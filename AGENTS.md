@@ -1,0 +1,15 @@
+# TypeDojo
+Native Rust/egui TypeScript practice app in the Keiko family. English UI and content.
+
+- `src/course.rs`: pure curriculum model, embedded `content/course.json`.
+- `src/store.rs`: local drafts and completion; `TYPEDOJO_HOME` isolates all learner data.
+- `src/compiler.rs`: real `tsc`, strict; background jobs only. Execute function samples only through the restricted, time-limited Node VM.
+- `src/main.rs`: thin egui UI; command work stays off its thread.
+- No panics, unwrap, unsafe, webview, or async runtime in shipped code.
+- Never overwrite unreadable progress. Atomic writes. No writes to another dojo's data.
+- Content checks must reject starters, accept solutions and an alternative, reject negative cases.
+- Before commits: `cargo fmt --check`, `cargo clippy --all-targets -- -D warnings`,
+  `cargo test`, `cargo run -- --verify-content`. Verification requires local Node and tsc.
+- Use `TYPEDOJO_HOME` in tests and visual review, never the learner's real data.
+- No public release or catalog installation entry until a verified signed bundle exists.
+- Conventional Commits, bujosa/ branches. No hosted CI.
