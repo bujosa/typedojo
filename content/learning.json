@@ -1,0 +1,2710 @@
+[
+  {
+    "id": "values",
+    "outcome": "Read a statement, name a value and choose const or let.",
+    "prerequisites": [],
+    "vocabulary": [
+      {
+        "term": "Program",
+        "meaning": "A sequence of instructions that a computer follows. In this app you write those instructions in TypeScript."
+      },
+      {
+        "term": "Value",
+        "meaning": "A piece of data, such as the text \"Ada\", the number 3 or the boolean true. Quotes distinguish text from a variable name."
+      },
+      {
+        "term": "Variable",
+        "meaning": "A name bound to a value. Reading the name gives you the current value; assigning with = gives that name a value."
+      },
+      {
+        "term": "const / let",
+        "meaning": "const prevents reassignment of the binding. let allows later reassignment. Neither keyword describes the data type."
+      },
+      {
+        "term": "Type annotation",
+        "meaning": "The colon in count: number tells the compiler what values that binding accepts. It is a compile-time rule, not a conversion."
+      },
+      {
+        "term": "export",
+        "meaning": "Makes a declaration available to another module. The lab checker imports your exported declarations by name."
+      },
+      {
+        "term": "Statement / semicolon",
+        "meaning": "A statement is an instruction. A semicolon marks its end. Prettier handles consistent spacing and punctuation; formatting does not decide whether the result is correct."
+      },
+      {
+        "term": "Compiler / runtime",
+        "meaning": "The compiler checks types before execution. Runtime is when JavaScript instructions actually run. Check practice or Check lab validates a contract; Run executes a playground; Format only changes the code layout."
+      }
+    ],
+    "example": "const title = \"First steps\";\nlet attempts: number = 0;\nattempts = attempts + 1;\nconst ready: boolean = true;\nconsole.log(title, attempts, ready);\n",
+    "explanation": [
+      "Read the first line as: bind the name title to a string value. The quotes belong to the string syntax; they are not part of its contents.",
+      "attempts begins as the number 0. The next statement reads attempts, adds 1, then stores 1 back into the same binding. This reassignment requires let.",
+      "ready is a boolean: true or false without quotes. A : number annotation would reject \"1\" because that value is a string. Formatting cannot turn one type into another."
+    ],
+    "prediction": {
+      "question": "After the example runs, what value does attempts contain?",
+      "choices": [
+        "The number 1.",
+        "The string \"1\".",
+        "The number 0, because types prevent reassignment."
+      ],
+      "correct": 0,
+      "explanation": "The initializer stores 0, then attempts + 1 evaluates to 1 and = assigns it back. A number annotation permits other numbers."
+    },
+    "practice": {
+      "task": "Export const topic containing any string and let attempts: number initialized to 1. Keep the names and annotation; correct the two type mismatches.",
+      "starter": "export const topic = 42;\nexport let attempts: string = \"1\";\n",
+      "solution": "export const topic = \"Variables\";\nexport let attempts: number = 1;\n",
+      "alternative": "export const topic: string = \"Bindings\";\nexport let attempts: number = 1;\n",
+      "negative": "export const topic = 42;\nexport let attempts: number = 1;\n",
+      "checks": "type A = Assert<Equal<typeof s.topic extends string ? true : false, true>>;\ntype B = Assert<Equal<typeof s.attempts, number>>;\n",
+      "runtime": "if (exports.attempts !== 1) throw new Error(\"attempts must start at 1\");\n",
+      "hint": "Use quotes for topic, number after the attempts colon, and the numeric literal 1 without quotes.",
+      "playground": "import { topic, attempts } from \"./answer\";\nconsole.log(topic, attempts, typeof attempts);\n"
+    },
+    "transfer": [
+      "Export a const named courseName containing a string, a let named lessonCount containing a number, and a let named isReady containing a boolean. Give the two let variables explicit annotations.",
+      "Remember: The initializer stores 0, then attempts + 1 evaluates to 1 and = assigns it back. A number annotation permits other numbers.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "arrays",
+    "outcome": "Read array syntax and distinguish an element from its index.",
+    "prerequisites": [
+      "values"
+    ],
+    "vocabulary": [
+      {
+        "term": "Array",
+        "meaning": "An ordered collection written with square brackets. [\"Ada\", \"Lin\"] contains two string elements."
+      },
+      {
+        "term": "Element / index",
+        "meaning": "An element is one item; its index is its numeric position. JavaScript starts indexing at 0, so names[0] reads the first item."
+      },
+      {
+        "term": "string[]",
+        "meaning": "An array whose elements must be strings. The [] after a type is not a value; [] on the right of = is an empty array value."
+      },
+      {
+        "term": "length / push",
+        "meaning": "length reports how many elements exist. push adds an element to a mutable array. With unchecked indexed access enabled, an index read may also be undefined."
+      }
+    ],
+    "example": "const names: string[] = [\"Ada\", \"Lin\"];\nnames.push(\"Sam\");\nconsole.log(names.length);\nconsole.log(names[0]);\n",
+    "explanation": [
+      "The annotation string[] constrains every element, rather than requiring one particular string. The initializer supplies the first two elements.",
+      "const stops rebinding names to a different array. It does not stop push from changing the existing array.",
+      "The first index is 0, and length is 3 after push. An empty array has no element at index 0, so avoid assuming every index exists."
+    ],
+    "prediction": {
+      "question": "What does names.length report after push?",
+      "choices": [
+        "2, because const freezes the array.",
+        "The last index, 2.",
+        "3."
+      ],
+      "correct": 2,
+      "explanation": "length counts elements; it is not the last index. const protects the binding, while push mutates the array."
+    },
+    "practice": {
+      "task": "Export words as a mutable string[] starting with \"practice\", and counts as a mutable number[] starting with 1. Correct the array element types.",
+      "starter": "export const words: number[] = [];\nexport const counts: string[] = [];\n",
+      "solution": "export const words: string[] = [\"practice\"];\nexport const counts: number[] = [1];\n",
+      "alternative": "export let words: Array<string> = [\"practice\"];\nexport let counts: Array<number> = [1];\n",
+      "negative": "export const words: string[] = [\"practice\"];\nexport const counts: readonly number[] = [1];\n",
+      "checks": "type A = Assert<Equal<typeof s.words, string[]>>;\ntype B = Assert<Equal<typeof s.counts, number[]>>;\n",
+      "runtime": "if (exports.words[0] !== \"practice\" || exports.counts[0] !== 1)\n  throw new Error(\"Start with the requested elements\");\n",
+      "hint": "The annotation describes element types. Use string[] for words and number[] for counts; put the requested first item inside each initializer.",
+      "playground": "import { words, counts } from \"./answer\";\nconsole.log(words[0], counts.length);\n"
+    },
+    "transfer": [
+      "Export names as a mutable string[] and scores as a mutable number[]. Both may start empty.",
+      "Remember: length counts elements; it is not the last index. const protects the binding, while push mutates the array.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "objects",
+    "outcome": "Describe the shape of one object and read its properties.",
+    "prerequisites": [
+      "arrays"
+    ],
+    "vocabulary": [
+      {
+        "term": "Object",
+        "meaning": "A value containing named properties, written with braces: { name: \"Ada\", points: 2 }."
+      },
+      {
+        "term": "Property",
+        "meaning": "A named part of an object. item.name reads the property called name; it does not read a variable named name."
+      },
+      {
+        "term": "Type alias",
+        "meaning": "A reusable type name declared with type. It describes acceptable values but does not create an object at runtime."
+      }
+    ],
+    "example": "type Book = { title: string; pages: number };\nconst book: Book = { title: \"Types\", pages: 80 };\nconsole.log(book.title);\n",
+    "explanation": [
+      "The Book alias defines two required properties and the type of each. A colon inside the type means property type.",
+      "The book initializer creates an actual value. A colon in that object supplies a property value, not its type.",
+      "Dot access reads a property. Book is erased when TypeScript compiles; book is the runtime object."
+    ],
+    "prediction": {
+      "question": "Does type Book create a book value?",
+      "choices": [
+        "Yes, but only when console.log runs.",
+        "No. It describes a shape; the initializer creates the value.",
+        "Yes, with empty property values."
+      ],
+      "correct": 1,
+      "explanation": "Type aliases are compile-time descriptions. A separate expression such as { title: \"Types\", pages: 80 } creates the object."
+    },
+    "practice": {
+      "task": "Export Practice with exactly required title: string and done: boolean properties.",
+      "starter": "export type Practice = { title: number };\n",
+      "solution": "export type Practice = { title: string; done: boolean };\n",
+      "alternative": "export type Practice = { title: string; done: boolean };\n",
+      "negative": "export type Practice = { title: string; done?: boolean };\n",
+      "checks": "type A = Assert<Equal<s.Practice, { title: string; done: boolean }>>;\nconst item: s.Practice = { title: \"Read\", done: false };\n",
+      "runtime": "",
+      "hint": "Define the type after type Practice =. Both title and done are required, with string and boolean value types.",
+      "playground": "import type { Practice } from \"./answer\";\nconst task: Practice = { title: \"Read\", done: false };\nconsole.log(task.title);\n"
+    },
+    "transfer": [
+      "Export a Learner type with name: string and lessons: number. Do not add an index signature or extra required fields.",
+      "Remember: Type aliases are compile-time descriptions. A separate expression such as { title: \"Types\", pages: 80 } creates the object.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "functions",
+    "outcome": "Trace arguments into parameters and follow the returned value.",
+    "prerequisites": [
+      "objects"
+    ],
+    "vocabulary": [
+      {
+        "term": "Function",
+        "meaning": "A reusable block of code. Declaring it does not execute its body; calling it does."
+      },
+      {
+        "term": "Parameter / argument",
+        "meaning": "A parameter names an input in the declaration. An argument is the value supplied by a particular call."
+      },
+      {
+        "term": "return",
+        "meaning": "Ends the current function call and sends a value back to its caller. console.log displays a value but does not return it."
+      }
+    ],
+    "example": "function square(value: number): number {\n  return value * value;\n}\nconst result = square(4);\nconsole.log(result);\n",
+    "explanation": [
+      "value is the parameter. The argument 4 is bound to value for this call. The two number annotations describe input and output.",
+      "The body evaluates 4 * 4, and return sends 16 to the caller. result then receives 16.",
+      "A signature can check that the result is a number. Runtime examples are also needed to check that the function calculates the right number."
+    ],
+    "prediction": {
+      "question": "What value is assigned to result?",
+      "choices": [
+        "16.",
+        "4.",
+        "undefined, because console.log is outside the function."
+      ],
+      "correct": 0,
+      "explanation": "The call evaluates the return expression before result is initialized. Logging is independent of returning."
+    },
+    "practice": {
+      "task": "Export practice(n: number): number returning n plus 1. Replace the placeholder return.",
+      "starter": "export function practice(n: number): string {\n  return \"todo\";\n}\n",
+      "solution": "export function practice(n: number): number {\n  return n + 1;\n}\n",
+      "alternative": "export const practice = (n: number): number => 1 + n;\n",
+      "negative": "export function practice(n: number): number {\n  return n;\n}\n",
+      "checks": "type A = Assert<Equal<Parameters<typeof s.practice>, [number]>>;\ntype B = Assert<Equal<ReturnType<typeof s.practice>, number>>;\n",
+      "runtime": "for (const n of [0, 3, -2])\n  if (exports.practice(n) !== n + 1) throw new Error(\"Add one to the input\");\n",
+      "hint": "Keep the input n typed as number. Return the expression n + 1 instead of a fixed result or a string.",
+      "playground": "import { practice } from \"./answer\";\nconsole.log(practice(4));\n"
+    },
+    "transfer": [
+      "Export a function greet with exactly one required string parameter and a string return type. Return a greeting containing that name.",
+      "Remember: The call evaluates the return expression before result is initialized. Logging is independent of returning.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "branches",
+    "outcome": "Use a condition to narrow a union before choosing an operation.",
+    "prerequisites": [
+      "functions"
+    ],
+    "vocabulary": [
+      {
+        "term": "Union",
+        "meaning": "A type written A | B accepts a value of either member. A particular runtime value still has one actual type."
+      },
+      {
+        "term": "Condition / branch",
+        "meaning": "An if condition chooses which block runs. A return inside the chosen block ends that call."
+      },
+      {
+        "term": "typeof narrowing",
+        "meaning": "typeof value === \"string\" is both a runtime test and evidence the compiler can use to narrow value."
+      }
+    ],
+    "example": "function describe(value: string | number): string {\n  if (typeof value === \"string\") {\n    return value.toUpperCase();\n  }\n  return value.toFixed(1);\n}\nconsole.log(describe(3));\n",
+    "explanation": [
+      "Before the if, value might be a string or a number. Only operations safe for both can be used immediately.",
+      "Inside the string branch, toUpperCase is valid. That branch returns, so it cannot continue into the number-only operation.",
+      "The remaining path knows value is a number. toFixed formats it as a string; a type annotation alone would not perform that conversion."
+    ],
+    "prediction": {
+      "question": "Which branch runs for the number 3?",
+      "choices": [
+        "The string path because the result is a string.",
+        "Both branches run.",
+        "The number path; it returns \"3.0\"."
+      ],
+      "correct": 2,
+      "explanation": "The test examines the input, not the return type. The string branch is skipped for a number."
+    },
+    "practice": {
+      "task": "Export practice(value: string | number): string. Return \"text\" for strings and \"number\" for numbers.",
+      "starter": "export function practice(value: string | number): string {\n  return \"todo\";\n}\n",
+      "solution": "export function practice(value: string | number): string {\n  if (typeof value === \"string\") return \"text\";\n  return \"number\";\n}\n",
+      "alternative": "export const practice = (value: string | number): string =>\n  typeof value === \"number\" ? \"number\" : \"text\";\n",
+      "negative": "export function practice(value: string | number): string {\n  return \"text\";\n}\n",
+      "checks": "type A = Assert<Equal<Parameters<typeof s.practice>, [string | number]>>;\ntype B = Assert<Equal<ReturnType<typeof s.practice>, string>>;\n",
+      "runtime": "if (exports.practice(\"0\") !== \"text\" || exports.practice(0) !== \"number\")\n  throw new Error(\"Test the input type, including zero\");\n",
+      "hint": "Check typeof value, not whether value is truthy. The string branch returns \"text\"; the other branch returns \"number\".",
+      "playground": "import { practice } from \"./answer\";\nconsole.log(practice(0));\n"
+    },
+    "transfer": [
+      "Export a function label(value: string | number): string. Narrow with typeof; return the string directly or convert the number with String(value).",
+      "Remember: The test examines the input, not the return type. The string branch is skipped for a number.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "loops",
+    "outcome": "Trace an accumulator across every item without changing the input.",
+    "prerequisites": [
+      "branches"
+    ],
+    "vocabulary": [
+      {
+        "term": "Iteration",
+        "meaning": "One visit to an item or one repetition of a loop body."
+      },
+      {
+        "term": "for…of",
+        "meaning": "Visits the values of an iterable. In for (const value of values), value is an element, not an index."
+      },
+      {
+        "term": "Accumulator",
+        "meaning": "A variable that carries a result between iterations. Its initial value decides the result for empty input."
+      }
+    ],
+    "example": "let total = 0;\nfor (const value of [2, 4, 1]) {\n  total = total + value;\n}\nconsole.log(total);\n",
+    "explanation": [
+      "Initialize total to 0 before the loop. For an empty input, no iterations run and total remains 0.",
+      "Trace the states: 0 + 2 gives 2; 2 + 4 gives 6; 6 + 1 gives 7. Each iteration reads the previous total.",
+      "Return the final result after the loop. Returning inside the body would stop after the first item."
+    ],
+    "prediction": {
+      "question": "What is total after the last iteration?",
+      "choices": [
+        "1, because the last item replaces the accumulator.",
+        "7.",
+        "2, because const stops iteration."
+      ],
+      "correct": 1,
+      "explanation": "Each assignment adds to the previous total, so all three values contribute."
+    },
+    "practice": {
+      "task": "Export practice(values: readonly number[]): number counting how many values are greater than 0. Do not modify values.",
+      "starter": "export function practice(values: readonly number[]): number {\n  return -1;\n}\n",
+      "solution": "export function practice(values: readonly number[]): number {\n  let count = 0;\n  for (const value of values) {\n    if (value > 0) count++;\n  }\n  return count;\n}\n",
+      "alternative": "export const practice = (values: readonly number[]): number =>\n  values.filter((value) => value > 0).length;\n",
+      "negative": "export function practice(values: readonly number[]): number {\n  return values.length;\n}\n",
+      "checks": "type A = Assert<Equal<Parameters<typeof s.practice>, [readonly number[]]>>;\ntype B = Assert<Equal<ReturnType<typeof s.practice>, number>>;\n",
+      "runtime": "if (\n  exports.practice(Object.freeze([-2, 0, 3, 1])) !== 2 ||\n  exports.practice([]) !== 0\n)\n  throw new Error(\"Count only positive values, including empty input\");\n",
+      "hint": "Start a count at 0, visit every value, increase the count only when value > 0, then return after the loop.",
+      "playground": "import { practice } from \"./answer\";\nconsole.log(practice([-2, 0, 3, 1]));\n"
+    },
+    "transfer": [
+      "Export total(values: readonly number[]): number. Use a loop or reduce to sum the values without mutating the input.",
+      "Remember: Each assignment adds to the previous total, so all three values contribute.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "discount",
+    "outcome": "Evaluate arithmetic in the right order and make units explicit.",
+    "prerequisites": [
+      "loops"
+    ],
+    "vocabulary": [
+      {
+        "term": "Operator / expression",
+        "meaning": "An operator combines values. An expression such as price * rate evaluates to a value."
+      },
+      {
+        "term": "Precedence",
+        "meaning": "Multiplication and division bind before addition and subtraction. Parentheses make grouping explicit."
+      },
+      {
+        "term": "Percentage",
+        "meaning": "A rate out of 100. 25 percent is 25 / 100, or 0.25; it is not the number 25 to subtract directly."
+      }
+    ],
+    "example": "const price = 80;\nconst rate = 25;\nconst saving = price * (rate / 100);\nconst remaining = price - saving;\nconsole.log(remaining);\n",
+    "explanation": [
+      "Turn the percentage into a fraction first: 25 / 100 is 0.25.",
+      "Multiplying 80 by 0.25 gives a saving of 20. Subtracting 20 from 80 gives 60.",
+      "Names such as saving and remaining clarify which value you intend to return. A valid numeric type does not catch using the wrong formula."
+    ],
+    "prediction": {
+      "question": "What is remaining?",
+      "choices": [
+        "60.",
+        "55, by subtracting 25 directly.",
+        "20, which is the saving rather than the remaining price."
+      ],
+      "correct": 0,
+      "explanation": "The percentage is applied to the price before the saving is subtracted."
+    },
+    "practice": {
+      "task": "Export practice(price:number):number returning the price with a 10% increase.",
+      "starter": "export function practice(price: number): number {\n  return price;\n}\n",
+      "solution": "export function practice(price: number): number {\n  return price + price * 0.1;\n}\n",
+      "alternative": "export const practice = (price: number): number => (price * 110) / 100;\n",
+      "negative": "export function practice(price: number): number {\n  return price + 10;\n}\n",
+      "checks": "type A = Assert<Equal<Parameters<typeof s.practice>, [number]>>;\n",
+      "runtime": "for (const price of [0, 20, 100])\n  if (Math.abs(exports.practice(price) - price * 1.1) > 1e-8)\n    throw new Error(\"Increase proportionally, not by a fixed amount\");\n",
+      "hint": "Calculate ten percent of the input as price * 0.1, then add that amount to the original price.",
+      "playground": "import { practice } from \"./answer\";\nconsole.log(practice(20));\n"
+    },
+    "transfer": [
+      "Export discount(price:number, percent:number):number returning price after subtracting the percentage. Do not mutate anything.",
+      "Remember: The percentage is applied to the price before the saving is subtracted.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "eligible",
+    "outcome": "Combine boolean conditions and test boundary values.",
+    "prerequisites": [
+      "discount"
+    ],
+    "vocabulary": [
+      {
+        "term": "Comparison",
+        "meaning": "Operators such as >= compare values and produce true or false. >= includes equality."
+      },
+      {
+        "term": "AND / OR",
+        "meaning": "a && b requires both conditions. a || b requires at least one. Parentheses make grouped conditions easier to read."
+      },
+      {
+        "term": "Boundary",
+        "meaning": "An input exactly at a rule change, such as an age limit. Test it as well as values on either side."
+      }
+    ],
+    "example": "const age = 16;\nconst hasPermission = true;\nconst canJoin = age >= 18 || (age >= 16 && hasPermission);\nconsole.log(canJoin);\n",
+    "explanation": [
+      "The first condition checks whether the person qualifies by age alone. At 16 it is false.",
+      "The grouped condition requires age at least 16 and permission. Both are true here.",
+      "OR combines the two paths. The complete expression is true even though its first condition is false."
+    ],
+    "prediction": {
+      "question": "Would age 15 with permission satisfy this rule?",
+      "choices": [
+        "Yes, because permission overrides every age requirement.",
+        "Yes, because OR requires both paths.",
+        "No; neither qualification path is true."
+      ],
+      "correct": 2,
+      "explanation": "Permission belongs to the grouped age-at-least-16 path. It is not a standalone alternative."
+    },
+    "practice": {
+      "task": "Export practice(score:number,submitted:boolean):boolean. Return true only when score is at least 60 AND submitted is true.",
+      "starter": "export function practice(score: number, submitted: boolean): boolean {\n  return false;\n}\n",
+      "solution": "export function practice(score: number, submitted: boolean): boolean {\n  return score >= 60 && submitted;\n}\n",
+      "alternative": "export const practice = (score: number, submitted: boolean): boolean =>\n  submitted ? score >= 60 : false;\n",
+      "negative": "export function practice(score: number, submitted: boolean): boolean {\n  return score >= 60 || submitted;\n}\n",
+      "checks": "type A = Assert<Equal<Parameters<typeof s.practice>, [number, boolean]>>;\n",
+      "runtime": "if (\n  !exports.practice(60, true) ||\n  exports.practice(59, true) ||\n  exports.practice(90, false)\n)\n  throw new Error(\"Both conditions are required, including the 60 boundary\");\n",
+      "hint": "Use && to require both submitted and score >= 60. Test 59, 60 and an unsubmitted high score.",
+      "playground": "import { practice } from \"./answer\";\nconsole.log(practice(60, true));\n"
+    },
+    "transfer": [
+      "Export eligible(age:number, hasConsent:boolean):boolean. A learner is eligible at 18 or older, or at 13 or older with consent.",
+      "Remember: Permission belongs to the grouped age-at-least-16 path. It is not a standalone alternative.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "initials",
+    "outcome": "Normalize a string and safely read its first character.",
+    "prerequisites": [
+      "eligible"
+    ],
+    "vocabulary": [
+      {
+        "term": "Method",
+        "meaning": "A function accessed through a value, such as text.trim(). Parentheses call it; text.trim without () refers to the function."
+      },
+      {
+        "term": "Normalization",
+        "meaning": "Converting equivalent inputs to a consistent form, such as removing surrounding whitespace."
+      },
+      {
+        "term": "Empty string",
+        "meaning": "The string \"\" contains zero characters. Its first indexed character is undefined, not another string."
+      }
+    ],
+    "example": "const raw = \"  Ada  \";\nconst clean = raw.trim();\nconst first = clean.charAt(0).toUpperCase();\nconsole.log(first);\n",
+    "explanation": [
+      "trim returns a new string without surrounding whitespace. It does not edit raw in place.",
+      "charAt(0) reads the first character and returns \"\" for an empty string, so the next string method remains safe.",
+      "toUpperCase returns another string. A chain reads left to right: normalize, select, then uppercase."
+    ],
+    "prediction": {
+      "question": "What does \"  \".trim().charAt(0) return?",
+      "choices": [
+        "A single space.",
+        "An empty string.",
+        "undefined."
+      ],
+      "correct": 1,
+      "explanation": "After trimming there are no characters. charAt handles that case by returning \"\"."
+    },
+    "practice": {
+      "task": "Export practice(value:string):string returning the trimmed value in lowercase.",
+      "starter": "export function practice(value: string): string {\n  return value;\n}\n",
+      "solution": "export function practice(value: string): string {\n  return value.trim().toLowerCase();\n}\n",
+      "alternative": "export const practice = (value: string): string => value.toLowerCase().trim();\n",
+      "negative": "export function practice(value: string): string {\n  return value.toLowerCase();\n}\n",
+      "checks": "type A = Assert<Equal<Parameters<typeof s.practice>, [string]>>;\n",
+      "runtime": "if (exports.practice(\"  ADA  \") !== \"ada\" || exports.practice(\"   \") !== \"\")\n  throw new Error(\"Trim and lowercase, including empty input\");\n",
+      "hint": "Call trim() and toLowerCase(), returning their resulting string. The original string does not change itself.",
+      "playground": "import { practice } from \"./answer\";\nconsole.log(practice(\"  ADA  \"));\n"
+    },
+    "transfer": [
+      "Export initials(first:string,last:string):string. Trim both fields and concatenate their first characters in uppercase. Empty fields contribute an empty string.",
+      "Remember: After trimming there are no characters. charAt handles that case by returning \"\".",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "fallback",
+    "outcome": "Distinguish missing values from valid falsy values.",
+    "prerequisites": [
+      "initials"
+    ],
+    "vocabulary": [
+      {
+        "term": "null / undefined",
+        "meaning": "Two values commonly used for absence. They are distinct types with strict null checks enabled."
+      },
+      {
+        "term": "Nullish coalescing",
+        "meaning": "value ?? fallback chooses the fallback only when value is null or undefined."
+      },
+      {
+        "term": "Falsy",
+        "meaning": "Values such as 0, false and \"\" behave as false in a boolean condition. They may still be valid domain values."
+      }
+    ],
+    "example": "const count: number | undefined = 0;\nconst withNullish = count ?? 5;\nconst withOr = count || 5;\nconsole.log(withNullish, withOr);\n",
+    "explanation": [
+      "count has a real value: zero. Its type also permits absence, so code must decide what absence means.",
+      "?? preserves zero because it is neither null nor undefined. || chooses 5 because zero is falsy.",
+      "Pick the operator that matches the rule. A default for missing data should not erase a valid zero."
+    ],
+    "prediction": {
+      "question": "Which result preserves the explicit zero?",
+      "choices": [
+        "withNullish.",
+        "withOr.",
+        "Neither; a union converts zero to undefined."
+      ],
+      "correct": 0,
+      "explanation": "The operator ?? tests absence rather than truthiness."
+    },
+    "practice": {
+      "task": "Export practice(value:string|null|undefined):string. Use \"untitled\" only for null or undefined; preserve an empty string.",
+      "starter": "export function practice(value: string | null | undefined): string {\n  return \"untitled\";\n}\n",
+      "solution": "export function practice(value: string | null | undefined): string {\n  return value ?? \"untitled\";\n}\n",
+      "alternative": "export const practice = (value: string | null | undefined): string =>\n  value === null || value === undefined ? \"untitled\" : value;\n",
+      "negative": "export function practice(value: string | null | undefined): string {\n  return value || \"untitled\";\n}\n",
+      "checks": "type A = Assert<\n  Equal<Parameters<typeof s.practice>, [string | null | undefined]>\n>;\n",
+      "runtime": "if (\n  exports.practice(null) !== \"untitled\" ||\n  exports.practice(undefined) !== \"untitled\" ||\n  exports.practice(\"\") !== \"\" ||\n  exports.practice(\"A\") !== \"A\"\n)\n  throw new Error(\"Default only for missing values\");\n",
+      "hint": "Use ??, or explicitly test null and undefined. Avoid || because it would replace an empty string.",
+      "playground": "import { practice } from \"./answer\";\nconsole.log(practice(null));\n"
+    },
+    "transfer": [
+      "Export fallback(value:number|null|undefined):number. Return value when present, otherwise 10. Preserve zero.",
+      "Remember: The operator ?? tests absence rather than truthiness.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "greeting",
+    "outcome": "Use a default argument and explain when it is applied.",
+    "prerequisites": [
+      "fallback"
+    ],
+    "vocabulary": [
+      {
+        "term": "Default parameter",
+        "meaning": "A parameter initializer supplies a value when the caller omits the argument or passes undefined."
+      },
+      {
+        "term": "Optional call argument",
+        "meaning": "A caller may leave it out. Inside the function, a default initializer can give the parameter a definite value."
+      }
+    ],
+    "example": "function welcome(name = \"guest\"): string {\n  return \"Hi, \" + name;\n}\nconsole.log(welcome());\nconsole.log(welcome(\"\"));\n",
+    "explanation": [
+      "The initializer gives name the string type and makes an argument optional at the call site.",
+      "welcome() uses \"guest\". welcome(\"\") uses the explicitly supplied empty string.",
+      "A default argument is not a truthiness test. It does not replace every falsy value."
+    ],
+    "prediction": {
+      "question": "What does welcome(\"\") return?",
+      "choices": [
+        "\"Hi, guest\".",
+        "undefined.",
+        "\"Hi, \"."
+      ],
+      "correct": 2,
+      "explanation": "The empty string is an explicit argument. The default applies only to a missing argument or undefined."
+    },
+    "practice": {
+      "task": "Export practice(count = 1):number returning count times 2.",
+      "starter": "export function practice(count: number): number {\n  return count;\n}\n",
+      "solution": "export function practice(count = 1): number {\n  return count * 2;\n}\n",
+      "alternative": "export function practice(count: number = 1): number {\n  return count + count;\n}\n",
+      "negative": "export function practice(count = 1): number {\n  return (count || 1) * 2;\n}\n",
+      "checks": "type A = Assert<Equal<Parameters<typeof s.practice>, [count?: number]>>;\n",
+      "runtime": "if (\n  exports.practice() !== 2 ||\n  exports.practice(0) !== 0 ||\n  exports.practice(3) !== 6\n)\n  throw new Error(\"Default only when omitted; preserve zero\");\n",
+      "hint": "Give count an initializer of 1 in the parameter list and return count * 2. Do not replace an explicit zero.",
+      "playground": "import { practice } from \"./answer\";\nconsole.log(practice());\n"
+    },
+    "transfer": [
+      "Export greeting(name = \"learner\"):string returning \"Hello, \" followed by name. Its parameter should be optional to callers.",
+      "Remember: The empty string is an explicit argument. The default applies only to a missing argument or undefined.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "doubled",
+    "outcome": "Transform each element into a new array with map.",
+    "prerequisites": [
+      "greeting"
+    ],
+    "vocabulary": [
+      {
+        "term": "Callback",
+        "meaning": "A function passed to another function. map calls its callback once for each existing array element."
+      },
+      {
+        "term": "map",
+        "meaning": "Builds a new array from the callback return values. It normally preserves the number and order of elements."
+      }
+    ],
+    "example": "const lengths = [\"Ada\", \"Lin\"].map((name) => name.length);\nconsole.log(lengths);\n",
+    "explanation": [
+      "map passes \"Ada\" to the callback, then \"Lin\". In each call name refers to the current element.",
+      "The callback returns each length, so the result contains [3, 3]. A callback body with braces needs an explicit return.",
+      "The input strings are not replaced. The returned array is a separate value."
+    ],
+    "prediction": {
+      "question": "What happens if a block callback forgets return?",
+      "choices": [
+        "map changes the input instead.",
+        "Its result for each element is undefined.",
+        "map automatically returns the last expression inside braces."
+      ],
+      "correct": 1,
+      "explanation": "An expression-bodied arrow returns its expression; a block body needs return."
+    },
+    "practice": {
+      "task": "Export practice(values:readonly number[]):number[] returning every input plus 1 in a new array.",
+      "starter": "export function practice(values: readonly number[]): number[] {\n  return [];\n}\n",
+      "solution": "export function practice(values: readonly number[]): number[] {\n  return values.map((value) => value + 1);\n}\n",
+      "alternative": "export const practice = (values: readonly number[]): number[] =>\n  Array.from(values, (value) => value + 1);\n",
+      "negative": "export function practice(values: readonly number[]): number[] {\n  return values.map((value) => value);\n}\n",
+      "checks": "type A = Assert<Equal<Parameters<typeof s.practice>, [readonly number[]]>>;\ntype B = Assert<Equal<ReturnType<typeof s.practice>, number[]>>;\n",
+      "runtime": "const input = Object.freeze([0, 2, -1]);\nconst output = exports.practice(input);\nif (JSON.stringify(output) !== \"[1,3,0]\" || exports.practice([]).length !== 0)\n  throw new Error(\"Transform each item without mutating input\");\n",
+      "hint": "Use map with a callback returning value + 1. An empty input should naturally produce an empty new array.",
+      "playground": "import { practice } from \"./answer\";\nconsole.log(practice([0, 2, -1]));\n"
+    },
+    "transfer": [
+      "Export doubled(values:readonly number[]):number[]. Return every input multiplied by two in a new array.",
+      "Remember: An expression-bodied arrow returns its expression; a block body needs return.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "passing",
+    "outcome": "Select elements with a predicate and preserve their order.",
+    "prerequisites": [
+      "doubled"
+    ],
+    "vocabulary": [
+      {
+        "term": "Predicate",
+        "meaning": "A function that answers a true/false question about a value."
+      },
+      {
+        "term": "filter",
+        "meaning": "Keeps an element when its callback returns a truthy result. It does not replace the element with that result."
+      }
+    ],
+    "example": "const kept = [10, 4, 8].filter((value) => value >= 8);\nconsole.log(kept);\n",
+    "explanation": [
+      "The predicate checks 10, 4 and 8 independently. Its results are true, false and true.",
+      "filter keeps the original values 10 and 8 in their original order. It does not return [true, false, true].",
+      "The equality boundary matters: >= 8 includes 8; > 8 would exclude it."
+    ],
+    "prediction": {
+      "question": "What is kept?",
+      "choices": [
+        "[10, 8].",
+        "[true, false, true].",
+        "[8, 10], because filter sorts."
+      ],
+      "correct": 0,
+      "explanation": "filter selects values without sorting them or mapping them to booleans."
+    },
+    "practice": {
+      "task": "Export practice(values:readonly number[]):number[] keeping only negative numbers, preserving order.",
+      "starter": "export function practice(values: readonly number[]): number[] {\n  return [];\n}\n",
+      "solution": "export function practice(values: readonly number[]): number[] {\n  return values.filter((value) => value < 0);\n}\n",
+      "alternative": "export function practice(values: readonly number[]): number[] {\n  const result: number[] = [];\n  for (const value of values) if (value < 0) result.push(value);\n  return result;\n}\n",
+      "negative": "export function practice(values: readonly number[]): number[] {\n  return values.filter((value) => value <= 0);\n}\n",
+      "checks": "type A = Assert<Equal<Parameters<typeof s.practice>, [readonly number[]]>>;\n",
+      "runtime": "if (\n  JSON.stringify(exports.practice(Object.freeze([1, -2, 0, -4]))) !==\n    \"[-2,-4]\" ||\n  exports.practice([]).length !== 0\n)\n  throw new Error(\"Keep only values below zero\");\n",
+      "hint": "The filter predicate is value < 0. Use a strict comparison so zero is excluded.",
+      "playground": "import { practice } from \"./answer\";\nconsole.log(practice([1, -2, 0, -4]));\n"
+    },
+    "transfer": [
+      "Export passing(scores:readonly number[]):number[]. Keep scores of at least 70, preserving order.",
+      "Remember: filter selects values without sorting them or mapping them to booleans.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "count-tags",
+    "outcome": "Use reduce with an explicit initial accumulator.",
+    "prerequisites": [
+      "passing"
+    ],
+    "vocabulary": [
+      {
+        "term": "reduce",
+        "meaning": "Combines a sequence into one accumulated result. The callback returns the accumulator used by the next call."
+      },
+      {
+        "term": "Initial value",
+        "meaning": "The second reduce argument provides the starting accumulator and makes the empty-input case well-defined."
+      },
+      {
+        "term": "Map collection",
+        "meaning": "A key/value collection with get and set methods. Unlike an ordinary object, user keys do not share an object prototype namespace."
+      }
+    ],
+    "example": "const total = [2, 3].reduce((sum, value) => sum + value, 0);\nconst counts = new Map<string, number>();\ncounts.set(\"ts\", (counts.get(\"ts\") ?? 0) + 1);\nconsole.log(total, counts.get(\"ts\"));\n",
+    "explanation": [
+      "reduce begins with sum = 0, then returns 2 and finally 5. The callback must return the next accumulator.",
+      "A Map distinguishes stored entries from object properties. get can return undefined when a key is absent.",
+      "?? 0 supplies an initial count only for an absent entry. The independent lab combines these operations to count repeated tags."
+    ],
+    "prediction": {
+      "question": "What does an empty number array reduce to with initial value 0?",
+      "choices": [
+        "undefined.",
+        "It always throws.",
+        "0."
+      ],
+      "correct": 2,
+      "explanation": "With an explicit initial accumulator, an empty input returns that accumulator without calling the callback."
+    },
+    "practice": {
+      "task": "Export practice(values:readonly number[]):number using reduce or a loop to sum all values, starting at 0.",
+      "starter": "export function practice(values: readonly number[]): number {\n  return -1;\n}\n",
+      "solution": "export function practice(values: readonly number[]): number {\n  return values.reduce((sum, value) => sum + value, 0);\n}\n",
+      "alternative": "export function practice(values: readonly number[]): number {\n  let sum = 0;\n  for (const value of values) sum += value;\n  return sum;\n}\n",
+      "negative": "export function practice(values: readonly number[]): number {\n  return values.reduce((sum, value) => sum + value);\n}\n",
+      "checks": "type A = Assert<Equal<Parameters<typeof s.practice>, [readonly number[]]>>;\n",
+      "runtime": "if (\n  exports.practice([]) !== 0 ||\n  exports.practice(Object.freeze([2, -1, 4])) !== 5\n)\n  throw new Error(\"Handle empty input and all elements\");\n",
+      "hint": "Supply 0 as the initial reduce accumulator and return sum + value from its callback.",
+      "playground": "import { practice } from \"./answer\";\nconsole.log(practice([2, -1, 4]));\n"
+    },
+    "transfer": [
+      "Export countTags(tags:readonly string[]):Map<string,number>. Count each exact tag, including \"__proto__\".",
+      "Remember: With an explicit initial accumulator, an empty input returns that accumulator without calling the callback.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "counter",
+    "outcome": "Track captured state across calls and distinguish separate closures.",
+    "prerequisites": [
+      "count-tags"
+    ],
+    "vocabulary": [
+      {
+        "term": "Closure",
+        "meaning": "A function together with access to variables from the scope where it was created."
+      },
+      {
+        "term": "Scope",
+        "meaning": "The region where a binding can be referenced. A local variable can remain reachable through a returned function."
+      },
+      {
+        "term": "Independent state",
+        "meaning": "Calling a factory twice creates two sets of local variables; the returned functions do not have to share state."
+      }
+    ],
+    "example": "function makeCounter() {\n  let count = 0;\n  return () => {\n    count += 1;\n    return count;\n  };\n}\nconst a = makeCounter();\nconst b = makeCounter();\nconsole.log(a(), a(), b());\n",
+    "explanation": [
+      "Each makeCounter call initializes a separate count. The returned function captures that call's binding.",
+      "Calling a twice changes its own count from 0 to 1 to 2. Calling b first changes a different count from 0 to 1.",
+      "Putting count outside the factory would share it between both returned functions, changing the behavior."
+    ],
+    "prediction": {
+      "question": "What does the final log display?",
+      "choices": [
+        "1, 1, 1.",
+        "1, 2, 1.",
+        "1, 2, 3."
+      ],
+      "correct": 1,
+      "explanation": "Each factory invocation creates one private counter; a retains its state between calls."
+    },
+    "practice": {
+      "task": "Export practice():()=>number. Its returned function must return 5 on every call. First practice returning a function before adding mutable state in the lab.",
+      "starter": "export function practice(): number {\n  return 5;\n}\n",
+      "solution": "export function practice(): () => number {\n  return () => 5;\n}\n",
+      "alternative": "export const practice = (): (() => number) =>\n  function () {\n    return 5;\n  };\n",
+      "negative": "export function practice(): () => number {\n  let n = 4;\n  return () => ++n;\n}\n",
+      "checks": "type A = Assert<Equal<ReturnType<typeof s.practice>, () => number>>;\n",
+      "runtime": "const f = exports.practice();\nif (f() !== 5 || f() !== 5)\n  throw new Error(\"Return a function with a stable result\");\n",
+      "hint": "Return a function, not the number 5 itself. That inner function should return 5 every time without changing state.",
+      "playground": "import { practice } from \"./answer\";\nconsole.log(practice());\n"
+    },
+    "transfer": [
+      "Export counter():()=>number. Each returned function starts at 1 and increments its own count on every call.",
+      "Remember: Each factory invocation creates one private counter; a retains its state between calls.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "safe-divide",
+    "outcome": "Choose between a normal return and an exception path.",
+    "prerequisites": [
+      "counter"
+    ],
+    "vocabulary": [
+      {
+        "term": "Exception",
+        "meaning": "An abrupt control-flow signal. throw stops the current normal path and looks for a matching catch handler."
+      },
+      {
+        "term": "Error",
+        "meaning": "A standard object carrying an error message. Throwing an Error provides useful failure information."
+      },
+      {
+        "term": "try / catch",
+        "meaning": "try runs code that may throw; catch handles a thrown value. The thrown value is not guaranteed to be an Error."
+      }
+    ],
+    "example": "function requirePositive(value: number): number {\n  if (value <= 0) throw new Error(\"Expected positive value\");\n  return value;\n}\ntry {\n  console.log(requirePositive(0));\n} catch (error) {\n  console.log(\"Rejected\");\n}\n",
+    "explanation": [
+      "The guard rejects 0 before the normal return can run. The message explains the violated rule.",
+      "throw does not return an Error as a successful result. It transfers control to the catch block.",
+      "Test both the normal path and the rejection boundary. A function that throws for every input is not a correct validator."
+    ],
+    "prediction": {
+      "question": "Does requirePositive(0) return an Error value?",
+      "choices": [
+        "No. It throws and transfers control to catch.",
+        "Yes, the return type automatically becomes Error.",
+        "No; it returns 0 and then throws."
+      ],
+      "correct": 0,
+      "explanation": "throw is an exception path, not a normal returned value."
+    },
+    "practice": {
+      "task": "Export practice(value:number):number. Throw Error for negative values; otherwise return value unchanged, including zero.",
+      "starter": "export function practice(value: number): number {\n  return value;\n}\n",
+      "solution": "export function practice(value: number): number {\n  if (value < 0) throw new Error(\"Negative value\");\n  return value;\n}\n",
+      "alternative": "export const practice = (value: number): number => {\n  if (value >= 0) return value;\n  throw new Error(\"Negative value\");\n};\n",
+      "negative": "export function practice(value: number): number {\n  if (value <= 0) throw new Error(\"Non-positive\");\n  return value;\n}\n",
+      "checks": "type A = Assert<Equal<Parameters<typeof s.practice>, [number]>>;\n",
+      "runtime": "if (exports.practice(0) !== 0 || exports.practice(2) !== 2)\n  throw new Error(\"Preserve non-negative inputs\");\nlet threw = false;\ntry {\n  exports.practice(-1);\n} catch (e) {\n  threw = e instanceof Error;\n}\nif (!threw) throw new Error(\"Reject negative values with Error\");\n",
+      "hint": "Guard value < 0 with throw new Error(...); let zero and positive values reach the normal return.",
+      "playground": "import { practice } from \"./answer\";\nconsole.log(practice(2));\n"
+    },
+    "transfer": [
+      "Export safeDivide(a:number,b:number):number. Throw an Error for a zero divisor; otherwise return the quotient.",
+      "Remember: throw is an exception path, not a normal returned value.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "optional",
+    "outcome": "Distinguish a missing property from a present null or undefined value.",
+    "prerequisites": [
+      "safe-divide"
+    ],
+    "vocabulary": [
+      {
+        "term": "Optional property",
+        "meaning": "The ? after a property name permits that property to be absent."
+      },
+      {
+        "term": "Exact optional properties",
+        "meaning": "With this compiler option, a property declared label?: string cannot be explicitly assigned undefined unless undefined is part of its value type."
+      }
+    ],
+    "example": "type Note = { id: string; label?: string };\nconst empty: Note = { id: \"n1\" };\nconst named: Note = { id: \"n2\", label: \"Review\" };\nconsole.log(empty.label ?? \"No label\");\n",
+    "explanation": [
+      "Both objects have the required id. Only named supplies label.",
+      "Reading an optional property can produce undefined because the property may be missing. That is why the read can use ??.",
+      "Absence, a present undefined and a present null are different cases. Describe each case the domain actually permits."
+    ],
+    "prediction": {
+      "question": "Can { id: \"n1\", label: null } satisfy Note?",
+      "choices": [
+        "Yes, because optional means any missing-like value.",
+        "Yes, because null is a string.",
+        "No, because label permits strings when present."
+      ],
+      "correct": 2,
+      "explanation": "The ? allows omission; it does not add null to the property type."
+    },
+    "practice": {
+      "task": "Export Practice with required id:string and optional title:string; reject explicit undefined and null for title.",
+      "starter": "export type Practice = { id: string; title: string };\n",
+      "solution": "export type Practice = { id: string; title?: string };\n",
+      "alternative": "export interface Practice {\n  id: string;\n  title?: string;\n}\n",
+      "negative": "export type Practice = { id: string; title?: string | undefined };\n",
+      "checks": "type A = Assert<Equal<s.Practice, { id: string; title?: string }>>;\nconst a: s.Practice = { id: \"1\" };\n// @ts-expect-error explicit undefined is not omission\nconst b: s.Practice = { id: \"1\", title: undefined };\n// @ts-expect-error null is not a string\nconst c: s.Practice = { id: \"1\", title: null };\n",
+      "runtime": "",
+      "hint": "Put ? after title, and keep its value type string. Do not add null or undefined to that value type.",
+      "playground": "import type { Practice } from \"./answer\";\nconst note: Practice = { id: \"n1\" };\nconsole.log(note.title ?? \"Missing\");\n"
+    },
+    "transfer": [
+      "Export Profile with required id: string and optional nickname: string. Reject null and explicit undefined for nickname.",
+      "Remember: The ? allows omission; it does not add null to the property type.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "literals",
+    "outcome": "Use a finite set of exact strings to model allowed states.",
+    "prerequisites": [
+      "optional"
+    ],
+    "vocabulary": [
+      {
+        "term": "Literal type",
+        "meaning": "A type accepting one specific value, such as \"open\", rather than every string."
+      },
+      {
+        "term": "Union member",
+        "meaning": "One alternative in A | B. Values outside all members are rejected by the compiler."
+      }
+    ],
+    "example": "type Door = \"open\" | \"closed\";\nconst state: Door = \"open\";\nconsole.log(state);\n",
+    "explanation": [
+      "The quotes are part of the type syntax: \"open\" describes that exact string value.",
+      "A union gives a small vocabulary of allowed states. It prevents misspellings from becoming ordinary accepted strings.",
+      "Runtime input still needs validation; a type does not inspect external data after compilation."
+    ],
+    "prediction": {
+      "question": "Would the string \"opening\" satisfy Door?",
+      "choices": [
+        "Yes, because every literal union is just string.",
+        "No; it is neither allowed literal.",
+        "Yes, because it starts with \"open\"."
+      ],
+      "correct": 1,
+      "explanation": "Literal unions match exact values, not prefixes."
+    },
+    "practice": {
+      "task": "Export Practice as exactly \"small\" | \"large\".",
+      "starter": "export type Practice = string;\n",
+      "solution": "export type Practice = \"small\" | \"large\";\n",
+      "alternative": "export type Practice = \"large\" | \"small\";\n",
+      "negative": "export type Practice = \"small\" | \"large\" | \"medium\";\n",
+      "checks": "type A = Assert<Equal<s.Practice, \"small\" | \"large\">>;\n// @ts-expect-error unsupported literal\nconst bad: s.Practice = \"medium\";\n",
+      "runtime": "",
+      "hint": "Write a union of exactly the two quoted string literals, rather than the broad string type.",
+      "playground": "import type { Practice } from \"./answer\";\nconst size: Practice = \"small\";\nconsole.log(size);\n"
+    },
+    "transfer": [
+      "Export Status as exactly \"draft\" | \"published\" | \"archived\".",
+      "Remember: Literal unions match exact values, not prefixes.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "tuples",
+    "outcome": "Assign a meaning and a type to each fixed position.",
+    "prerequisites": [
+      "literals"
+    ],
+    "vocabulary": [
+      {
+        "term": "Tuple",
+        "meaning": "An array-like type with declared positions and length, such as [string, number]."
+      },
+      {
+        "term": "readonly tuple",
+        "meaning": "A tuple whose elements cannot be reassigned through this reference. It is not a runtime freeze."
+      }
+    ],
+    "example": "type Entry = readonly [string, number];\nconst entry: Entry = [\"Ada\", 3];\nconst [name, count] = entry;\nconsole.log(name, count);\n",
+    "explanation": [
+      "Position 0 is a string and position 1 is a number. Reversing the values violates the type.",
+      "Destructuring gives names to the positions without changing the tuple.",
+      "readonly prevents writes through entry in TypeScript. It does not call Object.freeze."
+    ],
+    "prediction": {
+      "question": "Can [3, \"Ada\"] satisfy Entry?",
+      "choices": [
+        "No; its positions have the wrong types.",
+        "Yes, because it contains the same two values.",
+        "Yes, because readonly sorts the values."
+      ],
+      "correct": 0,
+      "explanation": "Tuple position is part of the contract, unlike an unordered set."
+    },
+    "practice": {
+      "task": "Export Practice as a readonly tuple with a string followed by a number.",
+      "starter": "export type Practice = readonly (string | number)[];\n",
+      "solution": "export type Practice = readonly [string, number];\n",
+      "alternative": "export type Practice = readonly [label: string, count: number];\n",
+      "negative": "export type Practice = [string, number];\n",
+      "checks": "type A = Assert<Equal<s.Practice, readonly [string, number]>>;\n// @ts-expect-error exactly two positions\nconst wrong: s.Practice = [\"A\", 1, 2];\n",
+      "runtime": "",
+      "hint": "Use readonly [string, number]. An array of string | number does not enforce the fixed positions or length.",
+      "playground": "import type { Practice } from \"./answer\";\nconst entry: Practice = [\"Practice\", 1];\nconsole.log(entry[0], entry[1]);\n"
+    },
+    "transfer": [
+      "Export Coordinate as a readonly tuple of exactly two numbers, latitude then longitude.",
+      "Remember: Tuple position is part of the contract, unlike an unordered set.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "readonly",
+    "outcome": "Separate protection of an object property from protection of an array value.",
+    "prerequisites": [
+      "tuples"
+    ],
+    "vocabulary": [
+      {
+        "term": "readonly property",
+        "meaning": "Prevents assigning a new value to that property through the typed reference."
+      },
+      {
+        "term": "ReadonlyArray",
+        "meaning": "Prevents array operations such as push through that array reference. Object readonly is shallow unless nested properties are also readonly."
+      }
+    ],
+    "example": "type Shelf = { readonly books: readonly string[] };\nconst shelf: Shelf = { books: [\"Types\"] };\nconsole.log(shelf.books.length);\n",
+    "explanation": [
+      "readonly before books prevents replacing shelf.books with another array.",
+      "readonly string[] prevents mutating that array through shelf.books. These are two separate protections.",
+      "The same underlying value may still have another mutable reference. TypeScript readonly is a development-time contract."
+    ],
+    "prediction": {
+      "question": "Does a readonly array annotation freeze the JavaScript array?",
+      "choices": [
+        "Yes, it inserts Object.freeze automatically.",
+        "Yes, it changes the array into a tuple.",
+        "No. It restricts operations through the typed reference."
+      ],
+      "correct": 2,
+      "explanation": "Type annotations are erased and do not add runtime freezing."
+    },
+    "practice": {
+      "task": "Export Practice with readonly id:string and readonly values:readonly number[].",
+      "starter": "export type Practice = { id: string; values: number[] };\n",
+      "solution": "export type Practice = {\n  readonly id: string;\n  readonly values: readonly number[];\n};\n",
+      "alternative": "export type Practice = Readonly<{ id: string; values: ReadonlyArray<number> }>;\n",
+      "negative": "export type Practice = { readonly id: string; readonly values: number[] };\n",
+      "checks": "type A = Assert<\n  Equal<s.Practice, { readonly id: string; readonly values: readonly number[] }>\n>;\ndeclare const item: s.Practice;\n// @ts-expect-error no array mutation through readonly reference\nitem.values.push(1);\n",
+      "runtime": "",
+      "hint": "Protect each object property with readonly, and also protect the values array with readonly number[].",
+      "playground": "import type { Practice } from \"./answer\";\nconst item: Practice = { id: \"1\", values: [1, 2] };\nconsole.log(item.values.length);\n"
+    },
+    "transfer": [
+      "Export Course with readonly id: string and readonly tags: readonly string[].",
+      "Remember: Type annotations are erased and do not add runtime freezing.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "unknown",
+    "outcome": "Collect evidence about an unknown value before using it.",
+    "prerequisites": [
+      "readonly"
+    ],
+    "vocabulary": [
+      {
+        "term": "unknown",
+        "meaning": "A value may have any runtime type, but code must narrow it before type-specific operations."
+      },
+      {
+        "term": "Type guard",
+        "meaning": "A runtime condition that gives the compiler evidence about a value on a particular path."
+      }
+    ],
+    "example": "function lengthOf(value: unknown): number {\n  if (typeof value === \"string\") return value.length;\n  return 0;\n}\nconsole.log(lengthOf(\"Ada\"), lengthOf(null));\n",
+    "explanation": [
+      "unknown is safer than assuming external data already has a useful type. It requires evidence before string operations.",
+      "typeof narrows to string on the guarded path, where .length is valid.",
+      "The other path handles every remaining value, including null, with a definite number result."
+    ],
+    "prediction": {
+      "question": "Can you call value.trim() immediately when value is unknown?",
+      "choices": [
+        "Yes, the return annotation proves the input type.",
+        "No; first prove it is a string.",
+        "Yes, unknown disables checking."
+      ],
+      "correct": 1,
+      "explanation": "unknown preserves checking. Output annotations do not validate an input."
+    },
+    "practice": {
+      "task": "Export practice(value:unknown):number returning a number input unchanged, and 0 for any other type.",
+      "starter": "export function practice(value: unknown): number {\n  return 0;\n}\n",
+      "solution": "export function practice(value: unknown): number {\n  return typeof value === \"number\" ? value : 0;\n}\n",
+      "alternative": "export function practice(value: unknown): number {\n  if (typeof value !== \"number\") return 0;\n  return value;\n}\n",
+      "negative": "export function practice(value: unknown): number {\n  return Number(value);\n}\n",
+      "checks": "type A = Assert<Equal<Parameters<typeof s.practice>, [unknown]>>;\n",
+      "runtime": "if (\n  exports.practice(3) !== 3 ||\n  exports.practice(\"3\") !== 0 ||\n  exports.practice(null) !== 0\n)\n  throw new Error(\"Narrow without converting other types\");\n",
+      "hint": "Use typeof value === \"number\" to narrow; return 0 on every other path instead of converting the input.",
+      "playground": "import { practice } from \"./answer\";\nconsole.log(practice(\"3\"));\n"
+    },
+    "transfer": [
+      "Export text(value: unknown): string. Return the input if typeof says it is a string; otherwise return an empty string.",
+      "Remember: unknown preserves checking. Output annotations do not validate an input.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "results",
+    "outcome": "Use one literal property to identify the available data in a union.",
+    "prerequisites": [
+      "unknown"
+    ],
+    "vocabulary": [
+      {
+        "term": "Discriminant",
+        "meaning": "A shared property with a different literal value in each union member."
+      },
+      {
+        "term": "Variant",
+        "meaning": "One complete shape in a union. Related fields belong to that particular variant, not to every possible value."
+      }
+    ],
+    "example": "type Task = { kind: \"done\"; score: number } | { kind: \"pending\" };\nfunction describe(task: Task): string {\n  if (task.kind === \"done\") return String(task.score);\n  return \"Wait\";\n}\nconsole.log(describe({ kind: \"done\", score: 8 }));\n",
+    "explanation": [
+      "kind exists in both variants, so it can be checked before reading variant-specific properties.",
+      "After kind === \"done\", the compiler knows score exists and is a number.",
+      "Making score optional on one large object would permit combinations the union can rule out."
+    ],
+    "prediction": {
+      "question": "Where can task.score be read safely?",
+      "choices": [
+        "In the branch narrowed to kind === \"done\".",
+        "On every Task without a check.",
+        "Only after changing Task to any."
+      ],
+      "correct": 0,
+      "explanation": "The discriminant proves which complete variant is present."
+    },
+    "practice": {
+      "task": "Export Practice as {kind:\"ready\";value:number} | {kind:\"empty\"}.",
+      "starter": "export type Practice = { kind: string; value?: number };\n",
+      "solution": "export type Practice = { kind: \"ready\"; value: number } | { kind: \"empty\" };\n",
+      "alternative": "export type Practice = { kind: \"empty\" } | { value: number; kind: \"ready\" };\n",
+      "negative": "export type Practice = { kind: \"ready\"; value?: number } | { kind: \"empty\" };\n",
+      "checks": "type A = Assert<\n  Equal<s.Practice, { kind: \"ready\"; value: number } | { kind: \"empty\" }>\n>;\n",
+      "runtime": "",
+      "hint": "Create two complete object variants joined by |. Only the ready variant has a required value property.",
+      "playground": "import type { Practice } from \"./answer\";\nconst item: Practice = { kind: \"ready\", value: 7 };\nif (item.kind === \"ready\") console.log(item.value);\n"
+    },
+    "transfer": [
+      "Export Result as { ok: true; value: string } | { ok: false; error: string }.",
+      "Remember: The discriminant proves which complete variant is present.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "generics",
+    "outcome": "Keep a caller-selected type related to a property type.",
+    "prerequisites": [
+      "objects",
+      "readonly"
+    ],
+    "vocabulary": [
+      {
+        "term": "Type parameter",
+        "meaning": "A placeholder for a type chosen when a generic type or function is used. T is a conventional name, not a special keyword."
+      },
+      {
+        "term": "Instantiation",
+        "meaning": "Supplying a type argument, such as Bag<number>, substitutes that type for T in the declaration."
+      }
+    ],
+    "example": "type Bag<T> = { item: T };\nconst numbers: Bag<number> = { item: 4 };\nconst words: Bag<string> = { item: \"Ada\" };\nconsole.log(numbers.item, words.item);\n",
+    "explanation": [
+      "Bag<T> describes one pattern; T is reused at the item property.",
+      "Bag<number> requires item to be a number, while Bag<string> requires a string. A union property would lose this per-use relationship.",
+      "Type arguments disappear at runtime; ordinary object properties still hold the actual values."
+    ],
+    "prediction": {
+      "question": "What type is item in Bag<boolean>?",
+      "choices": [
+        "unknown, because generics erase information.",
+        "string | number.",
+        "boolean."
+      ],
+      "correct": 2,
+      "explanation": "Substituting boolean for T preserves the exact relationship requested by that use."
+    },
+    "practice": {
+      "task": "Export Practice<T> as an object with exactly one mutable data:T property.",
+      "starter": "export type Practice<T> = { data: unknown };\n",
+      "solution": "export type Practice<T> = { data: T };\n",
+      "alternative": "export type Practice<T> = { data: T };\n",
+      "negative": "export type Practice<T> = { readonly data: T };\n",
+      "checks": "type A = Assert<Equal<s.Practice<number>, { data: number }>>;\ntype B = Assert<Equal<s.Practice<\"a\">, { data: \"a\" }>>;\n",
+      "runtime": "",
+      "hint": "Use the same T at the data property. Keep the property mutable and do not replace T with unknown.",
+      "playground": "import type { Practice } from \"./answer\";\nconst item: Practice<number> = { data: 4 };\nconsole.log(item.data);\n"
+    },
+    "transfer": [
+      "Export Box<T> as an object with exactly one mutable value property of type T.",
+      "Remember: Substituting boolean for T preserves the exact relationship requested by that use.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "generic-functions",
+    "outcome": "Preserve an input type in the output using one type parameter.",
+    "prerequisites": [
+      "generics"
+    ],
+    "vocabulary": [
+      {
+        "term": "Generic function",
+        "meaning": "A function whose signature relates types across a call instead of committing to one concrete type."
+      },
+      {
+        "term": "Inference",
+        "meaning": "The compiler can choose a type argument from the value supplied by the caller."
+      }
+    ],
+    "example": "function echo<T>(value: T): T {\n  return value;\n}\nconst word = echo(\"Ada\" as const);\nconst list = echo([1, 2]);\nconsole.log(word, list);\n",
+    "explanation": [
+      "The same T appears at input and output. Replacing the output with unknown would discard information the caller already has.",
+      "The call with a literal can infer the literal type; callers usually do not need to write echo<...> explicitly.",
+      "A generic contract does not authorize changing the value into an unrelated value of the same broad category."
+    ],
+    "prediction": {
+      "question": "Why is returning unknown weaker than returning T here?",
+      "choices": [
+        "T always means string.",
+        "The caller loses the specific input type relationship.",
+        "unknown makes the returned value identical."
+      ],
+      "correct": 1,
+      "explanation": "Using one type parameter connects the chosen input type to the output type."
+    },
+    "practice": {
+      "task": "Export generic practice<T>(value:T):T returning the original value unchanged.",
+      "starter": "export function practice(value: unknown): unknown {\n  return value;\n}\n",
+      "solution": "export function practice<T>(value: T): T {\n  return value;\n}\n",
+      "alternative": "export const practice = <T,>(value: T): T => value;\n",
+      "negative": "export function practice<T>(value: T): T {\n  return undefined as T;\n}\n",
+      "checks": "const n = s.practice(7 as const);\ntype A = Assert<Equal<typeof n, 7>>;\nconst text = s.practice(\"a\" as const);\ntype B = Assert<Equal<typeof text, \"a\">>;\n",
+      "runtime": "const item = { n: 1 };\nif (exports.practice(item) !== item || exports.practice(3) !== 3)\n  throw new Error(\"Return the actual input\");\n",
+      "hint": "Declare <T>, accept value:T and return T. The implementation should return the exact input value.",
+      "playground": "import { practice } from \"./answer\";\nconsole.log(practice({ id: \"a\" }));\n"
+    },
+    "transfer": [
+      "Export identity<T>(value: T): T and return the value unchanged.",
+      "Remember: Using one type parameter connects the chosen input type to the output type.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "constraints",
+    "outcome": "Require the members a generic operation needs while preserving extra information.",
+    "prerequisites": [
+      "generic-functions"
+    ],
+    "vocabulary": [
+      {
+        "term": "Constraint",
+        "meaning": "T extends Shape restricts acceptable type arguments to those assignable to Shape."
+      },
+      {
+        "term": "Structural typing",
+        "meaning": "Compatibility follows members and their types rather than a declaration having a particular name."
+      }
+    ],
+    "example": "type Named<T extends { name: string }> = T;\nconst user: Named<{ name: string; level: number }> = { name: \"Ada\", level: 2 };\nconsole.log(user.level);\n",
+    "explanation": [
+      "The constraint requires name:string. It allows a type with additional fields such as level.",
+      "Returning T preserves those additional fields instead of replacing the result with only {name:string}.",
+      "A constraint is checked during compilation; it does not validate an arbitrary runtime object."
+    ],
+    "prediction": {
+      "question": "Does the constraint remove level from the supplied type?",
+      "choices": [
+        "No; using T preserves it.",
+        "Yes; constraints strip extra fields.",
+        "Yes; extends turns values into strings."
+      ],
+      "correct": 0,
+      "explanation": "A constraint limits which types can be chosen but does not replace the chosen type."
+    },
+    "practice": {
+      "task": "Export Practice<T extends {name:string}> as T itself.",
+      "starter": "export type Practice<T> = { name: string };\n",
+      "solution": "export type Practice<T extends { name: string }> = T;\n",
+      "alternative": "export type Practice<T extends Record<\"name\", string>> = T;\n",
+      "negative": "export type Practice<T> = T;\n",
+      "checks": "type A = Assert<\n  Equal<s.Practice<{ name: \"Ada\"; rank: 1 }>, { name: \"Ada\"; rank: 1 }>\n>;\n// @ts-expect-error requires a name\ntype B = s.Practice<{}>;\n",
+      "runtime": "",
+      "hint": "Place extends {name:string} on T in the parameter declaration; make the alias result T rather than only the constraint shape.",
+      "playground": "import type { Practice } from \"./answer\";\nconst user: Practice<{ name: string; rank: number }> = { name: \"Ada\", rank: 1 };\nconsole.log(user.rank);\n"
+    },
+    "transfer": [
+      "Export Identified<T extends { id: string }> as T itself. It must preserve extra properties and reject types without a string id.",
+      "Remember: A constraint limits which types can be chosen but does not replace the chosen type.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "keyof",
+    "outcome": "Derive valid keys and look up the value type at a chosen key.",
+    "prerequisites": [
+      "generics",
+      "objects"
+    ],
+    "vocabulary": [
+      {
+        "term": "keyof",
+        "meaning": "Produces the property-key union of a type. keyof {name:string;age:number} is \"name\" | \"age\"."
+      },
+      {
+        "term": "Indexed access type",
+        "meaning": "T[K] looks up the type stored at a key or union of keys. This is type syntax, not a runtime property read."
+      }
+    ],
+    "example": "type Student = { name: string; age: number };\ntype Keys = keyof Student;\ntype Age = Student[\"age\"];\nconst age: Age = 20;\nconsole.log(age);\n",
+    "explanation": [
+      "Keys describes allowable property names, not the values stored in those properties.",
+      "Student[\"age\"] is number. Student[\"name\" | \"age\"] is string | number.",
+      "Constrain K to keyof T so a caller cannot request a property type that is not part of T."
+    ],
+    "prediction": {
+      "question": "What is Student[\"age\"]?",
+      "choices": [
+        "\"age\".",
+        "string | number regardless of the chosen key.",
+        "number."
+      ],
+      "correct": 2,
+      "explanation": "Indexed access selects the value type at the specified key."
+    },
+    "practice": {
+      "task": "Export Practice<T,K extends keyof T> as T[K].",
+      "starter": "export type Practice<T, K extends keyof T> = unknown;\n",
+      "solution": "export type Practice<T, K extends keyof T> = T[K];\n",
+      "alternative": "export type Practice<T, Key extends keyof T> = T[Key];\n",
+      "negative": "export type Practice<T, K extends keyof T> = keyof T;\n",
+      "checks": "type A = Assert<\n  Equal<s.Practice<{ name: string; age: number }, \"age\">, number>\n>;\n// @ts-expect-error no missing key\ntype B = s.Practice<{ age: number }, \"other\">;\n",
+      "runtime": "",
+      "hint": "Constrain K with extends keyof T, then use the indexed-access type T[K] as the alias result.",
+      "playground": "import type { Practice } from \"./answer\";\nconst count: Practice<{ count: number }, \"count\"> = 2;\nconsole.log(count);\n"
+    },
+    "transfer": [
+      "Export ValueAt<T, K extends keyof T> as the property type at K.",
+      "Remember: Indexed access selects the value type at the specified key.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "mapped",
+    "outcome": "Apply one type transformation to each property key.",
+    "prerequisites": [
+      "keyof"
+    ],
+    "vocabulary": [
+      {
+        "term": "Mapped type",
+        "meaning": "A type-level loop written [K in keyof T]. It creates a property for each selected key."
+      },
+      {
+        "term": "Modifier preservation",
+        "meaning": "A homomorphic mapped type over keyof T preserves optional and readonly modifiers unless explicitly changed."
+      }
+    ],
+    "example": "type Lists<T> = { [K in keyof T]: T[K][] };\ntype Group = Lists<{ name: string; score: number }>;\nconst group: Group = { name: [\"Ada\"], score: [9] };\n",
+    "explanation": [
+      "K takes each original property key. T[K] reads the original property value type.",
+      "Adding [] turns each value type into an array of that type. name and score retain their own distinct types.",
+      "This transformation produces a type; it does not loop over an object at runtime."
+    ],
+    "prediction": {
+      "question": "What is score in Lists<{score:number}>?",
+      "choices": [
+        "An array of the literal key \"score\".",
+        "number[].",
+        "string[]."
+      ],
+      "correct": 1,
+      "explanation": "The expression T[K][] wraps each original value type in an array."
+    },
+    "practice": {
+      "task": "Export Practice<T> mapping every property value of T to string, preserving modifiers.",
+      "starter": "export type Practice<T> = { [K in keyof T]: T[K] };\n",
+      "solution": "export type Practice<T> = { [K in keyof T]: string };\n",
+      "alternative": "export type Practice<T> = { [Key in keyof T]: string };\n",
+      "negative": "export type Practice<T> = { -readonly [K in keyof T]-?: string };\n",
+      "checks": "type A = Assert<\n  Equal<\n    s.Practice<{ readonly id: number; note?: boolean }>,\n    { readonly id: string; note?: string }\n  >\n>;\n",
+      "runtime": "",
+      "hint": "Loop with [K in keyof T] and use string as each property value type. Keep the original optional and readonly modifiers.",
+      "playground": "import type { Practice } from \"./answer\";\nconst labels: Practice<{ id: number }> = { id: \"one\" };\nconsole.log(labels.id);\n"
+    },
+    "transfer": [
+      "Export Flags<T> mapping every key of T to boolean, preserving modifiers.",
+      "Remember: The expression T[K][] wraps each original value type in an array.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "utilities",
+    "outcome": "Compose small utility types and reason about the order.",
+    "prerequisites": [
+      "mapped",
+      "optional"
+    ],
+    "vocabulary": [
+      {
+        "term": "Pick / Omit",
+        "meaning": "Pick retains named properties; Omit removes named properties from an object type."
+      },
+      {
+        "term": "Partial",
+        "meaning": "Makes all properties optional. It does not decide which fields a caller should be allowed to update."
+      }
+    ],
+    "example": "type Student = { id: string; name: string; score: number };\ntype Edit = Partial<Omit<Student, \"id\">>;\nconst change: Edit = { score: 10 };\n",
+    "explanation": [
+      "First remove id, so identity is not an editable field in the resulting object literal type.",
+      "Then Partial makes the remaining properties optional. A change can supply just score.",
+      "These types describe updates; they do not merge objects or enforce server authorization at runtime."
+    ],
+    "prediction": {
+      "question": "Which transformation happens first in this expression?",
+      "choices": [
+        "Omit removes id, then Partial makes remaining properties optional.",
+        "Partial converts every value to undefined.",
+        "Omit deletes a property from a runtime object."
+      ],
+      "correct": 0,
+      "explanation": "Nested type expressions are composed from the inside outward."
+    },
+    "practice": {
+      "task": "Export Practice<T> as Partial<Pick<T, keyof T>>; in other words, make every property optional without changing its value type.",
+      "starter": "export type Practice<T> = T;\n",
+      "solution": "export type Practice<T> = Partial<T>;\n",
+      "alternative": "export type Practice<T> = { [K in keyof T]?: T[K] };\n",
+      "negative": "export type Practice<T> = { [K in keyof T]: T[K] | undefined };\n",
+      "checks": "type A = Assert<\n  Equal<\n    s.Practice<{ id: string; count: number }>,\n    { id?: string; count?: number }\n  >\n>;\n",
+      "runtime": "",
+      "hint": "Partial<T> is enough. Alternatively map over keyof T and put ? on each property; a required property unioned with undefined is different.",
+      "playground": "import type { Practice } from \"./answer\";\nconst patch: Practice<{ id: string; count: number }> = { count: 3 };\nconsole.log(patch);\n"
+    },
+    "transfer": [
+      "Export Update<T extends { id: string }> as Partial<Omit<T, \"id\">>. Keep the identity out of an update.",
+      "Remember: Nested type expressions are composed from the inside outward.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "intersections",
+    "outcome": "Require two sets of members on the same value.",
+    "prerequisites": [
+      "utilities"
+    ],
+    "vocabulary": [
+      {
+        "term": "Intersection",
+        "meaning": "A & B requires a value to satisfy both sides; it is not an either/or choice."
+      },
+      {
+        "term": "Incompatible properties",
+        "meaning": "Intersecting incompatible types for the same property can produce an impossible requirement, often never."
+      }
+    ],
+    "example": "type Named = { name: string };\ntype Scored = { score: number };\ntype Ranked = Named & Scored;\nconst ranked: Ranked = { name: \"Ada\", score: 9 };\n",
+    "explanation": [
+      "Named contributes name and Scored contributes score. A Ranked value must include both.",
+      "The & does not merge runtime objects. The object initializer separately supplies both values.",
+      "Check overlapping property names before composing contracts; incompatible requirements do not magically resolve."
+    ],
+    "prediction": {
+      "question": "Could {name:\"Ada\"} alone satisfy Ranked?",
+      "choices": [
+        "Yes; either side of an intersection is enough.",
+        "Yes; TypeScript fills score with zero.",
+        "No; score is also required."
+      ],
+      "correct": 2,
+      "explanation": "An intersection requires both contracts on one value."
+    },
+    "practice": {
+      "task": "Export Practice<T> as T & {active:boolean}.",
+      "starter": "export type Practice<T> = T | { active: boolean };\n",
+      "solution": "export type Practice<T> = T & { active: boolean };\n",
+      "alternative": "export type Practice<T> = { active: boolean } & T;\n",
+      "negative": "export type Practice<T> = T & { active?: boolean };\n",
+      "checks": "type A = Assert<Equal<s.Practice<{ id: string }>[\"active\"], boolean>>;\nconst good: s.Practice<{ id: string }> = { id: \"1\", active: true };\n// @ts-expect-error active is required\nconst bad: s.Practice<{ id: string }> = { id: \"1\" };\n",
+      "runtime": "",
+      "hint": "Use T & {active:boolean}; a union would allow a value satisfying only one side.",
+      "playground": "import type { Practice } from \"./answer\";\nconst item: Practice<{ id: string }> = { id: \"1\", active: true };\nconsole.log(item);\n"
+    },
+    "transfer": [
+      "Export Audited<T> as T & {createdAt:Date;updatedAt:Date}.",
+      "Remember: An intersection requires both contracts on one value.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "interfaces",
+    "outcome": "Extend an object contract with another required property.",
+    "prerequisites": [
+      "intersections"
+    ],
+    "vocabulary": [
+      {
+        "term": "interface",
+        "meaning": "A named object contract declared with interface. It describes members without creating runtime values."
+      },
+      {
+        "term": "extends on an interface",
+        "meaning": "Includes the base interface members in the new contract, subject to compatible property types."
+      }
+    ],
+    "example": "interface Named {\n  name: string;\n}\ninterface Learner extends Named {\n  score: number;\n}\nconst learner: Learner = { name: \"Ada\", score: 3 };\n",
+    "explanation": [
+      "Named defines the shared property once. Learner inherits that requirement.",
+      "The extending interface adds score. A value must satisfy both name and score.",
+      "Interface extension is a type relationship; it does not instantiate a class or copy values."
+    ],
+    "prediction": {
+      "question": "Does declaring Learner create an object?",
+      "choices": [
+        "Yes; extends calls a constructor.",
+        "No; an initializer creates a value separately.",
+        "Yes; its properties begin as undefined."
+      ],
+      "correct": 1,
+      "explanation": "Interfaces are erased from emitted JavaScript."
+    },
+    "practice": {
+      "task": "Export interface Practice extending {id:string} through a named base interface, with required title:string.",
+      "starter": "interface Base {\n  id: string;\n}\nexport interface Practice extends Base {}\n",
+      "solution": "interface Base {\n  id: string;\n}\nexport interface Practice extends Base {\n  title: string;\n}\n",
+      "alternative": "interface Identified {\n  id: string;\n}\nexport interface Practice extends Identified {\n  title: string;\n}\n",
+      "negative": "interface Base {\n  id: string;\n}\nexport interface Practice extends Base {\n  title?: string;\n}\n",
+      "checks": "const good: s.Practice = { id: \"1\", title: \"Read\" };\ntype A = Assert<Equal<keyof s.Practice, \"id\" | \"title\">>;\n// @ts-expect-error title is required\nconst bad: s.Practice = { id: \"1\" };\n",
+      "runtime": "",
+      "hint": "Declare a base interface containing id, then extend it with a required title:string member.",
+      "playground": "import type { Practice } from \"./answer\";\nconst item: Practice = { id: \"1\", title: \"Read\" };\nconsole.log(item);\n"
+    },
+    "transfer": [
+      "Export Entity with id:string, and interface Student extending Entity with displayName:string.",
+      "Remember: Interfaces are erased from emitted JavaScript.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "typequeries",
+    "outcome": "Derive a type from an existing value instead of repeating its shape.",
+    "prerequisites": [
+      "interfaces"
+    ],
+    "vocabulary": [
+      {
+        "term": "typeof in a type",
+        "meaning": "Captures the static type of an existing binding. This differs from the runtime typeof operator that returns a string."
+      },
+      {
+        "term": "as const",
+        "meaning": "Requests literal inference and readonly properties for a literal expression. It does not freeze an object at runtime."
+      }
+    ],
+    "example": "const options = { mode: \"safe\", retries: 2 } as const;\ntype Options = typeof options;\nconst mode: Options[\"mode\"] = \"safe\";\n",
+    "explanation": [
+      "The object is a runtime value, while Options is a compile-time description derived from that binding.",
+      "as const keeps mode as the literal \"safe\" rather than widening it to string.",
+      "Derivation prevents a separately written type from drifting away from the intended value shape."
+    ],
+    "prediction": {
+      "question": "What is Options[\"mode\"] here?",
+      "choices": [
+        "The literal type \"safe\".",
+        "The runtime string \"string\".",
+        "Any string."
+      ],
+      "correct": 0,
+      "explanation": "The type query captures the const-asserted binding type."
+    },
+    "practice": {
+      "task": "Export practice={theme:\"dark\",size:2} as const and export type Practice=typeof practice.",
+      "starter": "export const practice = { theme: \"dark\", size: 2 };\nexport type Practice = typeof practice;\n",
+      "solution": "export const practice = { theme: \"dark\", size: 2 } as const;\nexport type Practice = typeof practice;\n",
+      "alternative": "export const practice = { size: 2, theme: \"dark\" } as const;\nexport type Practice = typeof practice;\n",
+      "negative": "export const practice = { theme: \"dark\", size: 2 };\nexport type Practice = typeof practice;\n",
+      "checks": "type A = Assert<\n  Equal<s.Practice, { readonly theme: \"dark\"; readonly size: 2 }>\n>;\n",
+      "runtime": "",
+      "hint": "Apply as const to the value initializer before deriving Practice with typeof practice.",
+      "playground": "import { practice } from \"./answer\";\nconsole.log(practice.theme);\n"
+    },
+    "transfer": [
+      "Export settings = {mode:\"strict\", retries:3} as const, and Settings = typeof settings.",
+      "Remember: The type query captures the const-asserted binding type.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "records",
+    "outcome": "Require a value for every key in a finite key union.",
+    "prerequisites": [
+      "typequeries"
+    ],
+    "vocabulary": [
+      {
+        "term": "Record<K,V>",
+        "meaning": "Creates an object type with a required property of type V for each key in K."
+      },
+      {
+        "term": "Finite key set",
+        "meaning": "A union such as \"low\" | \"high\" limits the named keys. This is not a runtime dictionary validator or a sealed-object mechanism."
+      }
+    ],
+    "example": "type Prices = Record<\"basic\" | \"pro\", number>;\nconst prices: Prices = { basic: 10, pro: 20 };\nconsole.log(prices.pro);\n",
+    "explanation": [
+      "Record expands the two key literals into two required properties.",
+      "Both values must be numbers, and an object literal missing pro is rejected.",
+      "TypeScript remains structurally typed: distinguish checking a fresh literal from validating arbitrary external objects."
+    ],
+    "prediction": {
+      "question": "Can the prices literal omit pro?",
+      "choices": [
+        "Yes; every record property is optional.",
+        "Yes; the compiler inserts a default price.",
+        "No; Record requires every key in the union."
+      ],
+      "correct": 2,
+      "explanation": "Record makes a property for every selected key; combine it with Partial only when omission is intended."
+    },
+    "practice": {
+      "task": "Export Practice as Record<\"low\"|\"high\",number>.",
+      "starter": "export type Practice = Record<string, number>;\n",
+      "solution": "export type Practice = Record<\"low\" | \"high\", number>;\n",
+      "alternative": "export type Practice = { low: number; high: number };\n",
+      "negative": "export type Practice = Partial<Record<\"low\" | \"high\", number>>;\n",
+      "checks": "type A = Assert<Equal<s.Practice, { low: number; high: number }>>;\n",
+      "runtime": "",
+      "hint": "Record<\"low\" | \"high\", number> requires both named numeric properties without widening the key set to every string.",
+      "playground": "import type { Practice } from \"./answer\";\nconst range: Practice = { low: 1, high: 5 };\nconsole.log(range.high);\n"
+    },
+    "transfer": [
+      "Export Labels as Record<\"idle\"|\"pending\"|\"done\",string>.",
+      "Remember: Record makes a property for every selected key; combine it with Partial only when omission is intended.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "required",
+    "outcome": "Remove optional modifiers without inventing new data.",
+    "prerequisites": [
+      "records"
+    ],
+    "vocabulary": [
+      {
+        "term": "Required<T>",
+        "meaning": "Makes every property required. It describes a complete shape; it does not fill missing properties in an object."
+      },
+      {
+        "term": "-? modifier",
+        "meaning": "The mapped-type syntax that removes optionality from mapped properties."
+      }
+    ],
+    "example": "type Draft = { title?: string; done?: boolean };\ntype Complete = Required<Draft>;\nconst task: Complete = { title: \"Read\", done: false };\n",
+    "explanation": [
+      "Draft permits missing properties. Required<Draft> requires both title and done.",
+      "The initializer still has to supply the data. A utility type does not create default values.",
+      "An explicit union with undefined is a separate type decision; do not confuse presence with every possible value type."
+    ],
+    "prediction": {
+      "question": "Does Required add missing properties at runtime?",
+      "choices": [
+        "Yes, by mutating the source object.",
+        "No; it only changes the type requirement.",
+        "Yes, using empty strings and false."
+      ],
+      "correct": 1,
+      "explanation": "Utility types are compile-time transformations."
+    },
+    "practice": {
+      "task": "Export Practice<T> making all original properties required.",
+      "starter": "export type Practice<T> = Partial<T>;\n",
+      "solution": "export type Practice<T> = Required<T>;\n",
+      "alternative": "export type Practice<T> = { [K in keyof T]-?: T[K] };\n",
+      "negative": "export type Practice<T> = T;\n",
+      "checks": "type A = Assert<\n  Equal<\n    s.Practice<{ title?: string; done?: boolean }>,\n    { title: string; done: boolean }\n  >\n>;\n",
+      "runtime": "",
+      "hint": "Use Required<T> or a mapped type with -? to remove optional modifiers.",
+      "playground": "import type { Practice } from \"./answer\";\nconst item: Practice<{ title?: string }> = { title: \"Read\" };\nconsole.log(item);\n"
+    },
+    "transfer": [
+      "Export Complete<T> with all original properties required, preserving their value types.",
+      "Remember: Utility types are compile-time transformations.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "satisfies",
+    "outcome": "Validate a configuration shape while retaining useful literal inference.",
+    "prerequisites": [
+      "required"
+    ],
+    "vocabulary": [
+      {
+        "term": "satisfies",
+        "meaning": "Checks that an expression is assignable to a type without replacing the result type with that target. Contextual typing can still affect inference."
+      },
+      {
+        "term": "as const with satisfies",
+        "meaning": "Keeps literal/readonly inference explicitly, then checks compatibility with the desired configuration shape."
+      }
+    ],
+    "example": "const options = { mode: \"safe\", retries: 2 } as const satisfies {\n  mode: \"safe\" | \"fast\";\n  retries: number;\n};\nconsole.log(options.mode);\n",
+    "explanation": [
+      "The right-hand contract rejects unsupported modes and non-numeric retry counts.",
+      "as const explicitly preserves the literal \"safe\" and literal 2 in the resulting binding type.",
+      "satisfies does not turn runtime input into validated data. It checks a statically known expression during compilation."
+    ],
+    "prediction": {
+      "question": "Does satisfies validate an incoming network response at runtime?",
+      "choices": [
+        "No; a runtime validator must do that.",
+        "Yes, it inserts a schema validator.",
+        "Yes, but only when combined with as const."
+      ],
+      "correct": 0,
+      "explanation": "Both satisfies and as const are erased from emitted JavaScript."
+    },
+    "practice": {
+      "task": "Export practice={enabled:true,limit:5} as const satisfying {enabled:boolean;limit:number}.",
+      "starter": "export const practice: { enabled: boolean; limit: number } = {\n  enabled: true,\n  limit: 5,\n};\n",
+      "solution": "export const practice = { enabled: true, limit: 5 } as const satisfies {\n  enabled: boolean;\n  limit: number;\n};\n",
+      "alternative": "export const practice = { limit: 5, enabled: true } as const satisfies {\n  limit: number;\n  enabled: boolean;\n};\n",
+      "negative": "export const practice = { enabled: false, limit: 5 } as const satisfies {\n  enabled: boolean;\n  limit: number;\n};\n",
+      "checks": "type A = Assert<\n  Equal<typeof s.practice, { readonly enabled: true; readonly limit: 5 }>\n>;\n",
+      "runtime": "",
+      "hint": "Keep enabled as the literal true and limit as the literal 5 using as const, then check the broad shape with satisfies.",
+      "playground": "import { practice } from \"./answer\";\nconsole.log(practice);\n"
+    },
+    "transfer": [
+      "Export config = {mode:\"strict\", retries:3} as const satisfies {mode:\"strict\"|\"loose\";retries:number}.",
+      "Remember: Both satisfies and as const are erased from emitted JavaScript.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "recursive",
+    "outcome": "Describe a nested structure using the type within its own definition.",
+    "prerequisites": [
+      "satisfies"
+    ],
+    "vocabulary": [
+      {
+        "term": "Recursive type",
+        "meaning": "A type that refers to itself through one of its members."
+      },
+      {
+        "term": "Leaf / child",
+        "meaning": "A leaf has no children. Recursion needs a finite stopping case when processing real data."
+      }
+    ],
+    "example": "type Folder = { name: string; children: readonly Folder[] };\nconst root: Folder = {\n  name: \"Root\",\n  children: [{ name: \"Docs\", children: [] }],\n};\nconsole.log(root.children.length);\n",
+    "explanation": [
+      "Each child has the same structure as its parent. The type does not fix a maximum depth.",
+      "An empty children array represents a leaf and gives runtime traversal a stopping case.",
+      "Recursive types describe shapes. Infinite or cyclic values still need care in runtime algorithms."
+    ],
+    "prediction": {
+      "question": "How does the example represent a leaf?",
+      "choices": [
+        "By omitting every required property.",
+        "By making its children the type never.",
+        "With an empty children array."
+      ],
+      "correct": 2,
+      "explanation": "The recursive requirement permits an empty array of children."
+    },
+    "practice": {
+      "task": "Export Practice<T> with data:T and children:readonly Practice<T>[].",
+      "starter": "export type Practice<T> = { data: T; children: readonly unknown[] };\n",
+      "solution": "export type Practice<T> = { data: T; children: readonly Practice<T>[] };\n",
+      "alternative": "export type Practice<T> = { children: ReadonlyArray<Practice<T>>; data: T };\n",
+      "negative": "export type Practice<T> = { data: T; children: readonly T[] };\n",
+      "checks": "type A = Assert<Equal<s.Practice<number>[\"data\"], number>>;\ntype B = Assert<\n  Equal<s.Practice<number>[\"children\"], readonly s.Practice<number>[]>\n>;\n",
+      "runtime": "",
+      "hint": "The children element type must be Practice<T>, not T or unknown. Make the array readonly.",
+      "playground": "import type { Practice } from \"./answer\";\nconst node: Practice<number> = { data: 1, children: [] };\nconsole.log(node.data);\n"
+    },
+    "transfer": [
+      "Export Tree<T> with value:T and children:readonly Tree<T>[].",
+      "Remember: The recursive requirement permits an empty array of children.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "extract",
+    "outcome": "Select only the union members assignable to a desired shape.",
+    "prerequisites": [
+      "recursive"
+    ],
+    "vocabulary": [
+      {
+        "term": "Extract<T,U>",
+        "meaning": "Keeps members of T that are assignable to U. Members that do not match are removed."
+      },
+      {
+        "term": "Assignability",
+        "meaning": "A type can satisfy a shape while having additional fields; matching does not require textual identity."
+      }
+    ],
+    "example": "type Action = { kind: \"save\"; id: string } | { kind: \"cancel\" };\ntype Save = Extract<Action, { kind: \"save\" }>;\nconst action: Save = { kind: \"save\", id: \"1\" };\n",
+    "explanation": [
+      "Action contains two complete variants. The filter shape identifies the save variant.",
+      "The id property is preserved because Extract selects the whole original member.",
+      "A non-matching union gives never, the type with no possible values."
+    ],
+    "prediction": {
+      "question": "Does Extract remove id from the save member?",
+      "choices": [
+        "Yes; it keeps only the discriminant.",
+        "No; it preserves the entire matching member.",
+        "Yes; it replaces each member with the filter shape."
+      ],
+      "correct": 1,
+      "explanation": "Extract selects union members rather than projecting their properties."
+    },
+    "practice": {
+      "task": "Export Practice<T> extracting members assignable to {kind:\"saved\"}.",
+      "starter": "export type Practice<T> = T;\n",
+      "solution": "export type Practice<T> = Extract<T, { kind: \"saved\" }>;\n",
+      "alternative": "export type Practice<T> = T extends { kind: \"saved\" } ? T : never;\n",
+      "negative": "export type Practice<T> = Exclude<T, { kind: \"saved\" }>;\n",
+      "checks": "type A = Assert<\n  Equal<\n    s.Practice<{ kind: \"saved\"; id: string } | { kind: \"cancel\" }>,\n    { kind: \"saved\"; id: string }\n  >\n>;\ntype B = Assert<Equal<s.Practice<{ kind: \"other\" }>, never>>;\n",
+      "runtime": "",
+      "hint": "Use Extract<T, {kind:\"saved\"}> to keep the full matching union member.",
+      "playground": "import type { Practice } from \"./answer\";\nconst value: Practice<{ kind: \"saved\"; id: string } | { kind: \"other\" }> = {\n  kind: \"saved\",\n  id: \"1\",\n};\nconsole.log(value);\n"
+    },
+    "transfer": [
+      "Export Success<T> extracting only members assignable to {ok:true}.",
+      "Remember: Extract selects union members rather than projecting their properties.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "parameters",
+    "outcome": "Derive a parameter tuple from a callable type.",
+    "prerequisites": [
+      "extract"
+    ],
+    "vocabulary": [
+      {
+        "term": "Function type",
+        "meaning": "A type describing callable input parameters and a returned value, such as (name:string)=>number."
+      },
+      {
+        "term": "Parameters<F>",
+        "meaning": "Extracts a function signature's parameter tuple. Optional parameters remain optional tuple positions."
+      }
+    ],
+    "example": "function repeat(text: string, count: number): string {\n  return text.repeat(count);\n}\ntype Inputs = Parameters<typeof repeat>;\nconst inputs: Inputs = [\"Hi\", 2];\nconsole.log(repeat(...inputs));\n",
+    "explanation": [
+      "typeof repeat captures the function type rather than calling the function.",
+      "Parameters turns the inputs into [text:string,count:number]. Tuple order still matters.",
+      "The spread syntax supplies those tuple elements as individual call arguments."
+    ],
+    "prediction": {
+      "question": "Does Parameters<F> describe the returned value?",
+      "choices": [
+        "No; it describes the input tuple.",
+        "Yes; it is the same as ReturnType<F>.",
+        "Yes; it executes F and records its result."
+      ],
+      "correct": 0,
+      "explanation": "Parameters and ReturnType extract different parts of a callable signature."
+    },
+    "practice": {
+      "task": "Export Practice<F extends (...args:never[])=>unknown> as Parameters<F>.",
+      "starter": "export type Practice<F extends (...args: never[]) => unknown> = ReturnType<F>;\n",
+      "solution": "export type Practice<F extends (...args: never[]) => unknown> = Parameters<F>;\n",
+      "alternative": "export type Practice<F extends (...args: never[]) => unknown> = F extends (\n  ...args: infer A\n) => unknown\n  ? A\n  : never;\n",
+      "negative": "export type Practice<F extends (...args: never[]) => unknown> = unknown[];\n",
+      "checks": "type A = Assert<\n  Equal<\n    s.Practice<(name: string, count?: number) => boolean>,\n    [string, number?]\n  >\n>;\n",
+      "runtime": "",
+      "hint": "Use Parameters<F> for input positions, keeping the callable constraint on F. Do not use ReturnType<F>.",
+      "playground": "import type { Practice } from \"./answer\";\nconst inputs: Practice<(name: string, count: number) => void> = [\"Ada\", 2];\nconsole.log(inputs);\n"
+    },
+    "transfer": [
+      "Export Args<F extends (...args:never[])=>unknown> as Parameters<F>.",
+      "Remember: Parameters and ReturnType extract different parts of a callable signature.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "promises",
+    "outcome": "Describe the fulfilled type of an asynchronous value.",
+    "prerequisites": [
+      "parameters"
+    ],
+    "vocabulary": [
+      {
+        "term": "Promise<T>",
+        "meaning": "Represents a value that will fulfill with T or reject. The promise is not itself the fulfilled value."
+      },
+      {
+        "term": "Awaited<T>",
+        "meaning": "Models recursive unwrapping of promise-like types, following how await obtains a fulfilled value."
+      }
+    ],
+    "example": "type Final = Awaited<Promise<Promise<number>>>;\nconst value: Final = 3;\nconsole.log(value);\n",
+    "explanation": [
+      "At the type level, Awaited follows nested promise-like wrappers to the final value type.",
+      "It also leaves an ordinary non-promise type such as string unchanged.",
+      "This utility does not create, execute or wait for a promise at runtime."
+    ],
+    "prediction": {
+      "question": "What is Awaited<Promise<Promise<number>>>?",
+      "choices": [
+        "Promise<number>.",
+        "unknown.",
+        "number."
+      ],
+      "correct": 2,
+      "explanation": "Awaited recursively unwraps the nested promise-like values."
+    },
+    "practice": {
+      "task": "Export Practice<T> as Awaited<T>.",
+      "starter": "export type Practice<T> = T;\n",
+      "solution": "export type Practice<T> = Awaited<T>;\n",
+      "alternative": "export type Practice<T> = T extends PromiseLike<infer U> ? Practice<U> : T;\n",
+      "negative": "export type Practice<T> = T extends Promise<infer U> ? U : T;\n",
+      "checks": "type A = Assert<Equal<s.Practice<Promise<Promise<number>>>, number>>;\ntype B = Assert<Equal<s.Practice<string>, string>>;\n",
+      "runtime": "",
+      "hint": "Awaited<T> unwraps nested promise-like values recursively; one infer step alone is not enough.",
+      "playground": "import type { Practice } from \"./answer\";\nconst value: Practice<Promise<number>> = 3;\nconsole.log(value);\n"
+    },
+    "transfer": [
+      "Export Resolved<T> = Awaited<T>.",
+      "Remember: Awaited recursively unwraps the nested promise-like values.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "conditional",
+    "outcome": "Choose a result type using a type relationship.",
+    "prerequisites": [
+      "generics",
+      "results"
+    ],
+    "vocabulary": [
+      {
+        "term": "Conditional type",
+        "meaning": "T extends U ? A : B chooses a type according to assignability."
+      },
+      {
+        "term": "Distribution",
+        "meaning": "When the checked type is a naked type parameter, the condition is applied to each union member separately."
+      }
+    ],
+    "example": "type NumbersOnly<T> = T extends number ? T : never;\ntype Kept = NumbersOnly<string | number | boolean>;\nconst value: Kept = 4;\n",
+    "explanation": [
+      "The conditional is about types, not a runtime if statement.",
+      "Distribution tests each member: string becomes never, number remains number, boolean becomes never.",
+      "never contributes no possible values to the resulting union, leaving number."
+    ],
+    "prediction": {
+      "question": "What does NumbersOnly<string|number> produce?",
+      "choices": [
+        "boolean.",
+        "number.",
+        "string | number."
+      ],
+      "correct": 1,
+      "explanation": "Each non-number union member maps to never and disappears from the union."
+    },
+    "practice": {
+      "task": "Export Practice<T> removing undefined from a union while preserving all other members, including null.",
+      "starter": "export type Practice<T> = T;\n",
+      "solution": "export type Practice<T> = T extends undefined ? never : T;\n",
+      "alternative": "export type Practice<T> = Exclude<T, undefined>;\n",
+      "negative": "export type Practice<T> = NonNullable<T>;\n",
+      "checks": "type A = Assert<Equal<s.Practice<string | null | undefined>, string | null>>;\n",
+      "runtime": "",
+      "hint": "Use T extends undefined ? never : T or Exclude<T, undefined>. Preserve null because this task removes only undefined.",
+      "playground": "import type { Practice } from \"./answer\";\nconst value: Practice<number | undefined> = 4;\nconsole.log(value);\n"
+    },
+    "transfer": [
+      "Export WithoutNull<T> that removes null and undefined from a union and preserves every other member.",
+      "Remember: Each non-number union member maps to never and disappears from the union.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "infer",
+    "outcome": "Capture a nested type using a conditional pattern.",
+    "prerequisites": [
+      "conditional",
+      "generics"
+    ],
+    "vocabulary": [
+      {
+        "term": "infer",
+        "meaning": "Introduces a type variable inside the checked pattern of a conditional type."
+      },
+      {
+        "term": "One-level unwrapping",
+        "meaning": "Removing one wrapper is different from recursively removing every nested wrapper."
+      }
+    ],
+    "example": "type Item<T> = T extends readonly (infer U)[] ? U : T;\ntype A = Item<string[]>;\nconst value: A = \"TypeScript\";\n",
+    "explanation": [
+      "infer U captures the element type if T matches the array pattern.",
+      "The true branch returns U, while a non-array uses the false branch T unchanged.",
+      "The type parameter U is available in the matching branch; it is not a runtime variable."
+    ],
+    "prediction": {
+      "question": "What is Item<string[]>?",
+      "choices": [
+        "string.",
+        "string[].",
+        "The runtime first element."
+      ],
+      "correct": 0,
+      "explanation": "The pattern extracts an element type; no array is read at runtime."
+    },
+    "practice": {
+      "task": "Export Practice<T> extracting one readonly-array element level; leave non-arrays unchanged.",
+      "starter": "export type Practice<T> = T;\n",
+      "solution": "export type Practice<T> = T extends readonly (infer U)[] ? U : T;\n",
+      "alternative": "export type Practice<T> = T extends ReadonlyArray<infer Item> ? Item : T;\n",
+      "negative": "export type Practice<T> = T extends readonly (infer U)[] ? Practice<U> : T;\n",
+      "checks": "type A = Assert<Equal<s.Practice<readonly number[]>, number>>;\ntype B = Assert<Equal<s.Practice<string[][]>, string[]>>;\ntype C = Assert<Equal<s.Practice<boolean>, boolean>>;\n",
+      "runtime": "",
+      "hint": "Match T against readonly (infer U)[] and return U once. Use T on the non-array branch.",
+      "playground": "import type { Practice } from \"./answer\";\nconst value: Practice<readonly number[]> = 4;\nconsole.log(value);\n"
+    },
+    "transfer": [
+      "Export Unwrap<T> that unwraps one Promise level and leaves non-promises unchanged.",
+      "Remember: The pattern extracts an element type; no array is read at runtime.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "templates",
+    "outcome": "Construct a precise string type from literal parts.",
+    "prerequisites": [
+      "infer"
+    ],
+    "vocabulary": [
+      {
+        "term": "Template literal type",
+        "meaning": "A type using backticks and ${...} interpolation to produce string combinations."
+      },
+      {
+        "term": "String constraint",
+        "meaning": "T extends string limits a type parameter to values that can be used in the intended string construction."
+      }
+    ],
+    "example": "type Field<T extends string> = `field:${T}`;\ntype Allowed = Field<\"name\" | \"age\">;\nconst key: Allowed = \"field:name\";\n",
+    "explanation": [
+      "The interpolation occurs in type syntax. It describes allowed strings rather than creating one runtime string.",
+      "A union in T produces a union of resulting names: \"field:name\" | \"field:age\".",
+      "This can connect identifiers across an API, but runtime strings still need validation when coming from outside."
+    ],
+    "prediction": {
+      "question": "Does Field<\"name\"|\"age\"> allow \"field:email\"?",
+      "choices": [
+        "Yes; interpolation always widens to string.",
+        "Yes; the colon ignores the suffix.",
+        "No; email was not a supplied member."
+      ],
+      "correct": 2,
+      "explanation": "The resulting type contains only combinations from the supplied literal union."
+    },
+    "practice": {
+      "task": "Export Practice<T extends string> producing exactly `on${T}`.",
+      "starter": "export type Practice<T extends string> = string;\n",
+      "solution": "export type Practice<T extends string> = `on${T}`;\n",
+      "alternative": "export type Practice<Name extends string> = `on${Name}`;\n",
+      "negative": "export type Practice<T extends string> = `on${Capitalize<T>}`;\n",
+      "checks": "type A = Assert<Equal<s.Practice<\"save\" | \"load\">, \"onsave\" | \"onload\">>;\n",
+      "runtime": "",
+      "hint": "Use the type template `on${T}` without capitalizing T or widening the result to string.",
+      "playground": "import type { Practice } from \"./answer\";\nconst event: Practice<\"save\"> = \"onsave\";\nconsole.log(event);\n"
+    },
+    "transfer": [
+      "Export EventName<T extends string> producing exactly `${T}Changed`.",
+      "Remember: The resulting type contains only combinations from the supplied literal union.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "remap",
+    "outcome": "Rename mapped keys while retaining their value relationship.",
+    "prerequisites": [
+      "mapped",
+      "templates"
+    ],
+    "vocabulary": [
+      {
+        "term": "Key remapping",
+        "meaning": "The as clause in a mapped type changes each generated property name."
+      },
+      {
+        "term": "String key filtering",
+        "meaning": "keyof can contain string, number and symbol keys. Restrict string transformations to string-compatible keys."
+      },
+      {
+        "term": "Capitalize",
+        "meaning": "A built-in string utility that capitalizes a string literal type's first character."
+      }
+    ],
+    "example": "type Setters<T> = {\n  [K in keyof T as K extends string ? `set${Capitalize<K>}` : never]: (\n    value: T[K],\n  ) => void;\n};\ntype Fields = Setters<{ name: string }>;\n",
+    "explanation": [
+      "The mapped type visits each original key K, then the as clause chooses the output name.",
+      "The conditional keeps string keys and maps other key kinds to never, removing them.",
+      "T[K] still reads the original property type, so setName receives a string."
+    ],
+    "prediction": {
+      "question": "What is the input type of setName?",
+      "choices": [
+        "void, because that is the return type.",
+        "string.",
+        "\"name\"."
+      ],
+      "correct": 1,
+      "explanation": "The method input is derived from the original name property's value type."
+    },
+    "practice": {
+      "task": "Export Practice<T> renaming string keys to `${K}Value` while keeping their value types; omit non-string keys.",
+      "starter": "export type Practice<T> = { [K in keyof T]: T[K] };\n",
+      "solution": "export type Practice<T> = {\n  [K in keyof T as K extends string ? `${K}Value` : never]: T[K];\n};\n",
+      "alternative": "export type Practice<T> = { [K in keyof T as `${K & string}Value`]: T[K] };\n",
+      "negative": "export type Practice<T> = {\n  [K in keyof T as K extends string ? `${K}Value` : never]: string;\n};\n",
+      "checks": "type A = Assert<\n  Equal<\n    s.Practice<{ count: number; name: string }>,\n    { countValue: number; nameValue: string }\n  >\n>;\n",
+      "runtime": "",
+      "hint": "Rename string keys with an as clause and `${K}Value`; read each unchanged value type with T[K].",
+      "playground": "import type { Practice } from \"./answer\";\nconst item: Practice<{ count: number }> = { countValue: 3 };\nconsole.log(item);\n"
+    },
+    "transfer": [
+      "Export Getters<T> mapping string keys to get + Capitalize<K>, with a zero-argument function returning the original property type.",
+      "Remember: The method input is derived from the original name property's value type.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "async",
+    "outcome": "Separate an async function's promise from its fulfilled value.",
+    "prerequisites": [
+      "remap"
+    ],
+    "vocabulary": [
+      {
+        "term": "async function",
+        "meaning": "Always returns a Promise. Returning a number from its body fulfills that promise with a number."
+      },
+      {
+        "term": "await",
+        "meaning": "Within an async context, obtains a fulfilled value or propagates a rejection. It does not make all computation non-blocking."
+      }
+    ],
+    "example": "async function readCount(): Promise<number> {\n  return 3;\n}\nreadCount().then((count) => console.log(count));\n",
+    "explanation": [
+      "Calling readCount returns a promise immediately, not the number 3 directly.",
+      "The returned number becomes the fulfillment value. The .then callback receives it after fulfillment.",
+      "In this app, Promise microtasks are supported; network, filesystem and timer APIs are not exposed to the practice VM."
+    ],
+    "prediction": {
+      "question": "What is the direct return value of readCount()?",
+      "choices": [
+        "A Promise<number>.",
+        "The number 3 synchronously.",
+        "undefined, because async ignores return."
+      ],
+      "correct": 0,
+      "explanation": "async wraps a normal body return into a fulfilled promise."
+    },
+    "practice": {
+      "task": "Export async practice():Promise<string> returning \"ready\". Do not use external APIs.",
+      "starter": "export function practice(): string {\n  return \"ready\";\n}\n",
+      "solution": "export async function practice(): Promise<string> {\n  return \"ready\";\n}\n",
+      "alternative": "export const practice = async (): Promise<string> => \"ready\";\n",
+      "negative": "export async function practice(): Promise<string> {\n  return \"wrong\";\n}\n",
+      "checks": "type A = Assert<Equal<ReturnType<typeof s.practice>, Promise<string>>>;\n",
+      "runtime": "exports.practice().then((value) => {\n  if (value !== \"ready\") throw new Error(\"Fulfill with ready\");\n});\n",
+      "hint": "Mark the function async and return the string \"ready\". You can observe it in the playground with .then(console.log).",
+      "playground": "import { practice } from \"./answer\";\nconsole.log(practice());\n"
+    },
+    "transfer": [
+      "Export async loadCount(): Promise<number>. Return a number; do not make network requests.",
+      "Remember: async wraps a normal body return into a fulfilled promise.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "exhaustive",
+    "outcome": "Use never to make an unhandled variant a compiler error.",
+    "prerequisites": [
+      "async"
+    ],
+    "vocabulary": [
+      {
+        "term": "never",
+        "meaning": "A type with no possible values. Narrowing every variant away can leave never."
+      },
+      {
+        "term": "Exhaustiveness check",
+        "meaning": "A final branch that requires never fails to compile if a possible variant still reaches it."
+      }
+    ],
+    "example": "type State = \"idle\" | \"done\";\nfunction name(state: State): string {\n  switch (state) {\n    case \"idle\":\n      return \"Wait\";\n    case \"done\":\n      return \"Finished\";\n    default: {\n      const missing: never = state;\n      return missing;\n    }\n  }\n}\n",
+    "explanation": [
+      "Each case returns, eliminating that literal from the remaining paths.",
+      "The default branch can require never only after every member has been handled.",
+      "Adding another State member without a new case makes the never assignment fail. A thrown Error can guard the impossible path at runtime."
+    ],
+    "prediction": {
+      "question": "Why does an added union member break the never assignment?",
+      "choices": [
+        "never accepts every value.",
+        "switch automatically invents a new case.",
+        "A remaining possible value is not assignable to never."
+      ],
+      "correct": 2,
+      "explanation": "The compiler proves exhaustiveness only when no union members remain."
+    },
+    "practice": {
+      "task": "Export practice(value:\"on\"|\"off\"):number returning 1 for \"on\" and 0 for \"off\".",
+      "starter": "export function practice(value: \"on\" | \"off\"): number {\n  return -1;\n}\n",
+      "solution": "export function practice(value: \"on\" | \"off\"): number {\n  switch (value) {\n    case \"on\":\n      return 1;\n    case \"off\":\n      return 0;\n    default: {\n      const missing: never = value;\n      return missing;\n    }\n  }\n}\n",
+      "alternative": "export const practice = (value: \"on\" | \"off\"): number =>\n  value === \"on\" ? 1 : 0;\n",
+      "negative": "export function practice(value: \"on\" | \"off\"): number {\n  return 1;\n}\n",
+      "checks": "type A = Assert<Equal<Parameters<typeof s.practice>, [\"on\" | \"off\"]>>;\n",
+      "runtime": "if (exports.practice(\"on\") !== 1 || exports.practice(\"off\") !== 0)\n  throw new Error(\"Handle both variants\");\n",
+      "hint": "Handle both on and off, returning 1 and 0 respectively. A never assignment can prove no variant remains.",
+      "playground": "import { practice } from \"./answer\";\nconsole.log(practice(\"on\"));\n"
+    },
+    "transfer": [
+      "Export assertNever(value: never): never. Throw an Error so the function cannot return normally.",
+      "Remember: The compiler proves exhaustiveness only when no union members remain.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "api-state",
+    "outcome": "Model a lifecycle with only valid combinations of state and data.",
+    "prerequisites": [
+      "exhaustive"
+    ],
+    "vocabulary": [
+      {
+        "term": "Lifecycle",
+        "meaning": "The meaningful states of an operation, such as idle, pending, success and failure."
+      },
+      {
+        "term": "State-specific data",
+        "meaning": "Data that belongs to one variant, such as a result on success or a message on failure."
+      }
+    ],
+    "example": "type Load<T> = { phase: \"pending\" } | { phase: \"ready\"; value: T };\nfunction display(load: Load<number>): string {\n  if (load.phase === \"ready\") return String(load.value);\n  return \"Loading\";\n}\n",
+    "explanation": [
+      "Use a literal state tag to select a complete variant, rather than several booleans that can contradict one another.",
+      "The ready variant requires a value. The pending variant does not pretend data is already available.",
+      "Render or process each variant explicitly. The independent lab expands this model to idle, pending, success and error."
+    ],
+    "prediction": {
+      "question": "Should a pending variant require a successful result value?",
+      "choices": [
+        "Yes; every variant must have identical properties.",
+        "No; that value belongs to the success variant.",
+        "Yes; use undefined assertions until success."
+      ],
+      "correct": 1,
+      "explanation": "A discriminated union permits different state-specific payloads."
+    },
+    "practice": {
+      "task": "Export Practice<T> as {phase:\"pending\"} | {phase:\"ready\";value:T}.",
+      "starter": "export type Practice<T> = { phase: string; value?: T };\n",
+      "solution": "export type Practice<T> = { phase: \"pending\" } | { phase: \"ready\"; value: T };\n",
+      "alternative": "export type Practice<T> = { value: T; phase: \"ready\" } | { phase: \"pending\" };\n",
+      "negative": "export type Practice<T> = { phase: \"pending\" } | { phase: \"ready\"; value?: T };\n",
+      "checks": "type A = Assert<\n  Equal<\n    s.Practice<number>,\n    { phase: \"pending\" } | { phase: \"ready\"; value: number }\n  >\n>;\n",
+      "runtime": "",
+      "hint": "Write a union of the pending variant and the ready variant. Only ready requires value:T.",
+      "playground": "import type { Practice } from \"./answer\";\nconst state: Practice<number> = { phase: \"ready\", value: 3 };\nif (state.phase === \"ready\") console.log(state.value);\n"
+    },
+    "transfer": [
+      "Export Remote<T> as four variants: {status:\"idle\"}, {status:\"pending\"}, {status:\"success\";data:T}, {status:\"error\";message:string}.",
+      "Remember: A discriminated union permits different state-specific payloads.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "brands",
+    "outcome": "Distinguish domain values that share a primitive representation.",
+    "prerequisites": [
+      "api-state"
+    ],
+    "vocabulary": [
+      {
+        "term": "Brand",
+        "meaning": "A marker intersected with a primitive type to prevent accidental assignment from another domain."
+      },
+      {
+        "term": "Construction boundary",
+        "meaning": "The place that validates raw data and deliberately constructs a branded value. An assertion alone does not validate anything."
+      }
+    ],
+    "example": "type OrderId = string & { readonly __brand: \"OrderId\" };\nfunction takeOrder(id: OrderId): string {\n  return id;\n}\n// A real boundary would validate the raw string before constructing OrderId.\n",
+    "explanation": [
+      "Two ordinary strings are structurally interchangeable, even when one means an order and another means a user.",
+      "A brand adds a compile-time distinction. It should not be manufactured indiscriminately with assertions.",
+      "The marker is not a runtime security check. Validation and deliberate construction still belong at the input boundary."
+    ],
+    "prediction": {
+      "question": "Does asserting raw as OrderId prove the string is valid?",
+      "choices": [
+        "No; an assertion supplies no runtime validation.",
+        "Yes; the assertion executes the brand validator.",
+        "Yes; strings cannot be malformed."
+      ],
+      "correct": 0,
+      "explanation": "Assertions ask the compiler to trust a claim; they do not inspect or transform the input."
+    },
+    "practice": {
+      "task": "Export Practice as number & {readonly __brand:\"Count\"}. Ordinary numbers must not be assignable to it.",
+      "starter": "export type Practice = number;\n",
+      "solution": "export type Practice = number & { readonly __brand: \"Count\" };\n",
+      "alternative": "export type Practice = { readonly __brand: \"Count\" } & number;\n",
+      "negative": "export type Practice = number & { __brand?: \"Count\" };\n",
+      "checks": "type A = Assert<Equal<s.Practice extends number ? true : false, true>>;\n// @ts-expect-error ordinary number is not branded\nconst n: s.Practice = 3;\ndeclare const p: s.Practice;\ntype B = Assert<Equal<typeof p.__brand, \"Count\">>;\n",
+      "runtime": "",
+      "hint": "Intersect number with a required readonly marker whose literal value is \"Count\". An optional marker would accept ordinary numbers.",
+      "playground": "import type { Practice } from \"./answer\";\n// This exercise defines the type only. A production constructor must validate raw input.\nconst checked: number = 3;\nconsole.log(checked);\n"
+    },
+    "transfer": [
+      "Export UserId as string & { readonly __brand: \"UserId\" }. Plain strings must not be assignable to it.",
+      "Remember: Assertions ask the compiler to trust a claim; they do not inspect or transform the input.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "validation",
+    "outcome": "Validate an unknown object before narrowing it to a domain shape.",
+    "prerequisites": [
+      "unknown",
+      "results"
+    ],
+    "vocabulary": [
+      {
+        "term": "Boundary",
+        "meaning": "A place where untrusted or untyped data enters the domain, such as parsed JSON or a user input."
+      },
+      {
+        "term": "Type predicate",
+        "meaning": "A return annotation value is Shape tells the compiler what a true result claims. The implementation must actually prove that claim."
+      },
+      {
+        "term": "Null guard",
+        "meaning": "typeof null is \"object\", so checking only typeof value === \"object\" is insufficient."
+      }
+    ],
+    "example": "type Named = { name: string };\nfunction isNamed(value: unknown): value is Named {\n  return (\n    typeof value === \"object\" &&\n    value !== null &&\n    \"name\" in value &&\n    typeof value.name === \"string\"\n  );\n}\nconsole.log(isNamed({ name: \"Ada\" }), isNamed(null));\n",
+    "explanation": [
+      "Start by rejecting non-objects and null before reading properties. Short-circuit AND makes later checks run only after earlier checks succeed.",
+      "The in check provides evidence that the property exists. Then validate the property's own runtime type.",
+      "A predicate annotation is a promise to callers. Returning true without the checks can make otherwise typed code unsafe."
+    ],
+    "prediction": {
+      "question": "Is typeof value === \"object\" enough to read value.name?",
+      "choices": [
+        "Yes; every object has a string name.",
+        "Yes; a type predicate annotation adds the checks.",
+        "No; null and the property still need checking."
+      ],
+      "correct": 2,
+      "explanation": "The annotation is erased. The boolean implementation must establish the required facts."
+    },
+    "practice": {
+      "task": "Export practice(value:unknown):boolean returning true only for non-null, non-array objects with a string id property.",
+      "starter": "export function practice(value: unknown): boolean {\n  return true;\n}\n",
+      "solution": "export function practice(value: unknown): boolean {\n  return (\n    typeof value === \"object\" &&\n    value !== null &&\n    !Array.isArray(value) &&\n    \"id\" in value &&\n    typeof value.id === \"string\"\n  );\n}\n",
+      "alternative": "export function practice(value: unknown): boolean {\n  if (typeof value !== \"object\" || value === null || Array.isArray(value))\n    return false;\n  if (!(\"id\" in value)) return false;\n  return typeof value.id === \"string\";\n}\n",
+      "negative": "export function practice(value: unknown): boolean {\n  return typeof value === \"object\";\n}\n",
+      "checks": "type A = Assert<Equal<Parameters<typeof s.practice>, [unknown]>>;\ntype B = Assert<Equal<ReturnType<typeof s.practice>, boolean>>;\n",
+      "runtime": "if (\n  !exports.practice({ id: \"1\" }) ||\n  exports.practice(null) ||\n  exports.practice([]) ||\n  exports.practice({ id: 1 }) ||\n  exports.practice({})\n)\n  throw new Error(\"Prove object, presence and string type\");\n",
+      "hint": "Reject null, non-objects and arrays before checking the id property and its typeof result.",
+      "playground": "import { practice } from \"./answer\";\nconsole.log(practice({ id: \"1\" }));\n"
+    },
+    "transfer": [
+      "Export User = {id:string;name:string} and isUser(value: unknown): value is User. Implement object, null, property and string checks.",
+      "Remember: The annotation is erased. The boolean implementation must establish the required facts.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "repositories",
+    "outcome": "Describe a storage boundary without coupling the domain to an implementation.",
+    "prerequisites": [
+      "validation"
+    ],
+    "vocabulary": [
+      {
+        "term": "Repository contract",
+        "meaning": "An interface for retrieving or saving domain values. It describes operations without selecting a database or network client."
+      },
+      {
+        "term": "Asynchronous absence",
+        "meaning": "Promise<T | undefined> means the operation may fulfill without an item. That differs from the promise itself being absent."
+      }
+    ],
+    "example": "interface Store<T> {\n  get(id: string): Promise<T | undefined>;\n}\nconst store: Store<{ id: string }> = {\n  async get(id) {\n    return id === \"1\" ? { id } : undefined;\n  },\n};\nstore.get(\"missing\").then((item) => console.log(item));\n",
+    "explanation": [
+      "The caller depends on a small operation contract, not a database implementation.",
+      "The promise wraps the possible result, including the absence case. A caller must await first, then inspect whether an item was found.",
+      "Tests can provide an in-memory implementation with the same contract. That is different from pretending a missing result is a successful entity."
+    ],
+    "prediction": {
+      "question": "What does a missing get result fulfill with here?",
+      "choices": [
+        "A guaranteed entity with an empty id.",
+        "undefined.",
+        "A missing Promise object."
+      ],
+      "correct": 1,
+      "explanation": "The absence type belongs inside the promise result union."
+    },
+    "practice": {
+      "task": "Export Practice<T extends {id:string}> with get(id:string):Promise<T|undefined>.",
+      "starter": "export type Practice<T extends { id: string }> = { get(id: string): T };\n",
+      "solution": "export type Practice<T extends { id: string }> = {\n  get(id: string): Promise<T | undefined>;\n};\n",
+      "alternative": "export interface Practice<T extends { id: string }> {\n  get(id: string): Promise<T | undefined>;\n}\n",
+      "negative": "export type Practice<T extends { id: string }> = {\n  get(id: string): Promise<T>;\n};\n",
+      "checks": "type A = Assert<\n  Equal<\n    ReturnType<s.Practice<{ id: string }>[\"get\"]>,\n    Promise<{ id: string } | undefined>\n  >\n>;\ntype B = Assert<Equal<Parameters<s.Practice<{ id: string }>[\"get\"]>, [string]>>;\n// @ts-expect-error entity constraint\ntype Bad = s.Practice<{ name: string }>;\n",
+      "runtime": "",
+      "hint": "Keep the missing value inside Promise<T | undefined>, and retain the id:string constraint on T.",
+      "playground": "import type { Practice } from \"./answer\";\nconst store: Practice<{ id: string }> = {\n  async get(id) {\n    return id === \"1\" ? { id } : undefined;\n  },\n};\nstore.get(\"1\").then(console.log);\n"
+    },
+    "transfer": [
+      "Export Repository<T extends {id:string}> with find(id:string): Promise<T|null> and save(entity:T): Promise<void>.",
+      "Remember: The absence type belongs inside the promise result union.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "events",
+    "outcome": "Connect every event name to its own payload type.",
+    "prerequisites": [
+      "repositories"
+    ],
+    "vocabulary": [
+      {
+        "term": "Event map",
+        "meaning": "An object type mapping event names to their payload shapes."
+      },
+      {
+        "term": "Handler",
+        "meaning": "A callback that receives an event payload. Keeping its parameter linked to the event key prevents mixing payloads."
+      }
+    ],
+    "example": "type Events = { saved: { id: string }; failed: { message: string } };\ntype Listeners<E> = { [K in keyof E]: (payload: E[K]) => void };\nconst listeners: Listeners<Events> = {\n  saved: (p) => console.log(p.id),\n  failed: (p) => console.log(p.message),\n};\n",
+    "explanation": [
+      "The key K selects an event name, then E[K] selects its corresponding payload.",
+      "saved receives the id shape; failed receives the message shape. A single broad payload union would weaken each individual handler.",
+      "void describes how callers use the return value. This type contract does not implement event delivery, ordering or retries."
+    ],
+    "prediction": {
+      "question": "What parameter does the saved handler receive?",
+      "choices": [
+        "The saved payload with id:string.",
+        "Only the literal string \"saved\".",
+        "Every possible event payload with no narrowing."
+      ],
+      "correct": 0,
+      "explanation": "The mapped handler reads the value type at that specific event key."
+    },
+    "practice": {
+      "task": "Export Practice<E> mapping every event key to (payload:E[K])=>void.",
+      "starter": "export type Practice<E> = { [K in keyof E]: () => void };\n",
+      "solution": "export type Practice<E> = { [K in keyof E]: (payload: E[K]) => void };\n",
+      "alternative": "export type Practice<E> = { [Key in keyof E]: (data: E[Key]) => void };\n",
+      "negative": "export type Practice<E> = { [K in keyof E]: (payload: unknown) => void };\n",
+      "checks": "type A = Assert<\n  Equal<\n    Parameters<s.Practice<{ saved: { id: string } }>[\"saved\"]>,\n    [{ id: string }]\n  >\n>;\ntype B = Assert<\n  Equal<ReturnType<s.Practice<{ saved: number }>[\"saved\"]>, void>\n>;\n",
+      "runtime": "",
+      "hint": "For each key K in keyof E, make a function with one E[K] parameter and void return type.",
+      "playground": "import type { Practice } from \"./answer\";\nconst handlers: Practice<{ saved: { id: string } }> = {\n  saved: (item) => console.log(item.id),\n};\nhandlers.saved({ id: \"1\" });\n"
+    },
+    "transfer": [
+      "Export Handlers<E> with one property per event key, each a function taking that event payload and returning void.",
+      "Remember: The mapped handler reads the value type at that specific event key.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "capstone",
+    "outcome": "Compose a reusable page shape and distinguish success from failure.",
+    "prerequisites": [
+      "events"
+    ],
+    "vocabulary": [
+      {
+        "term": "Page",
+        "meaning": "One portion of a larger result, carrying items and information needed to retrieve another portion."
+      },
+      {
+        "term": "Composition",
+        "meaning": "Building a larger contract from smaller generic types while retaining relationships between them."
+      },
+      {
+        "term": "Error contract",
+        "meaning": "Structured failure data that callers can handle deliberately rather than assuming every response succeeds."
+      }
+    ],
+    "example": "type Slice<T> = { readonly items: readonly T[]; readonly total: number };\ntype Response<T> =\n  | { ok: true; data: Slice<T> }\n  | { ok: false; message: string };\nconst response: Response<string> = {\n  ok: true,\n  data: { items: [\"Ada\"], total: 1 },\n};\n",
+    "explanation": [
+      "Slice<T> carries item values of the caller's selected T and a total count. readonly limits writes through this contract.",
+      "Response connects successful data to the page shape and carries a separate failure shape.",
+      "Narrow on ok before reading data. Runtime validation is still needed at an external API boundary."
+    ],
+    "prediction": {
+      "question": "May a caller read response.data on every Response variant?",
+      "choices": [
+        "Yes; readonly guarantees success.",
+        "Yes; generic types always include every property.",
+        "No; first narrow to ok:true."
+      ],
+      "correct": 2,
+      "explanation": "The failure variant has no data property. The discriminant identifies the successful payload."
+    },
+    "practice": {
+      "task": "Export Practice<T> with readonly items:readonly T[] and readonly total:number.",
+      "starter": "export type Practice<T> = { items: T[]; total: number };\n",
+      "solution": "export type Practice<T> = {\n  readonly items: readonly T[];\n  readonly total: number;\n};\n",
+      "alternative": "export type Practice<T> = Readonly<{ items: ReadonlyArray<T>; total: number }>;\n",
+      "negative": "export type Practice<T> = {\n  readonly items: readonly unknown[];\n  readonly total: number;\n};\n",
+      "checks": "type A = Assert<\n  Equal<\n    s.Practice<string>,\n    { readonly items: readonly string[]; readonly total: number }\n  >\n>;\n",
+      "runtime": "",
+      "hint": "Mark both properties readonly and also use readonly T[] for the nested items array.",
+      "playground": "import type { Practice } from \"./answer\";\nconst page: Practice<string> = { items: [\"Ada\"], total: 1 };\nconsole.log(page.items);\n"
+    },
+    "transfer": [
+      "Export Page<T> = {readonly items: readonly T[]; readonly nextCursor: string|null}. Export ApiResult<T> as {ok:true;data:Page<T>} | {ok:false;error:{code:string;message:string}}.",
+      "Remember: The failure variant has no data property. The discriminant identifies the successful payload.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "project-tracker",
+    "outcome": "Validate durations before aggregating a useful session total.",
+    "prerequisites": [
+      "loops",
+      "passing",
+      "count-tags"
+    ],
+    "vocabulary": [
+      {
+        "term": "Finite number",
+        "meaning": "A number other than NaN, Infinity or -Infinity. typeof alone still reports \"number\" for those special numeric values."
+      },
+      {
+        "term": "Domain rule",
+        "meaning": "A condition deciding whether a value is meaningful for this application, such as a non-negative duration."
+      },
+      {
+        "term": "Aggregation",
+        "meaning": "Combining multiple valid records into one summary while retaining the evidence needed to interpret it."
+      }
+    ],
+    "example": "const durations = [10, NaN, -3, 0, 5];\nconst valid = durations.filter((n) => Number.isFinite(n) && n >= 0);\nconst total = valid.reduce((sum, n) => sum + n, 0);\nconsole.log(valid.length, total);\n",
+    "explanation": [
+      "First reject non-finite and negative durations. Zero is valid, so use >= 0 instead of a truthiness test.",
+      "The valid durations are 10, 0 and 5. There are three valid values with a total of 15.",
+      "The independent project also checks completion status and returns both a count and a sum. Read its full rules before combining the conditions."
+    ],
+    "prediction": {
+      "question": "Does a zero-minute completed session count as a valid session?",
+      "choices": [
+        "Only if it is converted to a string.",
+        "Yes; zero is finite and non-negative.",
+        "No; zero is falsy."
+      ],
+      "correct": 1,
+      "explanation": "The rule is non-negative duration, not truthy duration. Zero can count even when it adds nothing to the sum."
+    },
+    "practice": {
+      "task": "Export practice(values:readonly number[]):number summing only finite, non-negative values without changing the input.",
+      "starter": "export function practice(values: readonly number[]): number {\n  return 0;\n}\n",
+      "solution": "export function practice(values: readonly number[]): number {\n  return values\n    .filter((n) => Number.isFinite(n) && n >= 0)\n    .reduce((sum, n) => sum + n, 0);\n}\n",
+      "alternative": "export function practice(values: readonly number[]): number {\n  let total = 0;\n  for (const n of values) if (Number.isFinite(n) && n >= 0) total += n;\n  return total;\n}\n",
+      "negative": "export function practice(values: readonly number[]): number {\n  return values.reduce((sum, n) => sum + n, 0);\n}\n",
+      "checks": "type A = Assert<Equal<Parameters<typeof s.practice>, [readonly number[]]>>;\n",
+      "runtime": "if (\n  exports.practice(Object.freeze([10, NaN, -3, 0, 5, Infinity])) !== 15 ||\n  exports.practice([]) !== 0\n)\n  throw new Error(\"Exclude invalid durations and handle empty input\");\n",
+      "hint": "Include a duration only if Number.isFinite(n) and n >= 0. Start the sum at 0 and do not mutate the input.",
+      "playground": "import { practice } from \"./answer\";\nconsole.log(practice([10, -3, 0, 5]));\n"
+    },
+    "transfer": [
+      "Export Session={minutes:number;completed:boolean}, Summary={minutes:number;sessions:number}, and summarize(input:readonly Session[]):Summary. Count completed sessions with finite non-negative minutes and sum those minutes. Leave inputs unchanged.",
+      "Remember: The rule is non-negative duration, not truthy duration. Zero can count even when it adds nothing to the sum.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "project-parser",
+    "outcome": "Validate before normalizing and return an explicit failure value.",
+    "prerequisites": [
+      "unknown",
+      "validation",
+      "results"
+    ],
+    "vocabulary": [
+      {
+        "term": "Parse result",
+        "meaning": "A success or failure representation produced after checking external input."
+      },
+      {
+        "term": "Normalization",
+        "meaning": "A deliberate transformation of already validated data, such as trimming whitespace."
+      },
+      {
+        "term": "Validation order",
+        "meaning": "Prove the outer value and property types before calling methods or applying domain rules."
+      }
+    ],
+    "example": "function readTitle(input: unknown): string | null {\n  if (typeof input !== \"string\") return null;\n  const title = input.trim();\n  return title.length > 0 ? title : null;\n}\nconsole.log(readTitle(\"  Types  \"));\n",
+    "explanation": [
+      "Check the runtime type before calling trim. An annotation or assertion cannot replace this proof.",
+      "Normalize the accepted string, then reject it if the normalized value is empty.",
+      "In the full project, validate each course property and return a structured result. Preserve its complete rules for ids, titles and durations."
+    ],
+    "prediction": {
+      "question": "What should happen to an input containing only spaces?",
+      "choices": [
+        "It should fail after trimming to an empty string.",
+        "It should be accepted because its original length is positive.",
+        "It should become the word undefined."
+      ],
+      "correct": 0,
+      "explanation": "The domain rule applies to the normalized title, so whitespace alone is not a useful title."
+    },
+    "practice": {
+      "task": "Export practice(input:unknown):string|null. Accept strings, trim them and return null for non-strings or an empty normalized string.",
+      "starter": "export function practice(input: unknown): string | null {\n  return null;\n}\n",
+      "solution": "export function practice(input: unknown): string | null {\n  if (typeof input !== \"string\") return null;\n  const text = input.trim();\n  return text.length > 0 ? text : null;\n}\n",
+      "alternative": "export function practice(input: unknown): string | null {\n  return typeof input === \"string\" ? input.trim() || null : null;\n}\n",
+      "negative": "export function practice(input: unknown): string | null {\n  return typeof input === \"string\" ? input : null;\n}\n",
+      "checks": "type A = Assert<Equal<Parameters<typeof s.practice>, [unknown]>>;\ntype B = Assert<Equal<ReturnType<typeof s.practice>, string | null>>;\n",
+      "runtime": "if (\n  exports.practice(\"  Types  \") !== \"Types\" ||\n  exports.practice(\"  \") !== null ||\n  exports.practice(1) !== null ||\n  exports.practice(null) !== null\n)\n  throw new Error(\"Validate, normalize, then reject empty titles\");\n",
+      "hint": "First narrow input to string, then trim it. Return the normalized string only when its length is positive; otherwise return null.",
+      "playground": "import { practice } from \"./answer\";\nconsole.log(practice(\"  Types  \"));\n"
+    },
+    "transfer": [
+      "Export Course={id:string;title:string;minutes:number}, ParseResult={ok:true;value:Course}|{ok:false;error:string}, and parseCourse(input:unknown):ParseResult. Validate and normalize as described. Failure must have a non-empty error.",
+      "Remember: The domain rule applies to the normalized title, so whitespace alone is not a useful title.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  },
+  {
+    "id": "project-catalog",
+    "outcome": "Build a predictable search pipeline before adding pagination.",
+    "prerequisites": [
+      "passing",
+      "initials",
+      "capstone"
+    ],
+    "vocabulary": [
+      {
+        "term": "Search normalization",
+        "meaning": "Making the query and candidates comparable, for example by using the same letter case."
+      },
+      {
+        "term": "Stable order",
+        "meaning": "Retaining the original relative order of matching records instead of sorting implicitly."
+      },
+      {
+        "term": "Pagination",
+        "meaning": "Selecting a window of an already filtered result. Filtering after slicing can produce incorrect page sizes or cursors."
+      }
+    ],
+    "example": "const titles = [\"Types\", \"Arrays\", \"Advanced Types\"];\nconst query = \" TYPES \".trim().toLowerCase();\nconst matches = titles.filter((title) => title.toLowerCase().includes(query));\nconst page = matches.slice(0, 1);\nconsole.log(page);\n",
+    "explanation": [
+      "Normalize the query once, then compare each candidate using the same casing convention.",
+      "Filtering first gives the full matching sequence in its original order. Only then select a page.",
+      "The independent project adds strict offset/limit validation and a next-offset value. An empty query should be handled deliberately, not by an unrelated truthiness condition."
+    ],
+    "prediction": {
+      "question": "Should the page slice happen before the search filter?",
+      "choices": [
+        "Yes; it always gives the same result.",
+        "Yes; slicing sorts the records by title.",
+        "No; filter the full input before selecting a page."
+      ],
+      "correct": 2,
+      "explanation": "Slicing first can discard matching records before search has considered them."
+    },
+    "practice": {
+      "task": "Export practice(titles:readonly string[],query:string):string[] returning case-insensitive matches for a trimmed query in their original order. An empty query matches every title.",
+      "starter": "export function practice(titles: readonly string[], query: string): string[] {\n  return [];\n}\n",
+      "solution": "export function practice(titles: readonly string[], query: string): string[] {\n  const q = query.trim().toLowerCase();\n  return titles.filter((title) => title.toLowerCase().includes(q));\n}\n",
+      "alternative": "export function practice(titles: readonly string[], query: string): string[] {\n  const q = query.trim().toLowerCase();\n  const result: string[] = [];\n  for (const title of titles)\n    if (title.toLowerCase().includes(q)) result.push(title);\n  return result;\n}\n",
+      "negative": "export function practice(titles: readonly string[], query: string): string[] {\n  return titles.filter((title) => title.includes(query));\n}\n",
+      "checks": "type A = Assert<\n  Equal<Parameters<typeof s.practice>, [readonly string[], string]>\n>;\n",
+      "runtime": "const titles = Object.freeze([\"Types\", \"Arrays\", \"Advanced Types\"]);\nif (\n  JSON.stringify(exports.practice(titles, \" TYPES \")) !==\n    JSON.stringify([\"Types\", \"Advanced Types\"]) ||\n  exports.practice(titles, \"\").length !== 3 ||\n  exports.practice([], \"a\").length !== 0\n)\n  throw new Error(\"Normalize query/candidates and preserve matching order\");\n",
+      "hint": "Normalize the query once with trim().toLowerCase(), then filter titles using lowercase includes without sorting or changing the input.",
+      "playground": "import { practice } from \"./answer\";\nconsole.log(practice([\"Types\", \"Arrays\", \"Advanced Types\"], \" TYPES \"));\n"
+    },
+    "transfer": [
+      "Export Course={id:string;title:string}; Page={items:Course[];nextOffset:number|null}; search(courses:readonly Course[],query:string,offset:number,limit:number):Page. Reject non-integer/negative offsets and non-integer/non-positive limits with Error. Filter titles using trimmed case-insensitive query, then slice; compute nextOffset or null.",
+      "Remember: Slicing first can discard matching records before search has considered them.",
+      "Explain why your solution follows the rule for both ordinary inputs and edge cases."
+    ]
+  }
+]

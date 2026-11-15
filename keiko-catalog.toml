@@ -1,0 +1,12 @@
+# Release contract: publish a verified signed release before shipping this in Keiko/catalog.toml.
+[[apps]]
+id = "typedojo"
+name = "TypeDojo"
+tagline = "TypeScript, from your first types to real contracts"
+description = "Fifty-three guided labs with a built-in editor, real compiler checks, runtime examples and saved progress."
+repo = "bujosa/typedojo"
+mac_bundle_name = "TypeDojo"
+mac_bundle_id = "dev.bujosa.typedojo"
+asset = "TypeDojo-v{version}-macos-{arch}.zip"
+checksums = "SHA256SUMS.txt"
+color = [135, 186, 247]
