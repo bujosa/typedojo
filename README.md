@@ -133,6 +133,10 @@ The catalog contract is in `keiko-catalog.toml`. A release provides the signed `
 
 See [docs/design.md](docs/design.md) for the architecture and failure states.
 
+## Contributing
+
+Start with [CONTRIBUTING.md](CONTRIBUTING.md) for local setup, contribution paths, validation and pull requests. Bug reports, teaching improvements and focused code changes are welcome.
+
 ## References and license
 
 The explanations and exercises are original. Technical reference:

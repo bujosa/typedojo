@@ -1,0 +1,29 @@
+name: Bug report
+description: Report a reproducible problem without private learner data.
+title: "bug: "
+body:
+  - type: input
+    id: version
+    attributes:
+      label: App version, operating system and architecture
+      placeholder: "For example: latest release tag, macOS version, Apple Silicon"
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Use fictional data. Include the lesson or command when relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected and actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Logs or screenshots
+      description: Remove tokens, private paths, learner drafts and personal information.

@@ -1,0 +1,23 @@
+name: Learning or product improvement
+description: Suggest a focused teaching, accessibility, documentation or product change.
+title: "proposal: "
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: What should improve, and for whom?
+      description: Name the lesson, workflow or documentation page where relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed outcome and example
+      description: For content, explain the learning outcome and reference supporting the correction.
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: How could this be verified?
+      description: Include boundaries, a useful example or an alternative approach.

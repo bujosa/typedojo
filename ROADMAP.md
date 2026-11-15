@@ -16,7 +16,7 @@ everything.
 - Owned compiler folders, deadlines, bounded output, isolated runtime contexts, no package download.
 - Native two-file IDE focus mode: Run, streaming logs, source-mapped V8 debugger, breakpoints,
   step over/into/out, pause/continue/stop, variables, call stack and expression inspection.
-- macOS bundle/release preparation and a draft Keiko catalog contract.
+- Public macOS Apple Silicon v0.1.0 release and verified installation through Keiko.
 
 ## Complete the beginner path
 
@@ -44,6 +44,6 @@ everything.
 
 ## Distribution
 
-- Review the initial course and UI with David, then create the private GitHub repository/release.
-- Add the verified release to Keiko and test install/update from the launcher.
-- Public visibility remains David's decision. Developer ID signing/notarization needs his account.
+- Completed: public repository/release and Keiko catalog integration, with anonymous install/update verification.
+- Contributor setup, content-authoring guidance and issue/PR templates are available in CONTRIBUTING.md.
+- Next: Developer ID signing/notarization needs the maintainer’s Apple account.
