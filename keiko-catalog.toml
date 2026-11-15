@@ -1,4 +1,4 @@
-# Draft only: publish a verified signed release before adding this to Keiko/catalog.toml.
+# Release contract: publish a verified signed release before shipping this in Keiko/catalog.toml.
 [[apps]]
 id = "typedojo"
 name = "TypeDojo"
@@ -9,4 +9,4 @@ mac_bundle_name = "TypeDojo"
 mac_bundle_id = "dev.bujosa.typedojo"
 asset = "TypeDojo-v{version}-macos-{arch}.zip"
 checksums = "SHA256SUMS.txt"
-color = [93, 167, 255]
+color = [135, 186, 247]

@@ -1,4 +1,6 @@
-# Validation — initial local build
+# Validation — historical initial local build
+
+This records the first build before the IDE, guided practice and formatting work. For current coverage see [the native E2E report](e2e-validation-2026-11-15.md).
 
 2026-11-14, macOS Apple silicon.
 

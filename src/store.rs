@@ -9,6 +9,10 @@ use std::{
 #[derive(Default, Serialize, Deserialize)]
 pub struct Draft {
     pub source: String,
+    #[serde(default)]
+    pub playground: Option<String>,
+    #[serde(default)]
+    pub breakpoints: crate::engine::Breakpoints,
     pub passed_source: Option<String>,
     pub solution_seen: bool,
 }
@@ -22,6 +26,8 @@ pub struct Progress {
     pub version: u32,
     pub selected: String,
     pub drafts: BTreeMap<String, Draft>,
+    #[serde(default)]
+    pub guided: BTreeMap<String, Draft>,
 }
 impl Default for Progress {
     fn default() -> Self {
@@ -29,6 +35,7 @@ impl Default for Progress {
             version: 1,
             selected: String::new(),
             drafts: BTreeMap::new(),
+            guided: BTreeMap::new(),
         }
     }
 }
@@ -38,6 +45,15 @@ impl Progress {
             .entry(lesson.id.clone())
             .or_insert_with(|| Draft {
                 source: lesson.starter.clone(),
+                ..Default::default()
+            })
+    }
+    pub fn guided_draft(&mut self, lesson: &Lesson, playground: &str) -> &mut Draft {
+        self.guided
+            .entry(lesson.id.clone())
+            .or_insert_with(|| Draft {
+                source: lesson.starter.clone(),
+                playground: Some(playground.into()),
                 ..Default::default()
             })
     }
@@ -125,12 +141,22 @@ mod tests {
         let d = p.draft(&l);
         d.source = l.solution.clone();
         d.passed_source = Some(d.source.clone());
+        d.playground = Some("console.log('saved playground');".into());
+        d.breakpoints.insert("answer.ts".into(), [2, 4].into());
         assert!(d.passed());
         store.save(&p).unwrap();
         assert!(Store::open(root.clone()).is_err());
         drop(store);
         let (store, mut p) = Store::open(root.clone()).unwrap();
         assert_eq!(p.complete(), 1);
+        assert_eq!(
+            p.draft(&l).playground.as_deref(),
+            Some("console.log('saved playground');")
+        );
+        assert_eq!(
+            p.draft(&l).breakpoints.get("answer.ts"),
+            Some(&[2, 4].into())
+        );
         p.draft(&l).source.push(' ');
         assert_eq!(p.complete(), 0);
         drop(store);
@@ -149,6 +175,39 @@ mod tests {
             );
             assert!(!root.join("session.lock").exists());
         }
+        fs::remove_dir_all(root).unwrap();
+    }
+    #[test]
+    fn old_drafts_load_without_workspace_fields() {
+        let old = r#"{"version":1,"selected":"values","drafts":{"values":{"source":"export const n=1;","passed_source":"export const n=1;","solution_seen":false}}}"#;
+        let progress: Progress = serde_json::from_str(old).unwrap();
+        let draft = &progress.drafts["values"];
+        assert!(draft.passed());
+        assert!(draft.playground.is_none());
+        assert!(draft.breakpoints.is_empty());
+        assert!(progress.guided.is_empty());
+    }
+    #[test]
+    fn guided_completion_is_separate_and_survives_reopen() {
+        let root = root();
+        let (store, mut progress) = Store::open(root.clone()).unwrap();
+        let lesson = crate::course::load().unwrap().remove(0);
+        let guide = crate::learning::load(&crate::course::load().unwrap())
+            .unwrap()
+            .remove(0);
+        let practice = guide.lesson(&lesson);
+        let draft = progress.guided_draft(&practice, &guide.practice.playground);
+        draft.source = practice.solution;
+        draft.passed_source = Some(draft.source.clone());
+        assert!(draft.passed());
+        assert_eq!(progress.complete(), 0);
+        store.save(&progress).unwrap();
+        drop(store);
+        let (store, progress) = Store::open(root.clone()).unwrap();
+        assert!(progress.guided[&practice.id].passed());
+        assert_eq!(progress.complete(), 0);
+        assert!(progress.drafts.is_empty());
+        drop(store);
         fs::remove_dir_all(root).unwrap();
     }
 }

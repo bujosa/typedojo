@@ -7,11 +7,11 @@
     "task": "Export a const named courseName containing a string, a let named lessonCount containing a number, and a let named isReady containing a boolean. Give the two let variables explicit annotations.",
     "starter": "export const courseName = 42;\nexport let lessonCount: string = \"ten\";\nexport let isReady: number = 1;\n",
     "solution": "export const courseName = \"TypeDojo\";\nexport let lessonCount: number = 30;\nexport let isReady: boolean = true;\n",
-    "checks": "const name: string = s.courseName;\ntype C1 = Assert<Equal<typeof s.lessonCount, number>>;\ntype C2 = Assert<Equal<typeof s.isReady, boolean>>;\n// @ts-expect-error quantity is not text\nconst bad: string = s.lessonCount;",
+    "checks": "const name: string = s.courseName;\ntype C1 = Assert<Equal<typeof s.lessonCount, number>>;\ntype C2 = Assert<Equal<typeof s.isReady, boolean>>;\n// @ts-expect-error quantity is not text\nconst bad: string = s.lessonCount;\n",
     "hint": "Text belongs in quotes. Use number and boolean annotations, not quoted type names.",
-    "alternative": "export const courseName: string = \"My dojo\";\nexport let lessonCount = 12;\nexport let isReady = false;",
+    "alternative": "export const courseName: string = \"My dojo\";\nexport let lessonCount = 12;\nexport let isReady = false;\n",
     "runtime": "",
-    "negative": "export const wrongAnswer = 1;"
+    "negative": "export const wrongAnswer = 1;\n"
   },
   {
     "id": "arrays",
@@ -19,13 +19,13 @@
     "title": "Lists and arrays",
     "concept": "An array is an ordered collection. JavaScript indexes start at zero. string[] means an array whose members are strings; Array<string> spells the same type.\n\nAn array annotation describes its elements, not its length. An empty unannotated array may not communicate your intent, so annotate empty collections. With strict checking and noUncheckedIndexedAccess, reading an arbitrary position also includes undefined: the element might not exist.",
     "task": "Export names as a mutable string[] and scores as a mutable number[]. Both may start empty.",
-    "starter": "export const names: number[] = [];\nexport const scores: string[] = [];",
-    "solution": "export const names: string[] = [];\nexport const scores: number[] = [];",
-    "checks": "type A = Assert<Equal<typeof s.names, string[]>>;\ntype B = Assert<Equal<typeof s.scores, number[]>>;\ns.names.push(\"Ada\");\n// @ts-expect-error names only accepts text\ns.names.push(4);",
+    "starter": "export const names: number[] = [];\nexport const scores: string[] = [];\n",
+    "solution": "export const names: string[] = [];\nexport const scores: number[] = [];\n",
+    "checks": "type A = Assert<Equal<typeof s.names, string[]>>;\ntype B = Assert<Equal<typeof s.scores, number[]>>;\ns.names.push(\"Ada\");\n// @ts-expect-error names only accepts text\ns.names.push(4);\n",
     "hint": "The brackets follow the element type.",
-    "alternative": "export const names: Array<string> = [\"Ada\"];\nexport const scores: Array<number> = [10];",
+    "alternative": "export const names: Array<string> = [\"Ada\"];\nexport const scores: Array<number> = [10];\n",
     "runtime": "",
-    "negative": "export const wrongAnswer = 1;"
+    "negative": "export const wrongAnswer = 1;\n"
   },
   {
     "id": "objects",
@@ -33,13 +33,13 @@
     "title": "Objects describe things",
     "concept": "Objects group related properties. A property has a key and a value: { name: \"Ada\", lessons: 3 }. A type alias names the shape you expect.\n\nTypeScript checks structures. A value fits a type if it supplies compatible required properties. Defining a type does not create an object or verify data arriving over a network.",
     "task": "Export a Learner type with name: string and lessons: number. Do not add an index signature or extra required fields.",
-    "starter": "export type Learner = {};",
-    "solution": "export type Learner = { name: string; lessons: number };",
-    "checks": "type A = Assert<Equal<s.Learner, {name: string; lessons: number}>>;\nconst ok: s.Learner = {name:\"Ada\", lessons:0};\n// @ts-expect-error missing required lessons\nconst bad: s.Learner = {name:\"Ada\"};",
+    "starter": "export type Learner = {};\n",
+    "solution": "export type Learner = { name: string; lessons: number };\n",
+    "checks": "type A = Assert<Equal<s.Learner, { name: string; lessons: number }>>;\nconst ok: s.Learner = { name: \"Ada\", lessons: 0 };\n// @ts-expect-error missing required lessons\nconst bad: s.Learner = { name: \"Ada\" };\n",
     "hint": "A type alias starts with export type Learner = ...;",
-    "alternative": "export interface Learner { name: string; lessons: number }",
+    "alternative": "export interface Learner {\n  name: string;\n  lessons: number;\n}\n",
     "runtime": "",
-    "negative": "export const wrongAnswer = 1;"
+    "negative": "export const wrongAnswer = 1;\n"
   },
   {
     "id": "functions",
@@ -47,13 +47,13 @@
     "title": "Functions have contracts",
     "concept": "A function accepts input and returns output. Parameters name the inputs. return sends a result back to the caller. A string return annotation requires a string on every returning path.\n\nThe function type describes what callers may supply. TypeScript does not prove that the result says the right thing: a function returning the wrong greeting can still have a correct string type. This lab checks the function contract and calls it with sample inputs. A few examples are useful evidence, not a proof for every input.",
     "task": "Export a function greet with exactly one required string parameter and a string return type. Return a greeting containing that name.",
-    "starter": "export function greet(name: number): number { return name; }",
-    "solution": "export function greet(name: string): string { return `Hello, ${name}`; }",
-    "checks": "type A = Assert<Equal<Parameters<typeof s.greet>, [string]>>;\ntype B = Assert<Equal<ReturnType<typeof s.greet>, string>>;\n// @ts-expect-error string input only\ns.greet(12);",
+    "starter": "export function greet(name: number): number {\n  return name;\n}\n",
+    "solution": "export function greet(name: string): string {\n  return `Hello, ${name}`;\n}\n",
+    "checks": "type A = Assert<Equal<Parameters<typeof s.greet>, [string]>>;\ntype B = Assert<Equal<ReturnType<typeof s.greet>, string>>;\n// @ts-expect-error string input only\ns.greet(12);\n",
     "hint": "Use name: string between parentheses and : string after them.",
-    "alternative": "export const greet = (name: string): string => \"Hello, \" + name;",
-    "runtime": "if (!exports.greet(\"Ada\").includes(\"Ada\")) throw new Error(\"The greeting must include the name.\");",
-    "negative": "export function greet(name: string): string { return \"Hello\"; }"
+    "alternative": "export const greet = (name: string): string => \"Hello, \" + name;\n",
+    "runtime": "if (!exports.greet(\"Ada\").includes(\"Ada\"))\n  throw new Error(\"The greeting must include the name.\");\n",
+    "negative": "export function greet(name: string): string {\n  return \"Hello\";\n}\n"
   },
   {
     "id": "branches",
@@ -61,13 +61,13 @@
     "title": "Branching and safe decisions",
     "concept": "if chooses a branch when a condition is true. JavaScript uses === for equality without conversion. typeof value === \"string\" both checks a runtime fact and tells TypeScript what is true inside that branch.\n\nA union such as string | number means either kind of value. You must handle both cases before using an operation that only one supports. This process is called narrowing.",
     "task": "Export a function label(value: string | number): string. Narrow with typeof; return the string directly or convert the number with String(value).",
-    "starter": "export function label(value: string | number): string { return value; }",
-    "solution": "export function label(value: string | number): string {\n  if (typeof value === \"string\") return value;\n  return String(value);\n}",
-    "checks": "type A = Assert<Equal<Parameters<typeof s.label>, [string | number]>>;\ntype B = Assert<Equal<ReturnType<typeof s.label>, string>>;\n// @ts-expect-error no boolean branch\ns.label(true);",
+    "starter": "export function label(value: string | number): string {\n  return value;\n}\n",
+    "solution": "export function label(value: string | number): string {\n  if (typeof value === \"string\") return value;\n  return String(value);\n}\n",
+    "checks": "type A = Assert<Equal<Parameters<typeof s.label>, [string | number]>>;\ntype B = Assert<Equal<ReturnType<typeof s.label>, string>>;\n// @ts-expect-error no boolean branch\ns.label(true);\n",
     "hint": "After the string branch returns, the remaining value is a number.",
-    "alternative": "export const label = (value: string | number): string => typeof value === \"number\" ? `${value}` : value;",
-    "runtime": "if (exports.label(\"hello\") !== \"hello\" || exports.label(12) !== \"12\") throw new Error(\"Handle both text and numbers.\");",
-    "negative": "export function label(value: string | number): string { return \"wrong\"; }"
+    "alternative": "export const label = (value: string | number): string =>\n  typeof value === \"number\" ? `${value}` : value;\n",
+    "runtime": "if (exports.label(\"hello\") !== \"hello\" || exports.label(12) !== \"12\")\n  throw new Error(\"Handle both text and numbers.\");\n",
+    "negative": "export function label(value: string | number): string {\n  return \"wrong\";\n}\n"
   },
   {
     "id": "loops",
@@ -75,13 +75,13 @@
     "title": "Iteration and return values",
     "concept": "for...of visits the values of an array. Start a numeric total at zero, then add each value. A function can keep local mutable state while its parameter remains read-only to callers.\n\nreadonly number[] accepts mutable arrays too, but prevents the function from pushing or assigning elements through that reference. It does not freeze the object at runtime.",
     "task": "Export total(values: readonly number[]): number. Use a loop or reduce to sum the values without mutating the input.",
-    "starter": "export function total(values: string[]): string { return values.join(\"\"); }",
-    "solution": "export function total(values: readonly number[]): number {\n  let result = 0;\n  for (const value of values) result += value;\n  return result;\n}",
-    "checks": "type A = Assert<Equal<Parameters<typeof s.total>, [readonly number[]]>>;\ntype B = Assert<Equal<ReturnType<typeof s.total>, number>>;\ns.total([1,2] as const);\n// @ts-expect-error no string values\ns.total([\"1\"]);",
+    "starter": "export function total(values: string[]): string {\n  return values.join(\"\");\n}\n",
+    "solution": "export function total(values: readonly number[]): number {\n  let result = 0;\n  for (const value of values) result += value;\n  return result;\n}\n",
+    "checks": "type A = Assert<Equal<Parameters<typeof s.total>, [readonly number[]]>>;\ntype B = Assert<Equal<ReturnType<typeof s.total>, number>>;\ns.total([1, 2] as const);\n// @ts-expect-error no string values\ns.total([\"1\"]);\n",
     "hint": "The readonly modifier belongs before number[].",
-    "alternative": "export const total = (values: readonly number[]): number => values.reduce((sum, n) => sum + n, 0);",
-    "runtime": "const values = Object.freeze([2,3,-1]); if (exports.total(values) !== 4 || exports.total([]) !== 0) throw new Error(\"Sum every input without changing the array.\");",
-    "negative": "export function total(values: readonly number[]): number { return 0; }"
+    "alternative": "export const total = (values: readonly number[]): number =>\n  values.reduce((sum, n) => sum + n, 0);\n",
+    "runtime": "const values = Object.freeze([2, 3, -1]);\nif (exports.total(values) !== 4 || exports.total([]) !== 0)\n  throw new Error(\"Sum every input without changing the array.\");\n",
+    "negative": "export function total(values: readonly number[]): number {\n  return 0;\n}\n"
   },
   {
     "id": "discount",
@@ -89,13 +89,13 @@
     "title": "Arithmetic and precedence",
     "concept": "JavaScript evaluates multiplication and division before addition and subtraction. Parentheses make intent explicit. A percentage is a ratio: 20 percent means 20 / 100.\n\nNumbers use floating-point arithmetic. Do not use an unchecked float formula as a production money ledger; choose an exact decimal or integer-minor-unit policy with explicit rounding. This lab uses simple exact examples so you can focus on operators.",
     "task": "Export discount(price:number, percent:number):number returning price after subtracting the percentage. Do not mutate anything.",
-    "starter": "export {};",
-    "solution": "export function discount(price:number, percent:number):number { return price * (1 - percent / 100); }",
-    "alternative": "export function discount(price:number, percent:number):number { return price * (1 - percent / 100);\n }",
-    "checks": "type A = Assert<Equal<typeof s.discount, (price:number,percent:number)=>number>>;",
+    "starter": "export {};\n",
+    "solution": "export function discount(price: number, percent: number): number {\n  return price * (1 - percent / 100);\n}\n",
+    "alternative": "export function discount(price: number, percent: number): number {\n  return price * (1 - percent / 100);\n}\n",
+    "checks": "type A = Assert<\n  Equal<typeof s.discount, (price: number, percent: number) => number>\n>;\n",
     "hint": "Convert the percentage to a fraction before subtracting it from 1.",
-    "runtime": "if(exports.discount(100,20)!==80 || exports.discount(80,0)!==80 || exports.discount(40,100)!==0) throw new Error(\"Check zero, ordinary and full discounts.\");",
-    "negative": "export function discount(price:number,percent:number):number{return price-percent;}"
+    "runtime": "if (\n  exports.discount(100, 20) !== 80 ||\n  exports.discount(80, 0) !== 80 ||\n  exports.discount(40, 100) !== 0\n)\n  throw new Error(\"Check zero, ordinary and full discounts.\");\n",
+    "negative": "export function discount(price: number, percent: number): number {\n  return price - percent;\n}\n"
   },
   {
     "id": "eligible",
@@ -103,13 +103,13 @@
     "title": "Comparisons and boolean logic",
     "concept": "A comparison produces a boolean. >= includes equality; > does not. && means both conditions must hold, || means at least one holds, and ! negates a boolean.\n\nUse parentheses when combining rules. Translate the requirement into separate conditions before compressing it into an expression. Boundary examples such as exactly eighteen reveal errors that ordinary examples can miss.",
     "task": "Export eligible(age:number, hasConsent:boolean):boolean. A learner is eligible at 18 or older, or at 13 or older with consent.",
-    "starter": "export {};",
-    "solution": "export function eligible(age:number,hasConsent:boolean):boolean { return age >= 18 || (age >= 13 && hasConsent); }",
-    "alternative": "export function eligible(age:number,hasConsent:boolean):boolean { return age >= 18 || (age >= 13 && hasConsent);\n }",
-    "checks": "type A = Assert<Equal<typeof s.eligible, (age:number,hasConsent:boolean)=>boolean>>;",
+    "starter": "export {};\n",
+    "solution": "export function eligible(age: number, hasConsent: boolean): boolean {\n  return age >= 18 || (age >= 13 && hasConsent);\n}\n",
+    "alternative": "export function eligible(age: number, hasConsent: boolean): boolean {\n  return age >= 18 || (age >= 13 && hasConsent);\n}\n",
+    "checks": "type A = Assert<\n  Equal<typeof s.eligible, (age: number, hasConsent: boolean) => boolean>\n>;\n",
     "hint": "There are two valid routes: adult, or teen with consent.",
-    "runtime": "if(!exports.eligible(18,false)||!exports.eligible(13,true)||exports.eligible(12,true)||exports.eligible(17,false)) throw new Error(\"Check both age boundaries and consent.\");",
-    "negative": "export function eligible(age:number,hasConsent:boolean):boolean{return age>18;}"
+    "runtime": "if (\n  !exports.eligible(18, false) ||\n  !exports.eligible(13, true) ||\n  exports.eligible(12, true) ||\n  exports.eligible(17, false)\n)\n  throw new Error(\"Check both age boundaries and consent.\");\n",
+    "negative": "export function eligible(age: number, hasConsent: boolean): boolean {\n  return age > 18;\n}\n"
   },
   {
     "id": "initials",
@@ -117,13 +117,13 @@
     "title": "Strings and normalization",
     "concept": "Strings are immutable: trim and toUpperCase return new strings. trim removes surrounding whitespace; it does not remove spaces within a name.\n\nArray indexing can produce undefined, especially for empty input. Use a fallback before applying string methods. Human names and Unicode are more complex than ASCII initials; the requirement here is deliberately two non-empty-or-empty simple name fields.",
     "task": "Export initials(first:string,last:string):string. Trim both fields and concatenate their first characters in uppercase. Empty fields contribute an empty string.",
-    "starter": "export {};",
-    "solution": "export function initials(first:string,last:string):string { return ((first.trim()[0] ?? \"\") + (last.trim()[0] ?? \"\")).toUpperCase(); }",
-    "alternative": "export function initials(first:string,last:string):string { return ((first.trim()[0] ?? \"\") + (last.trim()[0] ?? \"\")).toUpperCase();\n }",
-    "checks": "type A = Assert<Equal<typeof s.initials, (first:string,last:string)=>string>>;",
+    "starter": "export {};\n",
+    "solution": "export function initials(first: string, last: string): string {\n  return ((first.trim()[0] ?? \"\") + (last.trim()[0] ?? \"\")).toUpperCase();\n}\n",
+    "alternative": "export function initials(first: string, last: string): string {\n  return ((first.trim()[0] ?? \"\") + (last.trim()[0] ?? \"\")).toUpperCase();\n}\n",
+    "checks": "type A = Assert<\n  Equal<typeof s.initials, (first: string, last: string) => string>\n>;\n",
     "hint": "Index after trimming, then use ?? to handle an empty string.",
-    "runtime": "if(exports.initials(\" ada \",\" lovelace \")!==\"AL\"||exports.initials(\"\",\"\")!==\"\"||exports.initials(\"Grace\",\"\")!==\"G\") throw new Error(\"Handle whitespace, case and empty fields.\");",
-    "negative": "export function initials(first:string,last:string):string{return first+last;}"
+    "runtime": "if (\n  exports.initials(\" ada \", \" lovelace \") !== \"AL\" ||\n  exports.initials(\"\", \"\") !== \"\" ||\n  exports.initials(\"Grace\", \"\") !== \"G\"\n)\n  throw new Error(\"Handle whitespace, case and empty fields.\");\n",
+    "negative": "export function initials(first: string, last: string): string {\n  return first + last;\n}\n"
   },
   {
     "id": "fallback",
@@ -131,13 +131,13 @@
     "title": "Nullish coalescing",
     "concept": "?? uses its right-hand value only when the left-hand value is null or undefined. || also replaces falsy values such as zero, false and the empty string.\n\nChoose the operator according to domain meaning. A zero score is a real result, not missing data. Preserve it when providing a fallback for absent values.",
     "task": "Export fallback(value:number|null|undefined):number. Return value when present, otherwise 10. Preserve zero.",
-    "starter": "export {};",
-    "solution": "export function fallback(value:number|null|undefined):number { return value ?? 10; }",
-    "alternative": "export function fallback(value:number|null|undefined):number { return value ?? 10;\n }",
-    "checks": "type A = Assert<Equal<typeof s.fallback, (value:number|null|undefined)=>number>>;",
+    "starter": "export {};\n",
+    "solution": "export function fallback(value: number | null | undefined): number {\n  return value ?? 10;\n}\n",
+    "alternative": "export function fallback(value: number | null | undefined): number {\n  return value ?? 10;\n}\n",
+    "checks": "type A = Assert<\n  Equal<typeof s.fallback, (value: number | null | undefined) => number>\n>;\n",
     "hint": "Use ?? rather than ||.",
-    "runtime": "if(exports.fallback(0)!==0||exports.fallback(null)!==10||exports.fallback(undefined)!==10||exports.fallback(7)!==7) throw new Error(\"Zero is not missing.\");",
-    "negative": "export function fallback(value:number|null|undefined):number{return value||10;}"
+    "runtime": "if (\n  exports.fallback(0) !== 0 ||\n  exports.fallback(null) !== 10 ||\n  exports.fallback(undefined) !== 10 ||\n  exports.fallback(7) !== 7\n)\n  throw new Error(\"Zero is not missing.\");\n",
+    "negative": "export function fallback(value: number | null | undefined): number {\n  return value || 10;\n}\n"
   },
   {
     "id": "greeting",
@@ -145,13 +145,13 @@
     "title": "Default parameters",
     "concept": "A default parameter is used when the argument is omitted or explicitly undefined. It is not used for null or an empty string. A required parameter normally comes before optional or defaulted parameters.\n\nDefaults help keep callers simple, but should not hide a missing value that the caller must consciously supply. Here a friendly generic greeting is a reasonable fallback.",
     "task": "Export greeting(name = \"learner\"):string returning \"Hello, \" followed by name. Its parameter should be optional to callers.",
-    "starter": "export {};",
-    "solution": "export function greeting(name:string = \"learner\"):string { return \"Hello, \" + name; }",
-    "alternative": "export function greeting(name:string = \"learner\"):string { return \"Hello, \" + name;\n }",
-    "checks": "type A = Assert<Equal<typeof s.greeting, (name?:string)=>string>>;",
+    "starter": "export {};\n",
+    "solution": "export function greeting(name: string = \"learner\"): string {\n  return \"Hello, \" + name;\n}\n",
+    "alternative": "export function greeting(name: string = \"learner\"): string {\n  return \"Hello, \" + name;\n}\n",
+    "checks": "type A = Assert<Equal<typeof s.greeting, (name?: string) => string>>;\n",
     "hint": "A default value makes the argument optional at the call site.",
-    "runtime": "if(exports.greeting()!==\"Hello, learner\"||exports.greeting(\"Ada\")!==\"Hello, Ada\"||exports.greeting(\"\")!==\"Hello, \") throw new Error(\"Defaults apply to missing values, not empty text.\");",
-    "negative": "export function greeting(name:string = \"learner\"):string{return \"Hello, learner\";}"
+    "runtime": "if (\n  exports.greeting() !== \"Hello, learner\" ||\n  exports.greeting(\"Ada\") !== \"Hello, Ada\" ||\n  exports.greeting(\"\") !== \"Hello, \"\n)\n  throw new Error(\"Defaults apply to missing values, not empty text.\");\n",
+    "negative": "export function greeting(name: string = \"learner\"): string {\n  return \"Hello, learner\";\n}\n"
   },
   {
     "id": "doubled",
@@ -159,13 +159,13 @@
     "title": "Map a collection",
     "concept": "map creates a new array by applying a function to each element. The callback receives a value; an arrow such as n => n * 2 returns a transformed value.\n\nDo not confuse map with forEach, which does not return a transformed array. A readonly input documents that the operation must not change the original collection.",
     "task": "Export doubled(values:readonly number[]):number[]. Return every input multiplied by two in a new array.",
-    "starter": "export {};",
-    "solution": "export function doubled(values:readonly number[]):number[] { return values.map(n => n * 2); }",
-    "alternative": "export function doubled(values:readonly number[]):number[] { return values.map(n => n * 2);\n }",
-    "checks": "type A = Assert<Equal<typeof s.doubled, (values:readonly number[])=>number[]>>;",
+    "starter": "export {};\n",
+    "solution": "export function doubled(values: readonly number[]): number[] {\n  return values.map((n) => n * 2);\n}\n",
+    "alternative": "export function doubled(values: readonly number[]): number[] {\n  return values.map((n) => n * 2);\n}\n",
+    "checks": "type A = Assert<\n  Equal<typeof s.doubled, (values: readonly number[]) => number[]>\n>;\n",
     "hint": "Return the result of map.",
-    "runtime": "const input=Object.freeze([1,-2,0]); const result=exports.doubled(input);if(JSON.stringify(result)!==\"[2,-4,0]\"||exports.doubled([]).length!==0)throw new Error(\"Transform all elements, including negative values.\");",
-    "negative": "export function doubled(values:readonly number[]):number[]{return [...values];}"
+    "runtime": "const input = Object.freeze([1, -2, 0]);\nconst result = exports.doubled(input);\nif (JSON.stringify(result) !== \"[2,-4,0]\" || exports.doubled([]).length !== 0)\n  throw new Error(\"Transform all elements, including negative values.\");\n",
+    "negative": "export function doubled(values: readonly number[]): number[] {\n  return [...values];\n}\n"
   },
   {
     "id": "passing",
@@ -173,13 +173,13 @@
     "title": "Filter a collection",
     "concept": "filter retains the elements whose predicate returns true. It returns a new array and preserves the order of retained values.\n\nA threshold is a boundary decision: >= 70 includes exactly 70. Prefer an explicit named function or a readable short predicate over a clever expression whose truthiness is accidental.",
     "task": "Export passing(scores:readonly number[]):number[]. Keep scores of at least 70, preserving order.",
-    "starter": "export {};",
-    "solution": "export function passing(scores:readonly number[]):number[] { return scores.filter(score => score >= 70); }",
-    "alternative": "export function passing(scores:readonly number[]):number[] { return scores.filter(score => score >= 70);\n }",
-    "checks": "type A = Assert<Equal<typeof s.passing, (scores:readonly number[])=>number[]>>;",
+    "starter": "export {};\n",
+    "solution": "export function passing(scores: readonly number[]): number[] {\n  return scores.filter((score) => score >= 70);\n}\n",
+    "alternative": "export function passing(scores: readonly number[]): number[] {\n  return scores.filter((score) => score >= 70);\n}\n",
+    "checks": "type A = Assert<\n  Equal<typeof s.passing, (scores: readonly number[]) => number[]>\n>;\n",
     "hint": "A passing score is >= 70.",
-    "runtime": "if(JSON.stringify(exports.passing(Object.freeze([69,70,100,0])))!==\"[70,100]\"||exports.passing([]).length!==0)throw new Error(\"Include exactly 70 and retain input order.\");",
-    "negative": "export function passing(scores:readonly number[]):number[]{return scores.filter(x=>x>70);}"
+    "runtime": "if (\n  JSON.stringify(exports.passing(Object.freeze([69, 70, 100, 0]))) !==\n    \"[70,100]\" ||\n  exports.passing([]).length !== 0\n)\n  throw new Error(\"Include exactly 70 and retain input order.\");\n",
+    "negative": "export function passing(scores: readonly number[]): number[] {\n  return scores.filter((x) => x > 70);\n}\n"
   },
   {
     "id": "count-tags",
@@ -187,13 +187,13 @@
     "title": "Accumulate with reduce",
     "concept": "reduce carries an accumulator through a collection. Supplying an initial value defines the empty-input result and avoids the error that occurs when reducing an empty array without an initial value.\n\nWhen building a dictionary from arbitrary user strings, prototype keys need care. Map is often safer than a plain object. This exercise counts tags in a Map and returns it, preserving the distinction between missing keys and a count of zero.",
     "task": "Export countTags(tags:readonly string[]):Map<string,number>. Count each exact tag, including \"__proto__\".",
-    "starter": "export {};",
-    "solution": "export function countTags(tags:readonly string[]):Map<string,number> { return tags.reduce((counts,tag) => { counts.set(tag,(counts.get(tag) ?? 0)+1); return counts; }, new Map<string,number>()); }",
-    "alternative": "export function countTags(tags:readonly string[]):Map<string,number> { return tags.reduce((counts,tag) => { counts.set(tag,(counts.get(tag) ?? 0)+1);\n return counts;\n }, new Map<string,number>());\n }",
-    "checks": "type A = Assert<Equal<typeof s.countTags, (tags:readonly string[])=>Map<string,number>>>;",
+    "starter": "export {};\n",
+    "solution": "export function countTags(tags: readonly string[]): Map<string, number> {\n  return tags.reduce((counts, tag) => {\n    counts.set(tag, (counts.get(tag) ?? 0) + 1);\n    return counts;\n  }, new Map<string, number>());\n}\n",
+    "alternative": "export function countTags(tags: readonly string[]): Map<string, number> {\n  return tags.reduce((counts, tag) => {\n    counts.set(tag, (counts.get(tag) ?? 0) + 1);\n    return counts;\n  }, new Map<string, number>());\n}\n",
+    "checks": "type A = Assert<\n  Equal<typeof s.countTags, (tags: readonly string[]) => Map<string, number>>\n>;\n",
     "hint": "Seed reduce with a new Map<string,number>().",
-    "runtime": "const c=exports.countTags([\"ts\",\"ts\",\"__proto__\"]);if(c.get(\"ts\")!==2||c.get(\"__proto__\")!==1||exports.countTags([]).size!==0)throw new Error(\"Count duplicates and unusual keys safely.\");",
-    "negative": "export function countTags(tags:readonly string[]):Map<string,number>{return new Map();}"
+    "runtime": "const c = exports.countTags([\"ts\", \"ts\", \"__proto__\"]);\nif (\n  c.get(\"ts\") !== 2 ||\n  c.get(\"__proto__\") !== 1 ||\n  exports.countTags([]).size !== 0\n)\n  throw new Error(\"Count duplicates and unusual keys safely.\");\n",
+    "negative": "export function countTags(tags: readonly string[]): Map<string, number> {\n  return new Map();\n}\n"
   },
   {
     "id": "counter",
@@ -201,13 +201,13 @@
     "title": "Closures and private state",
     "concept": "A closure is a function that retains access to variables from where it was created. Each call to a factory can create an independent local variable and return a function that updates it.\n\nThis is a useful way to expose behavior without exposing mutable state directly. Avoid module-global state when separate users or instances need independent counters.",
     "task": "Export counter():()=>number. Each returned function starts at 1 and increments its own count on every call.",
-    "starter": "export {};",
-    "solution": "export function counter():()=>number { let count=0; return () => ++count; }",
-    "alternative": "export function counter():()=>number { let count=0;\n return () => ++count;\n }",
-    "checks": "type A = Assert<Equal<typeof s.counter, ()=>()=>number>>;",
+    "starter": "export {};\n",
+    "solution": "export function counter(): () => number {\n  let count = 0;\n  return () => ++count;\n}\n",
+    "alternative": "export function counter(): () => number {\n  let count = 0;\n  return () => ++count;\n}\n",
+    "checks": "type A = Assert<Equal<typeof s.counter, () => () => number>>;\n",
     "hint": "Create the mutable count inside the factory, outside its returned function.",
-    "runtime": "const a=exports.counter(),b=exports.counter();if(a()!==1||a()!==2||b()!==1||a()!==3)throw new Error(\"Each factory call needs independent state.\");",
-    "negative": "export function counter():()=>number{return ()=>1;}"
+    "runtime": "const a = exports.counter(),\n  b = exports.counter();\nif (a() !== 1 || a() !== 2 || b() !== 1 || a() !== 3)\n  throw new Error(\"Each factory call needs independent state.\");\n",
+    "negative": "export function counter(): () => number {\n  return () => 1;\n}\n"
   },
   {
     "id": "safe-divide",
@@ -215,13 +215,13 @@
     "title": "Exceptions and error paths",
     "concept": "throw stops the normal path and propagates an error to the nearest matching catch. Error objects carry useful messages. A function can return a number on successful paths and throw on invalid input.\n\nDo not catch an error just to silently report success. Decide which layer can recover. Division by zero produces Infinity in JavaScript, so an application requiring a finite ratio must explicitly reject zero.",
     "task": "Export safeDivide(a:number,b:number):number. Throw an Error for a zero divisor; otherwise return the quotient.",
-    "starter": "export {};",
-    "solution": "export function safeDivide(a:number,b:number):number { if(b===0) throw new Error(\"Division by zero\"); return a/b; }",
-    "alternative": "export function safeDivide(a:number,b:number):number { if(b===0) throw new Error(\"Division by zero\");\n return a/b;\n }",
-    "checks": "type A = Assert<Equal<typeof s.safeDivide, (a:number,b:number)=>number>>;",
+    "starter": "export {};\n",
+    "solution": "export function safeDivide(a: number, b: number): number {\n  if (b === 0) throw new Error(\"Division by zero\");\n  return a / b;\n}\n",
+    "alternative": "export function safeDivide(a: number, b: number): number {\n  if (b === 0) throw new Error(\"Division by zero\");\n  return a / b;\n}\n",
+    "checks": "type A = Assert<Equal<typeof s.safeDivide, (a: number, b: number) => number>>;\n",
     "hint": "Check the divisor before dividing.",
-    "runtime": "if(exports.safeDivide(8,2)!==4)throw new Error(\"Return the quotient.\");let threw=false;try{exports.safeDivide(1,0);}catch{threw=true;}if(!threw)throw new Error(\"Reject zero divisors.\");",
-    "negative": "export function safeDivide(a:number,b:number):number{return a/b;}"
+    "runtime": "if (exports.safeDivide(8, 2) !== 4) throw new Error(\"Return the quotient.\");\nlet threw = false;\ntry {\n  exports.safeDivide(1, 0);\n} catch {\n  threw = true;\n}\nif (!threw) throw new Error(\"Reject zero divisors.\");\n",
+    "negative": "export function safeDivide(a: number, b: number): number {\n  return a / b;\n}\n"
   },
   {
     "id": "optional",
@@ -229,13 +229,13 @@
     "title": "Optional is not nullable",
     "concept": "An optional property can be absent: nickname?: string. A nullable property must exist but can hold null: nickname: string | null. These express different states.\n\nWith exactOptionalPropertyTypes enabled, optional does not automatically mean you may assign undefined explicitly. Reading an optional property can still produce undefined because it may be absent. Decide which states your domain actually needs.",
     "task": "Export Profile with required id: string and optional nickname: string. Reject null and explicit undefined for nickname.",
-    "starter": "export type Profile = { id: string; nickname: string | null };",
-    "solution": "export type Profile = { id: string; nickname?: string };",
-    "checks": "type A = Assert<Equal<s.Profile, {id:string; nickname?:string}>>;\nconst ok: s.Profile = {id:\"1\"};\n// @ts-expect-error explicit undefined is not absence\nconst bad: s.Profile = {id:\"1\", nickname:undefined};",
+    "starter": "export type Profile = { id: string; nickname: string | null };\n",
+    "solution": "export type Profile = { id: string; nickname?: string };\n",
+    "checks": "type A = Assert<Equal<s.Profile, { id: string; nickname?: string }>>;\nconst ok: s.Profile = { id: \"1\" };\n// @ts-expect-error explicit undefined is not absence\nconst bad: s.Profile = { id: \"1\", nickname: undefined };\n",
     "hint": "Place ? after the property name.",
-    "alternative": "export interface Profile { id: string; nickname?: string }",
+    "alternative": "export interface Profile {\n  id: string;\n  nickname?: string;\n}\n",
     "runtime": "",
-    "negative": "export const wrongAnswer = 1;"
+    "negative": "export const wrongAnswer = 1;\n"
   },
   {
     "id": "literals",
@@ -243,13 +243,13 @@
     "title": "Literal unions",
     "concept": "string allows every string, but \"draft\" allows one precise value. A union of literals models a closed set of possibilities and catches spelling errors.\n\nChoose meaningful domain states instead of arbitrary text. A union exists only during checking; runtime input still needs validation before it can be trusted.",
     "task": "Export Status as exactly \"draft\" | \"published\" | \"archived\".",
-    "starter": "export type Status = string;",
-    "solution": "export type Status = \"draft\" | \"published\" | \"archived\";",
-    "checks": "type A = Assert<Equal<s.Status, \"draft\" | \"published\" | \"archived\">>;\n// @ts-expect-error unknown state\nconst bad: s.Status = \"deleted\";",
+    "starter": "export type Status = string;\n",
+    "solution": "export type Status = \"draft\" | \"published\" | \"archived\";\n",
+    "checks": "type A = Assert<Equal<s.Status, \"draft\" | \"published\" | \"archived\">>;\n// @ts-expect-error unknown state\nconst bad: s.Status = \"deleted\";\n",
     "hint": "Use | between the three quoted values.",
-    "alternative": "export type Status=\"draft\" | \"published\" | \"archived\";\n",
+    "alternative": "export type Status = \"draft\" | \"published\" | \"archived\";\n",
     "runtime": "",
-    "negative": "export const wrongAnswer = 1;"
+    "negative": "export const wrongAnswer = 1;\n"
   },
   {
     "id": "tuples",
@@ -257,13 +257,13 @@
     "title": "Tuples and position",
     "concept": "An array models a sequence of similar items. A tuple models a fixed arrangement: [string, number] promises text at position zero and a number at position one.\n\nNamed tuple members document what positions mean without changing assignability. readonly prevents writes through this reference. Prefer objects when named fields are clearer than positions.",
     "task": "Export Coordinate as a readonly tuple of exactly two numbers, latitude then longitude.",
-    "starter": "export type Coordinate = number[];",
-    "solution": "export type Coordinate = readonly [latitude: number, longitude: number];",
-    "checks": "type A = Assert<Equal<s.Coordinate, readonly [number, number]>>;\n// @ts-expect-error not a three-dimensional point\nconst bad: s.Coordinate = [1,2,3];",
+    "starter": "export type Coordinate = number[];\n",
+    "solution": "export type Coordinate = readonly [latitude: number, longitude: number];\n",
+    "checks": "type A = Assert<Equal<s.Coordinate, readonly [number, number]>>;\n// @ts-expect-error not a three-dimensional point\nconst bad: s.Coordinate = [1, 2, 3];\n",
     "hint": "Use readonly followed by square brackets containing two number types.",
-    "alternative": "export type Coordinate=readonly [latitude: number, longitude: number];\n",
+    "alternative": "export type Coordinate = readonly [latitude: number, longitude: number];\n",
     "runtime": "",
-    "negative": "export const wrongAnswer = 1;"
+    "negative": "export const wrongAnswer = 1;\n"
   },
   {
     "id": "readonly",
@@ -271,13 +271,13 @@
     "title": "Readonly object contracts",
     "concept": "readonly on an object property prevents reassignment through a typed reference. It communicates an ownership rule: consumers may inspect this field but should not replace it.\n\nReadonly is shallow. A readonly property holding an array does not make that array immutable unless its element collection is also readonly. It also does not call Object.freeze at runtime.",
     "task": "Export Course with readonly id: string and readonly tags: readonly string[].",
-    "starter": "export type Course = { id: string; tags: string[] };",
-    "solution": "export type Course = { readonly id: string; readonly tags: readonly string[] };",
-    "checks": "type A = Assert<Equal<s.Course, {readonly id:string; readonly tags:readonly string[]}>>;\ndeclare const course: s.Course;\n// @ts-expect-error cannot overwrite identity\ncourse.id = \"other\";\n// @ts-expect-error collection is read-only too\ncourse.tags.push(\"x\");",
+    "starter": "export type Course = { id: string; tags: string[] };\n",
+    "solution": "export type Course = { readonly id: string; readonly tags: readonly string[] };\n",
+    "checks": "type A = Assert<\n  Equal<s.Course, { readonly id: string; readonly tags: readonly string[] }>\n>;\ndeclare const course: s.Course;\n// @ts-expect-error cannot overwrite identity\ncourse.id = \"other\";\n// @ts-expect-error collection is read-only too\ncourse.tags.push(\"x\");\n",
     "hint": "There are three readonly modifiers in the full answer.",
-    "alternative": "export type Course={ readonly id: string;\n readonly tags: readonly string[] };\n",
+    "alternative": "export type Course = { readonly id: string; readonly tags: readonly string[] };\n",
     "runtime": "",
-    "negative": "export const wrongAnswer = 1;"
+    "negative": "export const wrongAnswer = 1;\n"
   },
   {
     "id": "unknown",
@@ -285,13 +285,13 @@
     "title": "Unknown input, known output",
     "concept": "unknown means the value has not been proved to have a usable shape. Unlike any, it does not let you call arbitrary methods or access arbitrary properties.\n\nStart at unknown when crossing a trust boundary. Narrow with runtime checks before returning a more useful type. An assertion using as is a claim, not a runtime check.",
     "task": "Export text(value: unknown): string. Return the input if typeof says it is a string; otherwise return an empty string.",
-    "starter": "export function text(value: unknown): string { return value; }",
-    "solution": "export function text(value: unknown): string { return typeof value === \"string\" ? value : \"\"; }",
-    "checks": "type A = Assert<Equal<Parameters<typeof s.text>, [unknown]>>;\ntype B = Assert<Equal<ReturnType<typeof s.text>, string>>;",
+    "starter": "export function text(value: unknown): string {\n  return value;\n}\n",
+    "solution": "export function text(value: unknown): string {\n  return typeof value === \"string\" ? value : \"\";\n}\n",
+    "checks": "type A = Assert<Equal<Parameters<typeof s.text>, [unknown]>>;\ntype B = Assert<Equal<ReturnType<typeof s.text>, string>>;\n",
     "hint": "unknown must be narrowed before it can be returned as a string.",
-    "alternative": "export function text(value: unknown): string { return typeof value === \"string\" ? value : \"\";\n }",
-    "runtime": "if (exports.text(\"Ada\") !== \"Ada\" || exports.text(null) !== \"\" || exports.text(3) !== \"\" || exports.text({}) !== \"\") throw new Error(\"Accept text; return empty text for everything else.\");",
-    "negative": "export function text(value: unknown): string { return \"wrong\"; }"
+    "alternative": "export function text(value: unknown): string {\n  return typeof value === \"string\" ? value : \"\";\n}\n",
+    "runtime": "if (\n  exports.text(\"Ada\") !== \"Ada\" ||\n  exports.text(null) !== \"\" ||\n  exports.text(3) !== \"\" ||\n  exports.text({}) !== \"\"\n)\n  throw new Error(\"Accept text; return empty text for everything else.\");\n",
+    "negative": "export function text(value: unknown): string {\n  return \"wrong\";\n}\n"
   },
   {
     "id": "results",
@@ -299,13 +299,13 @@
     "title": "Discriminated unions",
     "concept": "Several booleans can create impossible combinations: loading and failed and successful all at once. A discriminated union describes each valid state as its own object shape.\n\nThe shared literal field is the discriminant. After checking result.ok, TypeScript knows which other fields exist. Keep success data out of the failure branch so callers cannot accidentally depend on it.",
     "task": "Export Result as { ok: true; value: string } | { ok: false; error: string }.",
-    "starter": "export type Result = { ok: boolean; value?: string; error?: string };",
-    "solution": "export type Result = { ok: true; value: string } | { ok: false; error: string };",
-    "checks": "type A = Assert<Equal<s.Result, {ok:true;value:string}|{ok:false;error:string}>>;\n// @ts-expect-error success requires its value\nconst bad: s.Result = {ok:true};",
+    "starter": "export type Result = { ok: boolean; value?: string; error?: string };\n",
+    "solution": "export type Result = { ok: true; value: string } | { ok: false; error: string };\n",
+    "checks": "type A = Assert<\n  Equal<s.Result, { ok: true; value: string } | { ok: false; error: string }>\n>;\n// @ts-expect-error success requires its value\nconst bad: s.Result = { ok: true };\n",
     "hint": "Write two object types separated by |.",
-    "alternative": "export type Result={ ok: true;\n value: string } | { ok: false;\n error: string };\n",
+    "alternative": "export type Result = { ok: true; value: string } | { ok: false; error: string };\n",
     "runtime": "",
-    "negative": "export const wrongAnswer = 1;"
+    "negative": "export const wrongAnswer = 1;\n"
   },
   {
     "id": "generics",
@@ -313,13 +313,13 @@
     "title": "Generics keep relationships",
     "concept": "A generic parameter is a name for a type supplied by the caller. Box<T> can describe a box of strings or a box of numbers without duplicating the definition.\n\nThe important part is preserving a relationship: the contained value is the same T the caller chose. any would lose that connection and silently accept unrelated values.",
     "task": "Export Box<T> as an object with exactly one mutable value property of type T.",
-    "starter": "export type Box<T> = { value: unknown };",
-    "solution": "export type Box<T> = { value: T };",
-    "checks": "type A = Assert<Equal<s.Box<string>, {value:string}>>;\ntype B = Assert<Equal<s.Box<number>, {value:number}>>;\n// @ts-expect-error preserve the caller type\nconst bad: s.Box<number> = {value:\"2\"};",
+    "starter": "export type Box<T> = { value: unknown };\n",
+    "solution": "export type Box<T> = { value: T };\n",
+    "checks": "type A = Assert<Equal<s.Box<string>, { value: string }>>;\ntype B = Assert<Equal<s.Box<number>, { value: number }>>;\n// @ts-expect-error preserve the caller type\nconst bad: s.Box<number> = { value: \"2\" };\n",
     "hint": "Place <T> after Box, and use T as the value type.",
-    "alternative": "export interface Box<T> { value: T }",
+    "alternative": "export interface Box<T> {\n  value: T;\n}\n",
     "runtime": "",
-    "negative": "export const wrongAnswer = 1;"
+    "negative": "export const wrongAnswer = 1;\n"
   },
   {
     "id": "generic-functions",
@@ -327,13 +327,13 @@
     "title": "Generic functions and inference",
     "concept": "A generic function can infer its type argument from its input. identity<T>(value: T): T promises that the return type follows the input type.\n\nReturning unknown erases useful information. Returning any hides errors. A generic contract preserves both safety and inference without requiring a cast at every call site.",
     "task": "Export identity<T>(value: T): T and return the value unchanged.",
-    "starter": "export function identity(value: unknown): unknown { return value; }",
-    "solution": "export function identity<T>(value: T): T { return value; }",
-    "checks": "const a = s.identity(\"hello\" as const);\nconst b = s.identity(42 as const);\ntype A = Assert<Equal<typeof a, \"hello\">>;\ntype B = Assert<Equal<typeof b, 42>>;",
+    "starter": "export function identity(value: unknown): unknown {\n  return value;\n}\n",
+    "solution": "export function identity<T>(value: T): T {\n  return value;\n}\n",
+    "checks": "const a = s.identity(\"hello\" as const);\nconst b = s.identity(42 as const);\ntype A = Assert<Equal<typeof a, \"hello\">>;\ntype B = Assert<Equal<typeof b, 42>>;\n",
     "hint": "Declare <T> before the parameter list.",
-    "alternative": "export function identity<T>(value: T): T { return value;\n }",
-    "runtime": "const object = {x:1}; if (exports.identity(object) !== object || exports.identity(3) !== 3) throw new Error(\"Return exactly the supplied value.\");",
-    "negative": "export function identity<T>(value:T):T { throw new Error(\"wrong\"); }"
+    "alternative": "export function identity<T>(value: T): T {\n  return value;\n}\n",
+    "runtime": "const object = { x: 1 };\nif (exports.identity(object) !== object || exports.identity(3) !== 3)\n  throw new Error(\"Return exactly the supplied value.\");\n",
+    "negative": "export function identity<T>(value: T): T {\n  throw new Error(\"wrong\");\n}\n"
   },
   {
     "id": "constraints",
@@ -341,13 +341,13 @@
     "title": "Generic constraints",
     "concept": "A generic type is not automatically allowed to use a property. T extends { id: string } restricts callers to values with a compatible id while preserving their other properties.\n\nUse the smallest constraint that supports your operation. Requiring an entire application entity makes a helper harder to reuse and adds unnecessary coupling.",
     "task": "Export Identified<T extends { id: string }> as T itself. It must preserve extra properties and reject types without a string id.",
-    "starter": "export type Identified<T> = { id: string };",
-    "solution": "export type Identified<T extends { id: string }> = T;",
-    "checks": "type A = Assert<Equal<s.Identified<{id:string;name:string}>, {id:string;name:string}>>;\n// @ts-expect-error id is required\ntype Bad = s.Identified<{name:string}>;\n// @ts-expect-error id must be text\ntype Bad2 = s.Identified<{id:number}>;",
+    "starter": "export type Identified<T> = { id: string };\n",
+    "solution": "export type Identified<T extends { id: string }> = T;\n",
+    "checks": "type A = Assert<\n  Equal<\n    s.Identified<{ id: string; name: string }>,\n    { id: string; name: string }\n  >\n>;\n// @ts-expect-error id is required\ntype Bad = s.Identified<{ name: string }>;\n// @ts-expect-error id must be text\ntype Bad2 = s.Identified<{ id: number }>;\n",
     "hint": "The extends clause belongs inside the angle brackets.",
-    "alternative": "export type Identified<T extends { id: string }>=T;\n",
+    "alternative": "export type Identified<T extends { id: string }> = T;\n",
     "runtime": "",
-    "negative": "export const wrongAnswer = 1;"
+    "negative": "export const wrongAnswer = 1;\n"
   },
   {
     "id": "keyof",
@@ -355,13 +355,13 @@
     "title": "Keys and indexed access",
     "concept": "keyof T produces the allowed property names of T. T[K] looks up the type stored at key K. Together they connect a property name with its actual value type.\n\nConstraining K to keyof T prevents a typo from looking like a legitimate lookup. This is the foundation of type-safe selectors, form helpers and configuration utilities.",
     "task": "Export ValueAt<T, K extends keyof T> as the property type at K.",
-    "starter": "export type ValueAt<T, K> = unknown;",
-    "solution": "export type ValueAt<T, K extends keyof T> = T[K];",
-    "checks": "type A = Assert<Equal<s.ValueAt<{name:string;age:number}, \"age\">, number>>;\n// @ts-expect-error key does not exist\ntype Bad = s.ValueAt<{name:string}, \"age\">;",
+    "starter": "export type ValueAt<T, K> = unknown;\n",
+    "solution": "export type ValueAt<T, K extends keyof T> = T[K];\n",
+    "checks": "type A = Assert<Equal<s.ValueAt<{ name: string; age: number }, \"age\">, number>>;\n// @ts-expect-error key does not exist\ntype Bad = s.ValueAt<{ name: string }, \"age\">;\n",
     "hint": "Use T[K], not keyof K.",
-    "alternative": "export type ValueAt<T, K extends keyof T>=T[K];\n",
+    "alternative": "export type ValueAt<T, K extends keyof T> = T[K];\n",
     "runtime": "",
-    "negative": "export const wrongAnswer = 1;"
+    "negative": "export const wrongAnswer = 1;\n"
   },
   {
     "id": "mapped",
@@ -369,13 +369,13 @@
     "title": "Mapped types",
     "concept": "A mapped type visits each key in a union and describes a new property. { [K in keyof T]: boolean } keeps the keys of T and changes their values.\n\nMapped types preserve optional and readonly modifiers unless you explicitly add or remove them. They are useful when one model must stay synchronized with another, such as validation flags for every form field.",
     "task": "Export Flags<T> mapping every key of T to boolean, preserving modifiers.",
-    "starter": "export type Flags<T> = Record<string, boolean>;",
-    "solution": "export type Flags<T> = { [K in keyof T]: boolean };",
-    "checks": "type A = Assert<Equal<s.Flags<{name:string;age:number}>, {name:boolean;age:boolean}>>;\ntype B = Assert<Equal<s.Flags<{readonly name?:string}>, {readonly name?:boolean}>>;",
+    "starter": "export type Flags<T> = Record<string, boolean>;\n",
+    "solution": "export type Flags<T> = { [K in keyof T]: boolean };\n",
+    "checks": "type A = Assert<\n  Equal<s.Flags<{ name: string; age: number }>, { name: boolean; age: boolean }>\n>;\ntype B = Assert<\n  Equal<s.Flags<{ readonly name?: string }>, { readonly name?: boolean }>\n>;\n",
     "hint": "The mapping uses K in keyof T.",
-    "alternative": "export type Flags<T>={ [K in keyof T]: boolean };\n",
+    "alternative": "export type Flags<T> = { [K in keyof T]: boolean };\n",
     "runtime": "",
-    "negative": "export const wrongAnswer = 1;"
+    "negative": "export const wrongAnswer = 1;\n"
   },
   {
     "id": "utilities",
@@ -383,13 +383,13 @@
     "title": "Compose utility types",
     "concept": "Pick selects properties; Omit removes them. Partial makes properties optional; Readonly prevents reassignment. These utilities express small transformations without copying an entity definition.\n\nDo not use Partial indiscriminately for every update. Fields such as identity or audit timestamps often must never be user-editable. Model the writable subset first.",
     "task": "Export Update<T extends { id: string }> as Partial<Omit<T, \"id\">>. Keep the identity out of an update.",
-    "starter": "export type Update<T extends { id: string }> = Partial<T>;",
-    "solution": "export type Update<T extends { id: string }> = Partial<Omit<T, \"id\">>;",
-    "checks": "type A = Assert<Equal<s.Update<{id:string;name:string;age:number}>, {name?:string;age?:number}>>;\n// @ts-expect-error update cannot change identity\nconst bad: s.Update<{id:string;name:string}> = {id:\"new\"};",
+    "starter": "export type Update<T extends { id: string }> = Partial<T>;\n",
+    "solution": "export type Update<T extends { id: string }> = Partial<Omit<T, \"id\">>;\n",
+    "checks": "type A = Assert<\n  Equal<\n    s.Update<{ id: string; name: string; age: number }>,\n    { name?: string; age?: number }\n  >\n>;\n// @ts-expect-error update cannot change identity\nconst bad: s.Update<{ id: string; name: string }> = { id: \"new\" };\n",
     "hint": "First omit id, then make the remaining properties optional.",
-    "alternative": "export type Update<T extends { id: string }>=Partial<Omit<T, \"id\">>;\n",
+    "alternative": "export type Update<T extends { id: string }> = Partial<Omit<T, \"id\">>;\n",
     "runtime": "",
-    "negative": "export const wrongAnswer = 1;"
+    "negative": "export const wrongAnswer = 1;\n"
   },
   {
     "id": "intersections",
@@ -397,13 +397,13 @@
     "title": "Compose with intersections",
     "concept": "An intersection A & B requires both contracts at once. It is useful for combining independent capabilities. If two properties have incompatible types, their intersection can become impossible to satisfy.\n\nIntersection is not the same as a union: a union permits alternatives, while an intersection combines requirements. Keep each capability small and name the composed domain meaning.",
     "task": "Export Audited<T> as T & {createdAt:Date;updatedAt:Date}.",
-    "starter": "export {};",
-    "solution": "export type Audited<T> = T & {createdAt:Date;updatedAt:Date};",
-    "alternative": "export type Audited<T> = T & {createdAt:Date;\nupdatedAt:Date};\n",
-    "checks": "type A=Assert<Equal<s.Audited<{id:string}>,{id:string}&{createdAt:Date;updatedAt:Date}>>;",
+    "starter": "export {};\n",
+    "solution": "export type Audited<T> = T & { createdAt: Date; updatedAt: Date };\n",
+    "alternative": "export type Audited<T> = T & { createdAt: Date; updatedAt: Date };\n",
+    "checks": "type A = Assert<\n  Equal<\n    s.Audited<{ id: string }>,\n    { id: string } & { createdAt: Date; updatedAt: Date }\n  >\n>;\n",
     "hint": "Combine the two shapes with &.",
     "runtime": "",
-    "negative": "export const unrelated = 1;"
+    "negative": "export const unrelated = 1;\n"
   },
   {
     "id": "interfaces",
@@ -411,13 +411,13 @@
     "title": "Extend an interface",
     "concept": "An interface can extend another object interface, inheriting its required properties. A type alias can express object shapes too, plus unions and other transformations.\n\nUse the form that communicates intent; do not assume an interface creates a runtime class. Declaration merging is useful in library augmentation but can be surprising when unrelated declarations share a name.",
     "task": "Export Entity with id:string, and interface Student extending Entity with displayName:string.",
-    "starter": "export {};",
-    "solution": "export interface Entity {id:string}\nexport interface Student extends Entity {displayName:string}",
-    "alternative": "export interface Entity {id:string}\nexport interface Student extends Entity {displayName:string}",
-    "checks": "type A=Assert<Equal<s.Entity,{id:string}>>;\nconst ok:s.Student={id:\"1\",displayName:\"Ada\"};\n// @ts-expect-error inherited identity required\nconst bad:s.Student={displayName:\"Ada\"};",
+    "starter": "export {};\n",
+    "solution": "export interface Entity {\n  id: string;\n}\nexport interface Student extends Entity {\n  displayName: string;\n}\n",
+    "alternative": "export interface Entity {\n  id: string;\n}\nexport interface Student extends Entity {\n  displayName: string;\n}\n",
+    "checks": "type A = Assert<Equal<s.Entity, { id: string }>>;\nconst ok: s.Student = { id: \"1\", displayName: \"Ada\" };\n// @ts-expect-error inherited identity required\nconst bad: s.Student = { displayName: \"Ada\" };\n",
     "hint": "Write extends Entity after Student.",
     "runtime": "",
-    "negative": "export const unrelated = 1;"
+    "negative": "export const unrelated = 1;\n"
   },
   {
     "id": "typequeries",
@@ -425,13 +425,13 @@
     "title": "Derive from a value with typeof",
     "concept": "In a type position, typeof asks for the type of a value. It is different from the runtime typeof operator that returns a string. Deriving a type from one source of truth helps prevent duplicate contracts from drifting.\n\nA mutable object normally widens its string properties. as const preserves literal values and readonly properties; use it for small constant configurations rather than asserting arbitrary external data.",
     "task": "Export settings = {mode:\"strict\", retries:3} as const, and Settings = typeof settings.",
-    "starter": "export {};",
-    "solution": "export const settings={mode:\"strict\",retries:3} as const;\nexport type Settings=typeof settings;",
-    "alternative": "export const settings={mode:\"strict\",retries:3} as const;\n\nexport type Settings=typeof settings;\n",
-    "checks": "type A=Assert<Equal<s.Settings,{readonly mode:\"strict\";readonly retries:3}>>;\ntype B=Assert<Equal<typeof s.settings,s.Settings>>;",
+    "starter": "export {};\n",
+    "solution": "export const settings = { mode: \"strict\", retries: 3 } as const;\nexport type Settings = typeof settings;\n",
+    "alternative": "export const settings = { mode: \"strict\", retries: 3 } as const;\n\nexport type Settings = typeof settings;\n",
+    "checks": "type A = Assert<\n  Equal<s.Settings, { readonly mode: \"strict\"; readonly retries: 3 }>\n>;\ntype B = Assert<Equal<typeof s.settings, s.Settings>>;\n",
     "hint": "Use as const on the value, typeof in the alias.",
     "runtime": "",
-    "negative": "export const unrelated = 1;"
+    "negative": "export const unrelated = 1;\n"
   },
   {
     "id": "records",
@@ -439,13 +439,13 @@
     "title": "Records with a closed key set",
     "concept": "Record<K,V> creates a property of type V for every key in K. A finite union makes all keys required, which is useful for complete status labels and configuration tables.\n\nRecord<string,V> instead describes an open dictionary. It cannot guarantee that an arbitrary key exists at runtime. Under noUncheckedIndexedAccess, indexing an open record includes undefined.",
     "task": "Export Labels as Record<\"idle\"|\"pending\"|\"done\",string>.",
-    "starter": "export {};",
-    "solution": "export type Labels=Record<\"idle\"|\"pending\"|\"done\",string>;",
-    "alternative": "export type Labels=Record<\"idle\"|\"pending\"|\"done\",string>;\n",
-    "checks": "type A=Assert<Equal<s.Labels,{idle:string;pending:string;done:string}>>;\n// @ts-expect-error complete all states\nconst bad:s.Labels={idle:\"Ready\"};",
+    "starter": "export {};\n",
+    "solution": "export type Labels = Record<\"idle\" | \"pending\" | \"done\", string>;\n",
+    "alternative": "export type Labels = Record<\"idle\" | \"pending\" | \"done\", string>;\n",
+    "checks": "type A = Assert<\n  Equal<s.Labels, { idle: string; pending: string; done: string }>\n>;\n// @ts-expect-error complete all states\nconst bad: s.Labels = { idle: \"Ready\" };\n",
     "hint": "The key parameter is a literal union, not string.",
     "runtime": "",
-    "negative": "export const unrelated = 1;"
+    "negative": "export const unrelated = 1;\n"
   },
   {
     "id": "required",
@@ -453,13 +453,13 @@
     "title": "Remove optional modifiers",
     "concept": "Mapped types can remove modifiers. -? makes a property required; -readonly makes it writable. These transformations describe a new view of a shape without mutating any runtime value.\n\nOnly use a required view after actually establishing that the fields exist. A cast from a partial value does not fill missing properties.",
     "task": "Export Complete<T> with all original properties required, preserving their value types.",
-    "starter": "export {};",
-    "solution": "export type Complete<T> = {[K in keyof T]-?:T[K]};",
-    "alternative": "export type Complete<T> = {[K in keyof T]-?:T[K]};\n",
-    "checks": "type A=Assert<Equal<s.Complete<{name?:string;age?:number}>,{name:string;age:number}>>;",
+    "starter": "export {};\n",
+    "solution": "export type Complete<T> = { [K in keyof T]-?: T[K] };\n",
+    "alternative": "export type Complete<T> = { [K in keyof T]-?: T[K] };\n",
+    "checks": "type A = Assert<\n  Equal<\n    s.Complete<{ name?: string; age?: number }>,\n    { name: string; age: number }\n  >\n>;\n",
     "hint": "Put -? after the mapping brackets.",
     "runtime": "",
-    "negative": "export const unrelated = 1;"
+    "negative": "export const unrelated = 1;\n"
   },
   {
     "id": "satisfies",
@@ -467,13 +467,13 @@
     "title": "Validate without erasing inference",
     "concept": "satisfies checks whether an expression fits a contract without replacing its inferred type with that contract. This is useful for configuration that needs both validation and precise value information.\n\nAn explicit annotation may widen a value; as simply asserts a claim. Combine as const with satisfies when you want literal, readonly inference and shape validation.",
     "task": "Export config = {mode:\"strict\", retries:3} as const satisfies {mode:\"strict\"|\"loose\";retries:number}.",
-    "starter": "export {};",
-    "solution": "export const config={mode:\"strict\",retries:3} as const satisfies {mode:\"strict\"|\"loose\";retries:number};",
-    "alternative": "export const config={mode:\"strict\",retries:3} as const satisfies {mode:\"strict\"|\"loose\";\nretries:number};\n",
-    "checks": "type A=Assert<Equal<typeof s.config,{readonly mode:\"strict\";readonly retries:3}>>;",
+    "starter": "export {};\n",
+    "solution": "export const config = { mode: \"strict\", retries: 3 } as const satisfies {\n  mode: \"strict\" | \"loose\";\n  retries: number;\n};\n",
+    "alternative": "export const config = { mode: \"strict\", retries: 3 } as const satisfies {\n  mode: \"strict\" | \"loose\";\n  retries: number;\n};\n",
+    "checks": "type A = Assert<\n  Equal<typeof s.config, { readonly mode: \"strict\"; readonly retries: 3 }>\n>;\n",
     "hint": "Put satisfies after as const, followed by the shape.",
     "runtime": "",
-    "negative": "export const unrelated = 1;"
+    "negative": "export const unrelated = 1;\n"
   },
   {
     "id": "recursive",
@@ -481,13 +481,13 @@
     "title": "Recursive tree types",
     "concept": "A recursive type refers to itself. Trees, JSON-like data and nested menus use recursion to describe arbitrarily many levels with one definition.\n\nA recursive type does not detect cyclic runtime structures or enforce a maximum depth. Traversal algorithms still need termination and resource limits when handling untrusted data.",
     "task": "Export Tree<T> with value:T and children:readonly Tree<T>[].",
-    "starter": "export {};",
-    "solution": "export type Tree<T>={value:T;children:readonly Tree<T>[]};",
-    "alternative": "export type Tree<T>={value:T;\nchildren:readonly Tree<T>[]};\n",
-    "checks": "type A=Assert<Equal<s.Tree<number>,{value:number;children:readonly s.Tree<number>[]}>>;\n// @ts-expect-error keep the same value type at every level\nconst bad:s.Tree<number>={value:1,children:[{value:\"x\",children:[]}]};",
+    "starter": "export {};\n",
+    "solution": "export type Tree<T> = { value: T; children: readonly Tree<T>[] };\n",
+    "alternative": "export type Tree<T> = { value: T; children: readonly Tree<T>[] };\n",
+    "checks": "type A = Assert<\n  Equal<s.Tree<number>, { value: number; children: readonly s.Tree<number>[] }>\n>;\nconst bad: s.Tree<number> = {\n  value: 1,\n  // @ts-expect-error keep the same value type at every level\n  children: [{ value: \"x\", children: [] }],\n};\n",
     "hint": "The children property refers back to Tree<T>.",
     "runtime": "",
-    "negative": "export const unrelated = 1;"
+    "negative": "export const unrelated = 1;\n"
   },
   {
     "id": "extract",
@@ -495,13 +495,13 @@
     "title": "Extract a union member",
     "concept": "Extract<T,U> retains the union members assignable to U. It works especially well with discriminated unions: filter the union by a small discriminant shape.\n\nThis is a static transformation. At runtime, a filter function still needs to check the discriminant before claiming the narrower type.",
     "task": "Export Success<T> extracting only members assignable to {ok:true}.",
-    "starter": "export {};",
-    "solution": "export type Success<T>=Extract<T,{ok:true}>;",
-    "alternative": "export type Success<T>=Extract<T,{ok:true}>;\n",
-    "checks": "type A=Assert<Equal<s.Success<{ok:true;data:number}|{ok:false;error:string}>,{ok:true;data:number}>>;\ntype B=Assert<Equal<s.Success<{ok:false}>,never>>;",
+    "starter": "export {};\n",
+    "solution": "export type Success<T> = Extract<T, { ok: true }>;\n",
+    "alternative": "export type Success<T> = Extract<T, { ok: true }>;\n",
+    "checks": "type A = Assert<\n  Equal<\n    s.Success<{ ok: true; data: number } | { ok: false; error: string }>,\n    { ok: true; data: number }\n  >\n>;\ntype B = Assert<Equal<s.Success<{ ok: false }>, never>>;\n",
     "hint": "Extract takes the source union first and the matching shape second.",
     "runtime": "",
-    "negative": "export const unrelated = 1;"
+    "negative": "export const unrelated = 1;\n"
   },
   {
     "id": "parameters",
@@ -509,13 +509,13 @@
     "title": "Reuse function input types",
     "concept": "Parameters<F> extracts a function parameter tuple, including optional and rest parameters. ReturnType<F> extracts its result. Reusing these types is useful for wrappers that must follow an existing signature.\n\nOverloads require care: utility types generally use the last signature. Do not assume they recover every overload as a union.",
     "task": "Export Args<F extends (...args:never[])=>unknown> as Parameters<F>.",
-    "starter": "export {};",
-    "solution": "export type Args<F extends (...args:never[])=>unknown>=Parameters<F>;",
-    "alternative": "export type Args<F extends (...args:never[])=>unknown>=Parameters<F>;\n",
-    "checks": "type A=Assert<Equal<s.Args<(name:string,count?:number)=>void>,[string,number?]>>;",
+    "starter": "export {};\n",
+    "solution": "export type Args<F extends (...args: never[]) => unknown> = Parameters<F>;\n",
+    "alternative": "export type Args<F extends (...args: never[]) => unknown> = Parameters<F>;\n",
+    "checks": "type A = Assert<\n  Equal<s.Args<(name: string, count?: number) => void>, [string, number?]>\n>;\n",
     "hint": "Constrain F to a function and pass it to Parameters.",
     "runtime": "",
-    "negative": "export const unrelated = 1;"
+    "negative": "export const unrelated = 1;\n"
   },
   {
     "id": "promises",
@@ -523,13 +523,13 @@
     "title": "Awaited and asynchronous values",
     "concept": "Awaited<T> models recursive unwrapping by await, including nested promises and promise-like values. Unlike a one-level infer exercise, it follows the asynchronous value more deeply.\n\nA promise type does not encode its rejection type. Handle failures with catch or model expected failures as a result union. Decide whether cancellation is part of the public API.",
     "task": "Export Resolved<T> = Awaited<T>.",
-    "starter": "export {};",
-    "solution": "export type Resolved<T>=Awaited<T>;",
-    "alternative": "export type Resolved<T>=Awaited<T>;\n",
-    "checks": "type A=Assert<Equal<s.Resolved<Promise<Promise<string>>>,string>>;\ntype B=Assert<Equal<s.Resolved<number|null>,number|null>>;",
+    "starter": "export {};\n",
+    "solution": "export type Resolved<T> = Awaited<T>;\n",
+    "alternative": "export type Resolved<T> = Awaited<T>;\n",
+    "checks": "type A = Assert<Equal<s.Resolved<Promise<Promise<string>>>, string>>;\ntype B = Assert<Equal<s.Resolved<number | null>, number | null>>;\n",
     "hint": "The built-in utility already models recursive unwrapping.",
     "runtime": "",
-    "negative": "export const unrelated = 1;"
+    "negative": "export const unrelated = 1;\n"
   },
   {
     "id": "conditional",
@@ -537,13 +537,13 @@
     "title": "Conditional types",
     "concept": "A conditional type chooses a type with T extends U ? A : B. When T is a naked type parameter, a union distributes across the condition one member at a time.\n\nThis mechanism powers Exclude and Extract. It is a compile-time transformation, not an if statement that executes at runtime. Wrapping both sides in tuples can prevent distribution when the whole union must be considered together.",
     "task": "Export WithoutNull<T> that removes null and undefined from a union and preserves every other member.",
-    "starter": "export type WithoutNull<T> = T;",
-    "solution": "export type WithoutNull<T> = T extends null | undefined ? never : T;",
-    "checks": "type A = Assert<Equal<s.WithoutNull<string | null | undefined>, string>>;\ntype B = Assert<Equal<s.WithoutNull<0 | false | null>, 0 | false>>;",
+    "starter": "export type WithoutNull<T> = T;\n",
+    "solution": "export type WithoutNull<T> = T extends null | undefined ? never : T;\n",
+    "checks": "type A = Assert<Equal<s.WithoutNull<string | null | undefined>, string>>;\ntype B = Assert<Equal<s.WithoutNull<0 | false | null>, 0 | false>>;\n",
     "hint": "Use never to remove a union member.",
-    "alternative": "export type WithoutNull<T> = Exclude<T, null | undefined>;",
+    "alternative": "export type WithoutNull<T> = Exclude<T, null | undefined>;\n",
     "runtime": "",
-    "negative": "export const wrongAnswer = 1;"
+    "negative": "export const wrongAnswer = 1;\n"
   },
   {
     "id": "infer",
@@ -551,13 +551,13 @@
     "title": "Infer a nested type",
     "concept": "infer introduces a type variable while matching a structure. T extends Promise<infer U> ? U : T extracts the value inside a promise.\n\nThis exercise unwraps one level. The built-in Awaited utility recursively follows await semantics, including promise-like values; choose it for production async code unless you need a deliberately narrower contract.",
     "task": "Export Unwrap<T> that unwraps one Promise level and leaves non-promises unchanged.",
-    "starter": "export type Unwrap<T> = T;",
-    "solution": "export type Unwrap<T> = T extends Promise<infer U> ? U : T;",
-    "checks": "type A = Assert<Equal<s.Unwrap<Promise<string>>, string>>;\ntype B = Assert<Equal<s.Unwrap<number>, number>>;\ntype C = Assert<Equal<s.Unwrap<Promise<Promise<number>>>, Promise<number>>>;",
+    "starter": "export type Unwrap<T> = T;\n",
+    "solution": "export type Unwrap<T> = T extends Promise<infer U> ? U : T;\n",
+    "checks": "type A = Assert<Equal<s.Unwrap<Promise<string>>, string>>;\ntype B = Assert<Equal<s.Unwrap<number>, number>>;\ntype C = Assert<Equal<s.Unwrap<Promise<Promise<number>>>, Promise<number>>>;\n",
     "hint": "Match Promise<infer U> and return U in the true branch.",
-    "alternative": "export type Unwrap<T>=T extends Promise<infer U> ? U : T;\n",
+    "alternative": "export type Unwrap<T> = T extends Promise<infer U> ? U : T;\n",
     "runtime": "",
-    "negative": "export const wrongAnswer = 1;"
+    "negative": "export const wrongAnswer = 1;\n"
   },
   {
     "id": "templates",
@@ -565,13 +565,13 @@
     "title": "Template literal types",
     "concept": "Template literal types build string types from other types. Interpolating a union produces a union of possible strings. This can keep event names and routes aligned with a domain model.\n\nLarge cross-products can hurt readability and compiler performance. Prefer ordinary string validation when the set of possible values is huge or not known until runtime.",
     "task": "Export EventName<T extends string> producing exactly `${T}Changed`.",
-    "starter": "export type EventName<T extends string> = string;",
-    "solution": "export type EventName<T extends string> = `${T}Changed`;",
-    "checks": "type A = Assert<Equal<s.EventName<\"name\" | \"age\">, \"nameChanged\" | \"ageChanged\">>;\n// @ts-expect-error input must be text\ntype Bad = s.EventName<42>;",
+    "starter": "export type EventName<T extends string> = string;\n",
+    "solution": "export type EventName<T extends string> = `${T}Changed`;\n",
+    "checks": "type A = Assert<\n  Equal<s.EventName<\"name\" | \"age\">, \"nameChanged\" | \"ageChanged\">\n>;\n// @ts-expect-error input must be text\ntype Bad = s.EventName<42>;\n",
     "hint": "Backticks allow ${T} interpolation inside a type.",
-    "alternative": "export type EventName<T extends string>=`${T}Changed`;\n",
+    "alternative": "export type EventName<T extends string> = `${T}Changed`;\n",
     "runtime": "",
-    "negative": "export const wrongAnswer = 1;"
+    "negative": "export const wrongAnswer = 1;\n"
   },
   {
     "id": "remap",
@@ -579,13 +579,13 @@
     "title": "Remap object keys",
     "concept": "A mapped type can rename each key with an as clause. Capitalize changes the first character of a string type, so a model key can become a getter name.\n\nkeyof may include numbers or symbols. Intersecting K with string keeps a string transformation well-formed and drops keys that cannot be represented by this naming scheme.",
     "task": "Export Getters<T> mapping string keys to get + Capitalize<K>, with a zero-argument function returning the original property type.",
-    "starter": "export type Getters<T> = T;",
-    "solution": "export type Getters<T> = { [K in keyof T as `get${Capitalize<K & string>}`]: () => T[K] };",
-    "checks": "type A = Assert<Equal<s.Getters<{name:string;age:number}>, {getName:()=>string;getAge:()=>number}>>;",
+    "starter": "export type Getters<T> = T;\n",
+    "solution": "export type Getters<T> = {\n  [K in keyof T as `get${Capitalize<K & string>}`]: () => T[K];\n};\n",
+    "checks": "type A = Assert<\n  Equal<\n    s.Getters<{ name: string; age: number }>,\n    { getName: () => string; getAge: () => number }\n  >\n>;\n",
     "hint": "The as clause goes inside the mapping brackets, before the colon.",
-    "alternative": "export type Getters<T>={ [K in keyof T as `get${Capitalize<K & string>}`]: () => T[K] };\n",
+    "alternative": "export type Getters<T> = {\n  [K in keyof T as `get${Capitalize<K & string>}`]: () => T[K];\n};\n",
     "runtime": "",
-    "negative": "export const wrongAnswer = 1;"
+    "negative": "export const wrongAnswer = 1;\n"
   },
   {
     "id": "async",
@@ -593,13 +593,13 @@
     "title": "Async contracts",
     "concept": "An async function returns a Promise even when the body returns an ordinary value. await waits for a promise and exposes its fulfilled value; a rejection still needs error handling.\n\nA type annotation on a fetch response does not validate JSON. Keep transport data unknown until checks prove it has the expected shape. This lab practices the signature without contacting a server.",
     "task": "Export async loadCount(): Promise<number>. Return a number; do not make network requests.",
-    "starter": "export async function loadCount(): Promise<string> { return \"3\"; }",
-    "solution": "export async function loadCount(): Promise<number> { return 3; }",
-    "checks": "type A = Assert<Equal<Parameters<typeof s.loadCount>, []>>;\ntype B = Assert<Equal<ReturnType<typeof s.loadCount>, Promise<number>>>;",
+    "starter": "export async function loadCount(): Promise<string> {\n  return \"3\";\n}\n",
+    "solution": "export async function loadCount(): Promise<number> {\n  return 3;\n}\n",
+    "checks": "type A = Assert<Equal<Parameters<typeof s.loadCount>, []>>;\ntype B = Assert<Equal<ReturnType<typeof s.loadCount>, Promise<number>>>;\n",
     "hint": "Use Promise<number> for an async numeric result.",
-    "alternative": "export async function loadCount(): Promise<number> { return 3;\n }",
+    "alternative": "export async function loadCount(): Promise<number> {\n  return 3;\n}\n",
     "runtime": "",
-    "negative": "export const wrongAnswer = 1;"
+    "negative": "export const wrongAnswer = 1;\n"
   },
   {
     "id": "exhaustive",
@@ -607,13 +607,13 @@
     "title": "Exhaustiveness with never",
     "concept": "never represents a value that cannot occur. When a switch handles every member of a discriminated union, its remaining value narrows to never.\n\nAn assertNever helper causes future unhandled variants to fail compilation. Throwing at runtime is still useful if invalid external data gets through; compile-time exhaustiveness does not validate a network payload.",
     "task": "Export assertNever(value: never): never. Throw an Error so the function cannot return normally.",
-    "starter": "export function assertNever(value: unknown): void {}",
-    "solution": "export function assertNever(value: never): never { throw new Error(`Unexpected value: ${value}`); }",
-    "checks": "type A = Assert<Equal<typeof s.assertNever, (value:never)=>never>>;\n// @ts-expect-error existing variants are not never\ns.assertNever(\"loading\");",
+    "starter": "export function assertNever(value: unknown): void {}\n",
+    "solution": "export function assertNever(value: never): never {\n  throw new Error(`Unexpected value: ${value}`);\n}\n",
+    "checks": "type A = Assert<Equal<typeof s.assertNever, (value: never) => never>>;\n// @ts-expect-error existing variants are not never\ns.assertNever(\"loading\");\n",
     "hint": "A function that always throws has return type never.",
-    "alternative": "export function assertNever(value: never): never { throw new Error(`Unexpected value: ${value}`);\n }",
-    "runtime": "let threw=false; try { exports.assertNever(\"unexpected\"); } catch { threw=true; } if (!threw) throw new Error(\"Throw for an impossible value.\");",
-    "negative": "export function assertNever(value:never):never { while(true) {} }"
+    "alternative": "export function assertNever(value: never): never {\n  throw new Error(`Unexpected value: ${value}`);\n}\n",
+    "runtime": "let threw = false;\ntry {\n  exports.assertNever(\"unexpected\");\n} catch {\n  threw = true;\n}\nif (!threw) throw new Error(\"Throw for an impossible value.\");\n",
+    "negative": "export function assertNever(value: never): never {\n  while (true) {}\n}\n"
   },
   {
     "id": "api-state",
@@ -621,13 +621,13 @@
     "title": "Model a request lifecycle",
     "concept": "A request can be idle, pending, successful or failed. A union gives each state only the fields it can honestly provide. Components can switch on status and avoid repeated optional-property checks.\n\nKeep transport details separate from domain data. A string error is enough for this exercise; real applications may need error codes, retryability and correlation identifiers. Do not conflate an empty successful list with a failed request.",
     "task": "Export Remote<T> as four variants: {status:\"idle\"}, {status:\"pending\"}, {status:\"success\";data:T}, {status:\"error\";message:string}.",
-    "starter": "export type Remote<T> = { status: string; data?: T; message?: string };",
-    "solution": "export type Remote<T> = {status:\"idle\"} | {status:\"pending\"} | {status:\"success\";data:T} | {status:\"error\";message:string};",
-    "checks": "type A = Assert<Equal<s.Remote<number>, {status:\"idle\"}|{status:\"pending\"}|{status:\"success\";data:number}|{status:\"error\";message:string}>>;\n// @ts-expect-error success needs data\nconst bad: s.Remote<number> = {status:\"success\"};",
+    "starter": "export type Remote<T> = { status: string; data?: T; message?: string };\n",
+    "solution": "export type Remote<T> =\n  | { status: \"idle\" }\n  | { status: \"pending\" }\n  | { status: \"success\"; data: T }\n  | { status: \"error\"; message: string };\n",
+    "checks": "type A = Assert<\n  Equal<\n    s.Remote<number>,\n    | { status: \"idle\" }\n    | { status: \"pending\" }\n    | { status: \"success\"; data: number }\n    | { status: \"error\"; message: string }\n  >\n>;\n// @ts-expect-error success needs data\nconst bad: s.Remote<number> = { status: \"success\" };\n",
     "hint": "Use a separate object type for each status.",
-    "alternative": "export type Remote<T>={status:\"idle\"} | {status:\"pending\"} | {status:\"success\";\ndata:T} | {status:\"error\";\nmessage:string};\n",
+    "alternative": "export type Remote<T> =\n  | { status: \"idle\" }\n  | { status: \"pending\" }\n  | { status: \"success\"; data: T }\n  | { status: \"error\"; message: string };\n",
     "runtime": "",
-    "negative": "export const wrongAnswer = 1;"
+    "negative": "export const wrongAnswer = 1;\n"
   },
   {
     "id": "brands",
@@ -635,13 +635,13 @@
     "title": "Opaque identifiers",
     "concept": "User IDs and course IDs may both be strings, but swapping them can be a serious bug. A brand adds a compile-time distinction while keeping the runtime representation unchanged.\n\nBrands do not validate data or create secrecy. Construct branded values only after validation at a controlled boundary. A cast can bypass a brand, so it is a convention backed by checking, not a security barrier.",
     "task": "Export UserId as string & { readonly __brand: \"UserId\" }. Plain strings must not be assignable to it.",
-    "starter": "export type UserId = string;",
-    "solution": "export type UserId = string & { readonly __brand: \"UserId\" };",
-    "checks": "type A = Assert<Equal<s.UserId, string & {readonly __brand:\"UserId\"}>>;\n// @ts-expect-error plain strings have not been validated\nconst bad: s.UserId = \"user-1\";",
+    "starter": "export type UserId = string;\n",
+    "solution": "export type UserId = string & { readonly __brand: \"UserId\" };\n",
+    "checks": "type A = Assert<Equal<s.UserId, string & { readonly __brand: \"UserId\" }>>;\n// @ts-expect-error plain strings have not been validated\nconst bad: s.UserId = \"user-1\";\n",
     "hint": "Intersect string with a readonly marker object.",
-    "alternative": "export type UserId=string & { readonly __brand: \"UserId\" };\n",
+    "alternative": "export type UserId = string & { readonly __brand: \"UserId\" };\n",
     "runtime": "",
-    "negative": "export const wrongAnswer = 1;"
+    "negative": "export const wrongAnswer = 1;\n"
   },
   {
     "id": "validation",
@@ -649,13 +649,13 @@
     "title": "Validate a boundary",
     "concept": "A type predicate tells callers that a successful check establishes a type. The body must perform the checks: annotations alone cannot validate JSON.\n\nFor an object, reject null first because typeof null is \"object\". Then check property existence and each field type. A false predicate can mislead the compiler, so test validators with missing fields, wrong types and null in a real project.",
     "task": "Export User = {id:string;name:string} and isUser(value: unknown): value is User. Implement object, null, property and string checks.",
-    "starter": "export type User = {id:string;name:string};\nexport function isUser(value: unknown): boolean { return false; }",
-    "solution": "export type User = {id:string;name:string};\nexport function isUser(value: unknown): value is User {\n  return typeof value === \"object\" && value !== null\n    && \"id\" in value && typeof value.id === \"string\"\n    && \"name\" in value && typeof value.name === \"string\";\n}",
-    "checks": "type A = Assert<Equal<s.User, {id:string;name:string}>>;\ntype B = Assert<Equal<typeof s.isUser, (value:unknown)=>value is s.User>>;\ndeclare const input: unknown;\nif (s.isUser(input)) { const id: string = input.id; }",
+    "starter": "export type User = { id: string; name: string };\nexport function isUser(value: unknown): boolean {\n  return false;\n}\n",
+    "solution": "export type User = { id: string; name: string };\nexport function isUser(value: unknown): value is User {\n  return (\n    typeof value === \"object\" &&\n    value !== null &&\n    \"id\" in value &&\n    typeof value.id === \"string\" &&\n    \"name\" in value &&\n    typeof value.name === \"string\"\n  );\n}\n",
+    "checks": "type A = Assert<Equal<s.User, { id: string; name: string }>>;\ntype B = Assert<Equal<typeof s.isUser, (value: unknown) => value is s.User>>;\ndeclare const input: unknown;\nif (s.isUser(input)) {\n  const id: string = input.id;\n}\n",
     "hint": "Use value is User after the parameter list. The compiler checks the signature; runtime cases also reject malformed users.",
-    "alternative": "export type User={id:string;\nname:string};\n\nexport function isUser(value: unknown): value is User {\n  return typeof value === \"object\" && value !== null\n    && \"id\" in value && typeof value.id === \"string\"\n    && \"name\" in value && typeof value.name === \"string\";\n\n}",
-    "runtime": "for (const value of [null, undefined, 1, \"x\", {}, {id:\"1\"}, {name:\"Ada\"}, {id:3,name:\"Ada\"}]) { if (exports.isUser(value)) throw new Error(\"Reject malformed users, including null and missing fields.\"); } if (!exports.isUser({id:\"1\",name:\"Ada\"})) throw new Error(\"Accept a valid user.\");",
-    "negative": "export type User = {id:string;name:string}; export function isUser(value:unknown):value is User { return true; }"
+    "alternative": "export type User = { id: string; name: string };\n\nexport function isUser(value: unknown): value is User {\n  return (\n    typeof value === \"object\" &&\n    value !== null &&\n    \"id\" in value &&\n    typeof value.id === \"string\" &&\n    \"name\" in value &&\n    typeof value.name === \"string\"\n  );\n}\n",
+    "runtime": "for (const value of [\n  null,\n  undefined,\n  1,\n  \"x\",\n  {},\n  { id: \"1\" },\n  { name: \"Ada\" },\n  { id: 3, name: \"Ada\" },\n]) {\n  if (exports.isUser(value))\n    throw new Error(\n      \"Reject malformed users, including null and missing fields.\",\n    );\n}\nif (!exports.isUser({ id: \"1\", name: \"Ada\" }))\n  throw new Error(\"Accept a valid user.\");\n",
+    "negative": "export type User = { id: string; name: string };\nexport function isUser(value: unknown): value is User {\n  return true;\n}\n"
   },
   {
     "id": "repositories",
@@ -663,13 +663,13 @@
     "title": "Separate domain from storage",
     "concept": "A repository interface describes what a domain service needs without choosing a database. Promise return types make asynchronous boundaries explicit.\n\nA missing record is an expected outcome, so represent it with null. A rejected promise is a separate failure path. This type does not solve transactions, retries or authorization; those belong in the implementation contract.",
     "task": "Export Repository<T extends {id:string}> with find(id:string): Promise<T|null> and save(entity:T): Promise<void>.",
-    "starter": "export interface Repository<T> { find(id: number): T; save(entity: T): void }",
-    "solution": "export interface Repository<T extends {id:string}> {\n  find(id: string): Promise<T | null>;\n  save(entity: T): Promise<void>;\n}",
-    "checks": "type R = s.Repository<{id:string;name:string}>;\ntype A = Assert<Equal<ReturnType<R[\"find\"]>, Promise<{id:string;name:string}|null>>>;\ntype B = Assert<Equal<Parameters<R[\"save\"]>, [{id:string;name:string}]>>;\ntype C = Assert<Equal<ReturnType<R[\"save\"]>, Promise<void>>>;\n// @ts-expect-error entities need identity\ntype Bad = s.Repository<{name:string}>;",
+    "starter": "export interface Repository<T> {\n  find(id: number): T;\n  save(entity: T): void;\n}\n",
+    "solution": "export interface Repository<T extends { id: string }> {\n  find(id: string): Promise<T | null>;\n  save(entity: T): Promise<void>;\n}\n",
+    "checks": "type R = s.Repository<{ id: string; name: string }>;\ntype A = Assert<\n  Equal<ReturnType<R[\"find\"]>, Promise<{ id: string; name: string } | null>>\n>;\ntype B = Assert<Equal<Parameters<R[\"save\"]>, [{ id: string; name: string }]>>;\ntype C = Assert<Equal<ReturnType<R[\"save\"]>, Promise<void>>>;\n// @ts-expect-error entities need identity\ntype Bad = s.Repository<{ name: string }>;\n",
     "hint": "Keep the constraint on T, and wrap each asynchronous result in Promise.",
-    "alternative": "export interface Repository<T extends {id:string}> {\n  find(id: string): Promise<T | null>;\n\n  save(entity: T): Promise<void>;\n\n}",
+    "alternative": "export interface Repository<T extends { id: string }> {\n  find(id: string): Promise<T | null>;\n\n  save(entity: T): Promise<void>;\n}\n",
     "runtime": "",
-    "negative": "export const wrongAnswer = 1;"
+    "negative": "export const wrongAnswer = 1;\n"
   },
   {
     "id": "events",
@@ -677,13 +677,13 @@
     "title": "Typed event handlers",
     "concept": "An event map associates each event name with its payload. A mapped handler type derives function parameters from that map, preventing unrelated payloads from drifting apart.\n\nThis is a local type contract. Distributed events also need versioning, ordering, idempotency, retry and privacy rules; TypeScript types disappear across the wire and cannot replace schema validation.",
     "task": "Export Handlers<E> with one property per event key, each a function taking that event payload and returning void.",
-    "starter": "export type Handlers<E> = Record<string, (payload: unknown) => void>;",
-    "solution": "export type Handlers<E> = { [K in keyof E]: (payload: E[K]) => void };",
-    "checks": "type A = Assert<Equal<s.Handlers<{created:{id:string};removed:number}>, {created:(payload:{id:string})=>void;removed:(payload:number)=>void}>>;",
+    "starter": "export type Handlers<E> = Record<string, (payload: unknown) => void>;\n",
+    "solution": "export type Handlers<E> = { [K in keyof E]: (payload: E[K]) => void };\n",
+    "checks": "type A = Assert<\n  Equal<\n    s.Handlers<{ created: { id: string }; removed: number }>,\n    {\n      created: (payload: { id: string }) => void;\n      removed: (payload: number) => void;\n    }\n  >\n>;\n",
     "hint": "Map over keyof E; use E[K] as the function parameter type.",
-    "alternative": "export type Handlers<E>={ [K in keyof E]: (payload: E[K]) => void };\n",
+    "alternative": "export type Handlers<E> = { [K in keyof E]: (payload: E[K]) => void };\n",
     "runtime": "",
-    "negative": "export const wrongAnswer = 1;"
+    "negative": "export const wrongAnswer = 1;\n"
   },
   {
     "id": "capstone",
@@ -691,13 +691,13 @@
     "title": "Capstone: a typed learning API",
     "concept": "A good API contract preserves the relationship between an operation and its payload. Combine generics, discriminated unions and readonly collections to describe a paginated response without leaking storage details.\n\nA cursor may be null when no next page exists. A failure must contain an error and must not masquerade as an empty successful page. In production, validate responses, test runtime behavior and define compatibility before publishing changes. Completing this course is evidence of type-contract practice, not professional experience by itself.",
     "task": "Export Page<T> = {readonly items: readonly T[]; readonly nextCursor: string|null}. Export ApiResult<T> as {ok:true;data:Page<T>} | {ok:false;error:{code:string;message:string}}.",
-    "starter": "export type Page<T> = T[];\nexport type ApiResult<T> = {ok:boolean;data?:Page<T>};",
-    "solution": "export type Page<T> = {readonly items:readonly T[];readonly nextCursor:string|null};\nexport type ApiResult<T> = {ok:true;data:Page<T>} | {ok:false;error:{code:string;message:string}};",
-    "checks": "type A = Assert<Equal<s.Page<number>, {readonly items:readonly number[];readonly nextCursor:string|null}>>;\ntype B = Assert<Equal<s.ApiResult<string>, {ok:true;data:s.Page<string>}|{ok:false;error:{code:string;message:string}}>>;\n// @ts-expect-error missing failure detail\nconst bad: s.ApiResult<number> = {ok:false};",
+    "starter": "export type Page<T> = T[];\nexport type ApiResult<T> = { ok: boolean; data?: Page<T> };\n",
+    "solution": "export type Page<T> = {\n  readonly items: readonly T[];\n  readonly nextCursor: string | null;\n};\nexport type ApiResult<T> =\n  | { ok: true; data: Page<T> }\n  | { ok: false; error: { code: string; message: string } };\n",
+    "checks": "type A = Assert<\n  Equal<\n    s.Page<number>,\n    { readonly items: readonly number[]; readonly nextCursor: string | null }\n  >\n>;\ntype B = Assert<\n  Equal<\n    s.ApiResult<string>,\n    | { ok: true; data: s.Page<string> }\n    | { ok: false; error: { code: string; message: string } }\n  >\n>;\n// @ts-expect-error missing failure detail\nconst bad: s.ApiResult<number> = { ok: false };\n",
     "hint": "Build Page first, then use it only in the success variant.",
-    "alternative": "export type Page<T>={readonly items:readonly T[];\nreadonly nextCursor:string|null};\n\nexport type ApiResult<T>={ok:true;\ndata:Page<T>} | {ok:false;\nerror:{code:string;\nmessage:string}};\n",
+    "alternative": "export type Page<T> = {\n  readonly items: readonly T[];\n  readonly nextCursor: string | null;\n};\n\nexport type ApiResult<T> =\n  | { ok: true; data: Page<T> }\n  | { ok: false; error: { code: string; message: string } };\n",
     "runtime": "",
-    "negative": "export const wrongAnswer = 1;"
+    "negative": "export const wrongAnswer = 1;\n"
   },
   {
     "id": "project-tracker",
@@ -705,13 +705,13 @@
     "title": "Project: study-session tracker",
     "concept": "Combine object types, immutable inputs, validation and aggregation. A useful tracker needs an honest total and useful evidence: how many completed sessions count, and what happens when a duration is invalid?\n\nTreat duration as domain data. This project ignores non-finite or negative durations and counts only completed sessions. Work through empty input, unfinished sessions and bad values before the happy path. Never mutate a session just to mark it processed.\n\nSuggested approach: define Session and Summary, initialize totals, loop over sessions, skip invalid or incomplete sessions, and accumulate. After passing, explain why a zero-minute completed session still counts as a session.",
     "task": "Export Session={minutes:number;completed:boolean}, Summary={minutes:number;sessions:number}, and summarize(input:readonly Session[]):Summary. Count completed sessions with finite non-negative minutes and sum those minutes. Leave inputs unchanged.",
-    "starter": "export {};",
-    "solution": "export type Session={minutes:number;completed:boolean};\nexport type Summary={minutes:number;sessions:number};\nexport function summarize(input:readonly Session[]):Summary {\n const result:Summary={minutes:0,sessions:0};\n for(const session of input){\n  if(session.completed && Number.isFinite(session.minutes) && session.minutes>=0){result.minutes+=session.minutes;result.sessions++;}\n }\n return result;\n}",
-    "alternative": "export type Session={minutes:number;\ncompleted:boolean};\n\nexport type Summary={minutes:number;\nsessions:number};\n\nexport function summarize(input:readonly Session[]):Summary {\n const result:Summary={minutes:0,sessions:0};\n\n for(const session of input){\n  if(session.completed && Number.isFinite(session.minutes) && session.minutes>=0){result.minutes+=session.minutes;\nresult.sessions++;\n}\n }\n return result;\n\n}",
-    "checks": "type A=Assert<Equal<s.Session,{minutes:number;completed:boolean}>>;\ntype B=Assert<Equal<Parameters<typeof s.summarize>,[readonly s.Session[]]>>;\ntype C=Assert<Equal<ReturnType<typeof s.summarize>,{minutes:number;sessions:number}>>;",
+    "starter": "export {};\n",
+    "solution": "export type Session = { minutes: number; completed: boolean };\nexport type Summary = { minutes: number; sessions: number };\nexport function summarize(input: readonly Session[]): Summary {\n  const result: Summary = { minutes: 0, sessions: 0 };\n  for (const session of input) {\n    if (\n      session.completed &&\n      Number.isFinite(session.minutes) &&\n      session.minutes >= 0\n    ) {\n      result.minutes += session.minutes;\n      result.sessions++;\n    }\n  }\n  return result;\n}\n",
+    "alternative": "export type Session = { minutes: number; completed: boolean };\n\nexport type Summary = { minutes: number; sessions: number };\n\nexport function summarize(input: readonly Session[]): Summary {\n  const result: Summary = { minutes: 0, sessions: 0 };\n\n  for (const session of input) {\n    if (\n      session.completed &&\n      Number.isFinite(session.minutes) &&\n      session.minutes >= 0\n    ) {\n      result.minutes += session.minutes;\n      result.sessions++;\n    }\n  }\n  return result;\n}\n",
+    "checks": "type A = Assert<Equal<s.Session, { minutes: number; completed: boolean }>>;\ntype B = Assert<Equal<Parameters<typeof s.summarize>, [readonly s.Session[]]>>;\ntype C = Assert<\n  Equal<ReturnType<typeof s.summarize>, { minutes: number; sessions: number }>\n>;\n",
     "hint": "Count a zero-minute completed session. Use Number.isFinite before summing.",
-    "runtime": "const input=Object.freeze([Object.freeze({minutes:25,completed:true}),{minutes:10,completed:false},{minutes:-1,completed:true},{minutes:Infinity,completed:true},{minutes:NaN,completed:true},{minutes:0,completed:true}]);const r=exports.summarize(input);if(r.minutes!==25||r.sessions!==2)throw new Error(\"Count only completed, finite, non-negative sessions.\");const e=exports.summarize([]);if(e.minutes!==0||e.sessions!==0)throw new Error(\"Empty input has zero totals.\");",
-    "negative": "export type Session={minutes:number;completed:boolean};export type Summary={minutes:number;sessions:number};export function summarize(input:readonly Session[]):Summary{return {minutes:0,sessions:0};}"
+    "runtime": "const input = Object.freeze([\n  Object.freeze({ minutes: 25, completed: true }),\n  { minutes: 10, completed: false },\n  { minutes: -1, completed: true },\n  { minutes: Infinity, completed: true },\n  { minutes: NaN, completed: true },\n  { minutes: 0, completed: true },\n]);\nconst r = exports.summarize(input);\nif (r.minutes !== 25 || r.sessions !== 2)\n  throw new Error(\"Count only completed, finite, non-negative sessions.\");\nconst e = exports.summarize([]);\nif (e.minutes !== 0 || e.sessions !== 0)\n  throw new Error(\"Empty input has zero totals.\");\n",
+    "negative": "export type Session = { minutes: number; completed: boolean };\nexport type Summary = { minutes: number; sessions: number };\nexport function summarize(input: readonly Session[]): Summary {\n  return { minutes: 0, sessions: 0 };\n}\n"
   },
   {
     "id": "project-parser",
@@ -719,13 +719,13 @@
     "title": "Project: validate an API payload",
     "concept": "Type annotations do not validate JSON. A boundary parser must accept unknown, inspect it, and return either trusted domain data or a useful failure. This combines narrowing with a discriminated result union.\n\nThe payload here is a course. Its id and title must be non-empty after trimming; duration must be a finite non-negative number. Unknown extra fields are ignored. Successful output normalizes text, rather than returning the original object reference.\n\nBuild the parser in stages: reject null and non-objects; test required properties; validate their values; then construct a fresh Course. In production, use a reviewed runtime-schema strategy when the model grows, and define error codes if clients need to branch on failures.",
     "task": "Export Course={id:string;title:string;minutes:number}, ParseResult={ok:true;value:Course}|{ok:false;error:string}, and parseCourse(input:unknown):ParseResult. Validate and normalize as described. Failure must have a non-empty error.",
-    "starter": "export {};",
-    "solution": "export type Course={id:string;title:string;minutes:number};\nexport type ParseResult={ok:true;value:Course}|{ok:false;error:string};\nexport function parseCourse(input:unknown):ParseResult {\n if(typeof input!==\"object\"||input===null||!(\"id\" in input)||!(\"title\" in input)||!(\"minutes\" in input)) return {ok:false,error:\"Missing course fields\"};\n if(typeof input.id!==\"string\"||!input.id.trim()||typeof input.title!==\"string\"||!input.title.trim()||typeof input.minutes!==\"number\"||!Number.isFinite(input.minutes)||input.minutes<0) return {ok:false,error:\"Invalid course fields\"};\n return {ok:true,value:{id:input.id.trim(),title:input.title.trim(),minutes:input.minutes}};\n}",
-    "alternative": "export type Course={id:string;\ntitle:string;\nminutes:number};\n\nexport type ParseResult={ok:true;\nvalue:Course}|{ok:false;\nerror:string};\n\nexport function parseCourse(input:unknown):ParseResult {\n if(typeof input!==\"object\"||input===null||!(\"id\" in input)||!(\"title\" in input)||!(\"minutes\" in input)) return {ok:false,error:\"Missing course fields\"};\n\n if(typeof input.id!==\"string\"||!input.id.trim()||typeof input.title!==\"string\"||!input.title.trim()||typeof input.minutes!==\"number\"||!Number.isFinite(input.minutes)||input.minutes<0) return {ok:false,error:\"Invalid course fields\"};\n\n return {ok:true,value:{id:input.id.trim(),title:input.title.trim(),minutes:input.minutes}};\n\n}",
-    "checks": "type A=Assert<Equal<s.Course,{id:string;title:string;minutes:number}>>;\ntype B=Assert<Equal<s.ParseResult,{ok:true;value:s.Course}|{ok:false;error:string}>>;\ntype C=Assert<Equal<typeof s.parseCourse,(input:unknown)=>s.ParseResult>>;",
+    "starter": "export {};\n",
+    "solution": "export type Course = { id: string; title: string; minutes: number };\nexport type ParseResult =\n  | { ok: true; value: Course }\n  | { ok: false; error: string };\nexport function parseCourse(input: unknown): ParseResult {\n  if (\n    typeof input !== \"object\" ||\n    input === null ||\n    !(\"id\" in input) ||\n    !(\"title\" in input) ||\n    !(\"minutes\" in input)\n  )\n    return { ok: false, error: \"Missing course fields\" };\n  if (\n    typeof input.id !== \"string\" ||\n    !input.id.trim() ||\n    typeof input.title !== \"string\" ||\n    !input.title.trim() ||\n    typeof input.minutes !== \"number\" ||\n    !Number.isFinite(input.minutes) ||\n    input.minutes < 0\n  )\n    return { ok: false, error: \"Invalid course fields\" };\n  return {\n    ok: true,\n    value: {\n      id: input.id.trim(),\n      title: input.title.trim(),\n      minutes: input.minutes,\n    },\n  };\n}\n",
+    "alternative": "export type Course = { id: string; title: string; minutes: number };\n\nexport type ParseResult =\n  | { ok: true; value: Course }\n  | { ok: false; error: string };\n\nexport function parseCourse(input: unknown): ParseResult {\n  if (\n    typeof input !== \"object\" ||\n    input === null ||\n    !(\"id\" in input) ||\n    !(\"title\" in input) ||\n    !(\"minutes\" in input)\n  )\n    return { ok: false, error: \"Missing course fields\" };\n\n  if (\n    typeof input.id !== \"string\" ||\n    !input.id.trim() ||\n    typeof input.title !== \"string\" ||\n    !input.title.trim() ||\n    typeof input.minutes !== \"number\" ||\n    !Number.isFinite(input.minutes) ||\n    input.minutes < 0\n  )\n    return { ok: false, error: \"Invalid course fields\" };\n\n  return {\n    ok: true,\n    value: {\n      id: input.id.trim(),\n      title: input.title.trim(),\n      minutes: input.minutes,\n    },\n  };\n}\n",
+    "checks": "type A = Assert<\n  Equal<s.Course, { id: string; title: string; minutes: number }>\n>;\ntype B = Assert<\n  Equal<\n    s.ParseResult,\n    { ok: true; value: s.Course } | { ok: false; error: string }\n  >\n>;\ntype C = Assert<Equal<typeof s.parseCourse, (input: unknown) => s.ParseResult>>;\n",
     "hint": "Check every field before constructing the success object. Return a fresh normalized object.",
-    "runtime": "for(const x of [null,1,\"x\",{},{id:\"1\",title:\" \" ,minutes:2},{id:\"1\",title:\"TS\",minutes:-1},{id:\"1\",title:\"TS\",minutes:Infinity},{id:\"1\",title:\"TS\",minutes:\"5\"}]){const r=exports.parseCourse(x);if(r.ok||typeof r.error!==\"string\"||!r.error.length)throw new Error(\"Reject invalid payloads with an explanation.\");}const original={id:\" a \",title:\" TS \",minutes:0};const r=exports.parseCourse(Object.freeze(original));if(!r.ok||r.value.id!==\"a\"||r.value.title!==\"TS\"||r.value.minutes!==0||r.value===original)throw new Error(\"Normalize valid input into a fresh course.\");",
-    "negative": "export type Course={id:string;title:string;minutes:number};export type ParseResult={ok:true;value:Course}|{ok:false;error:string};export function parseCourse(input:unknown):ParseResult{return {ok:false,error:\"bad\"};}"
+    "runtime": "for (const x of [\n  null,\n  1,\n  \"x\",\n  {},\n  { id: \"1\", title: \" \", minutes: 2 },\n  { id: \"1\", title: \"TS\", minutes: -1 },\n  { id: \"1\", title: \"TS\", minutes: Infinity },\n  { id: \"1\", title: \"TS\", minutes: \"5\" },\n]) {\n  const r = exports.parseCourse(x);\n  if (r.ok || typeof r.error !== \"string\" || !r.error.length)\n    throw new Error(\"Reject invalid payloads with an explanation.\");\n}\nconst original = { id: \" a \", title: \" TS \", minutes: 0 };\nconst r = exports.parseCourse(Object.freeze(original));\nif (\n  !r.ok ||\n  r.value.id !== \"a\" ||\n  r.value.title !== \"TS\" ||\n  r.value.minutes !== 0 ||\n  r.value === original\n)\n  throw new Error(\"Normalize valid input into a fresh course.\");\n",
+    "negative": "export type Course = { id: string; title: string; minutes: number };\nexport type ParseResult =\n  | { ok: true; value: Course }\n  | { ok: false; error: string };\nexport function parseCourse(input: unknown): ParseResult {\n  return { ok: false, error: \"bad\" };\n}\n"
   },
   {
     "id": "project-catalog",
@@ -733,12 +733,12 @@
     "title": "Project: searchable course catalog",
     "concept": "A catalog search combines text normalization, readonly inputs and pagination. Define behavior before writing code: search titles case-insensitively after trimming the query; empty query matches everything; retain original order.\n\nPagination needs a validated integer page size and a predictable cursor. This local exercise uses a numeric offset and reports null when there is no next page. It deliberately avoids pretending an offset is a durable cursor for a changing production database.\n\nUse filter, slice and a fresh response object. Reject invalid offsets and sizes instead of silently coercing them. After the lab, consider how authorization, deleted records and concurrent inserts would change a real API.",
     "task": "Export Course={id:string;title:string}; Page={items:Course[];nextOffset:number|null}; search(courses:readonly Course[],query:string,offset:number,limit:number):Page. Reject non-integer/negative offsets and non-integer/non-positive limits with Error. Filter titles using trimmed case-insensitive query, then slice; compute nextOffset or null.",
-    "starter": "export {};",
-    "solution": "export type Course={id:string;title:string};\nexport type Page={items:Course[];nextOffset:number|null};\nexport function search(courses:readonly Course[],query:string,offset:number,limit:number):Page {\n if(!Number.isInteger(offset)||offset<0||!Number.isInteger(limit)||limit<=0) throw new Error(\"Invalid pagination\");\n const q=query.trim().toLowerCase();\n const matches=courses.filter(c=>c.title.toLowerCase().includes(q));\n const items=matches.slice(offset,offset+limit);\n return {items,nextOffset:offset+items.length<matches.length?offset+items.length:null};\n}",
-    "alternative": "export type Course={id:string;\ntitle:string};\n\nexport type Page={items:Course[];\nnextOffset:number|null};\n\nexport function search(courses:readonly Course[],query:string,offset:number,limit:number):Page {\n if(!Number.isInteger(offset)||offset<0||!Number.isInteger(limit)||limit<=0) throw new Error(\"Invalid pagination\");\n\n const q=query.trim().toLowerCase();\n\n const matches=courses.filter(c=>c.title.toLowerCase().includes(q));\n\n const items=matches.slice(offset,offset+limit);\n\n return {items,nextOffset:offset+items.length<matches.length?offset+items.length:null};\n\n}",
-    "checks": "type A=Assert<Equal<typeof s.search,(courses:readonly s.Course[],query:string,offset:number,limit:number)=>s.Page>>;\ntype B=Assert<Equal<s.Page,{items:s.Course[];nextOffset:number|null}>>;",
+    "starter": "export {};\n",
+    "solution": "export type Course = { id: string; title: string };\nexport type Page = { items: Course[]; nextOffset: number | null };\nexport function search(\n  courses: readonly Course[],\n  query: string,\n  offset: number,\n  limit: number,\n): Page {\n  if (\n    !Number.isInteger(offset) ||\n    offset < 0 ||\n    !Number.isInteger(limit) ||\n    limit <= 0\n  )\n    throw new Error(\"Invalid pagination\");\n  const q = query.trim().toLowerCase();\n  const matches = courses.filter((c) => c.title.toLowerCase().includes(q));\n  const items = matches.slice(offset, offset + limit);\n  return {\n    items,\n    nextOffset:\n      offset + items.length < matches.length ? offset + items.length : null,\n  };\n}\n",
+    "alternative": "export type Course = { id: string; title: string };\n\nexport type Page = { items: Course[]; nextOffset: number | null };\n\nexport function search(\n  courses: readonly Course[],\n  query: string,\n  offset: number,\n  limit: number,\n): Page {\n  if (\n    !Number.isInteger(offset) ||\n    offset < 0 ||\n    !Number.isInteger(limit) ||\n    limit <= 0\n  )\n    throw new Error(\"Invalid pagination\");\n\n  const q = query.trim().toLowerCase();\n\n  const matches = courses.filter((c) => c.title.toLowerCase().includes(q));\n\n  const items = matches.slice(offset, offset + limit);\n\n  return {\n    items,\n    nextOffset:\n      offset + items.length < matches.length ? offset + items.length : null,\n  };\n}\n",
+    "checks": "type A = Assert<\n  Equal<\n    typeof s.search,\n    (\n      courses: readonly s.Course[],\n      query: string,\n      offset: number,\n      limit: number,\n    ) => s.Page\n  >\n>;\ntype B = Assert<\n  Equal<s.Page, { items: s.Course[]; nextOffset: number | null }>\n>;\n",
     "hint": "Pagination applies after filtering. Use the filtered collection length for nextOffset.",
-    "runtime": "const courses=Object.freeze([{id:\"1\",title:\"TypeScript basics\"},{id:\"2\",title:\"Docker\"},{id:\"3\",title:\"Advanced TYPESCRIPT\"}]);let r=exports.search(courses,\" typescript \",0,1);if(r.items.length!==1||r.items[0].id!==\"1\"||r.nextOffset!==1)throw new Error(\"Normalize search before paging.\");r=exports.search(courses,\"typescript\",1,1);if(r.items[0]?.id!==\"3\"||r.nextOffset!==null)throw new Error(\"End of results must have a null next offset.\");r=exports.search(courses,\"missing\",0,5);if(r.items.length||r.nextOffset!==null)throw new Error(\"No matches is a successful empty page.\");for(const [o,l] of [[-1,1],[0,0],[0,1.5],[NaN,2],[0,Infinity]]){let threw=false;try{exports.search(courses,\"\",o,l);}catch{threw=true;}if(!threw)throw new Error(\"Reject invalid pagination.\");}",
-    "negative": "export type Course={id:string;title:string};export type Page={items:Course[];nextOffset:number|null};export function search(courses:readonly Course[],query:string,offset:number,limit:number):Page{return {items:[],nextOffset:null};}"
+    "runtime": "const courses = Object.freeze([\n  { id: \"1\", title: \"TypeScript basics\" },\n  { id: \"2\", title: \"Docker\" },\n  { id: \"3\", title: \"Advanced TYPESCRIPT\" },\n]);\nlet r = exports.search(courses, \" typescript \", 0, 1);\nif (r.items.length !== 1 || r.items[0].id !== \"1\" || r.nextOffset !== 1)\n  throw new Error(\"Normalize search before paging.\");\nr = exports.search(courses, \"typescript\", 1, 1);\nif (r.items[0]?.id !== \"3\" || r.nextOffset !== null)\n  throw new Error(\"End of results must have a null next offset.\");\nr = exports.search(courses, \"missing\", 0, 5);\nif (r.items.length || r.nextOffset !== null)\n  throw new Error(\"No matches is a successful empty page.\");\nfor (const [o, l] of [\n  [-1, 1],\n  [0, 0],\n  [0, 1.5],\n  [NaN, 2],\n  [0, Infinity],\n]) {\n  let threw = false;\n  try {\n    exports.search(courses, \"\", o, l);\n  } catch {\n    threw = true;\n  }\n  if (!threw) throw new Error(\"Reject invalid pagination.\");\n}\n",
+    "negative": "export type Course = { id: string; title: string };\nexport type Page = { items: Course[]; nextOffset: number | null };\nexport function search(\n  courses: readonly Course[],\n  query: string,\n  offset: number,\n  limit: number,\n): Page {\n  return { items: [], nextOffset: null };\n}\n"
   }
 ]

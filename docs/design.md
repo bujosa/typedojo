@@ -28,3 +28,10 @@ autocomplete, multiple profiles or spaced repetition in 0.1.
 
 Keiko integration is staged in `keiko-catalog.toml`; it must not be added to the production catalog
 until a signed release and checksums can actually be downloaded. Existing apps remain unaffected.
+
+## Interactive engine
+
+The IDE focus workbench has a separate run/debug session owner (`src/engine.rs`), native
+presentation (`src/ide.rs`) and trusted Inspector bridge (`runtime/bridge.cjs`). It never credits
+completion or changes the existing lab checker. See [ide-engine.md](ide-engine.md) for its lifecycle,
+source maps, local trust boundary, deadlines and progress compatibility.

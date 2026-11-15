@@ -1,5 +1,13 @@
+mod commands;
 mod compiler;
 mod course;
+mod design;
+mod editor;
+mod engine;
+mod formatter;
+mod ide;
+mod learning;
+mod reader;
 mod store;
 
 use egui::{Color32, RichText};
@@ -9,17 +17,30 @@ use std::{
 };
 use store::{Progress, Store};
 
-const BLUE: Color32 = Color32::from_rgb(93, 167, 255);
-const MUTED: Color32 = Color32::from_rgb(166, 176, 193);
+const BLUE: Color32 = design::ACCENT;
+const MUTED: Color32 = design::MUTED;
 const GOOD: Color32 = Color32::from_rgb(116, 212, 157);
-const WARN: Color32 = Color32::from_rgb(244, 190, 96);
+const WARN: Color32 = Color32::from_rgb(229, 190, 133);
 
 struct Completed {
     id: String,
     source: String,
     result: Result<compiler::Report, String>,
+    guided: bool,
+}
+struct FormatJob {
+    id: String,
+    file: String,
+    source: String,
+    points: std::collections::BTreeSet<usize>,
+    result: Result<formatter::Formatted, String>,
 }
 struct App {
+    art: Option<egui::TextureHandle>,
+    reader: reader::Reader,
+    guides: Vec<learning::Guide>,
+    workbench: ide::Workbench,
+    reference_editor: editor::Editor,
     lessons: Vec<course::Lesson>,
     progress: Progress,
     store: Option<Store>,
@@ -29,16 +50,26 @@ struct App {
     storage_error: Option<String>,
     pending: Option<mpsc::Receiver<Completed>>,
     dirty: Option<Instant>,
-    hint: bool,
     solution: bool,
+    solution_copied: bool,
     reset: bool,
     curriculum: bool,
-    tab: usize,
+    open_sections: std::collections::HashSet<String>,
+    focus: bool,
+    path_before_focus: bool,
+    stage: usize,
+    format_pending: Option<mpsc::Receiver<FormatJob>>,
+    format_notice: Option<(String, bool)>,
     screenshot_requested: bool,
     started: Instant,
 }
 impl App {
-    fn new(ctx: &egui::Context, lessons: Vec<course::Lesson>) -> Self {
+    fn new(
+        ctx: &egui::Context,
+        lessons: Vec<course::Lesson>,
+        guides: Vec<learning::Guide>,
+        initial_width: f32,
+    ) -> Self {
         style(ctx);
         let opened = store::home().and_then(Store::open);
         let (store, progress, storage_error) = match opened {
@@ -49,7 +80,16 @@ impl App {
             .iter()
             .position(|l| l.id == progress.selected)
             .unwrap_or(0);
+        let open_sections = std::iter::once(lessons[selected].section.clone()).collect();
         Self {
+            open_sections,
+            focus: false,
+            path_before_focus: true,
+            art: design::courtyard(ctx),
+            reader: reader::Reader::default(),
+            guides,
+            workbench: ide::Workbench::default(),
+            reference_editor: editor::Editor::default(),
             lessons,
             progress,
             store,
@@ -59,11 +99,13 @@ impl App {
             status: None,
             pending: None,
             dirty: None,
-            hint: false,
             solution: false,
+            solution_copied: false,
             reset: false,
-            curriculum: true,
-            tab: 0,
+            curriculum: initial_width > 1000.0,
+            stage: 0,
+            format_pending: None,
+            format_notice: None,
             screenshot_requested: false,
             started: Instant::now(),
         }
@@ -85,30 +127,62 @@ impl App {
         }
     }
     fn select(&mut self, index: usize) {
+        self.workbench.select(&self.lessons[index].id);
         self.selected = index;
+        self.stage = 0;
+        self.reader = reader::Reader::default();
+        self.format_notice = None;
+        self.open_sections
+            .insert(self.lessons[index].section.clone());
         self.progress.selected = self.lessons[index].id.clone();
-        self.hint = false;
         self.solution = false;
         self.status = None;
         self.dirty = Some(Instant::now());
     }
+    fn active_lesson(&self) -> course::Lesson {
+        if self.stage == 1 {
+            self.guides[self.selected].lesson(&self.lessons[self.selected])
+        } else {
+            self.lessons[self.selected].clone()
+        }
+    }
+    fn active_draft(&mut self, lesson: &course::Lesson) -> &mut store::Draft {
+        if self.stage == 1 {
+            self.progress
+                .guided_draft(lesson, &self.guides[self.selected].practice.playground)
+        } else {
+            self.progress.draft(lesson)
+        }
+    }
+    fn set_stage(&mut self, stage: usize) {
+        self.workbench.stop();
+        self.stage = stage.min(2);
+        self.status = None;
+        self.format_notice = None;
+        self.workbench.select(&self.active_lesson().id);
+    }
     fn check(&mut self, ctx: &egui::Context) {
-        if self.pending.is_some() {
+        if self.pending.is_some() || self.format_pending.is_some() || self.stage == 0 {
             return;
         }
+        let lesson = self.active_lesson();
+        let source = self.active_draft(&lesson).source.clone();
+        let guided = self.stage == 1;
         self.save();
-        let lesson = self.lessons[self.selected].clone();
-        let source = self.progress.draft(&lesson).source.clone();
         let (tx, rx) = mpsc::channel();
         self.pending = Some(rx);
         self.status = None;
         let ctx = ctx.clone();
         std::thread::spawn(move || {
-            let result = compiler::check(&lesson, &source);
+            let result = compiler::check(&lesson, &source).map(|mut report|{
+                if guided && !report.passed {report.text=format!("Practice is not solved yet.\n\nNext step: {}\n\nCompiler details (contract.ts compares your exports with the task):\n{}",lesson.hint,report.text);}
+                report
+            });
             let _ = tx.send(Completed {
                 id: lesson.id,
                 source,
                 result,
+                guided,
             });
             ctx.request_repaint();
         });
@@ -118,21 +192,27 @@ impl App {
         match result {
             Some(Ok(done)) => {
                 self.pending = None;
+                let current = self.active_lesson().id == done.id;
                 match done.result {
                     Ok(report) => {
-                        if let Some(draft) = self.progress.drafts.get_mut(&done.id)
+                        let drafts = if done.guided {
+                            &mut self.progress.guided
+                        } else {
+                            &mut self.progress.drafts
+                        };
+                        if let Some(draft) = drafts.get_mut(&done.id)
                             && draft.source == done.source
                         {
-                            if report.passed {
-                                draft.passed_source = Some(done.source);
+                            draft.passed_source = if report.passed {
+                                Some(done.source)
                             } else {
-                                draft.passed_source = None;
-                            }
-                            if self.lessons[self.selected].id == done.id {
+                                None
+                            };
+                            if current {
                                 self.status = Some((report.text, report.passed));
                             }
                             self.dirty = Some(Instant::now());
-                        } else if self.lessons[self.selected].id == done.id {
+                        } else if current {
                             self.status = Some((
                                 "Draft changed while checking. Check the current draft again."
                                     .into(),
@@ -140,9 +220,9 @@ impl App {
                             ));
                         }
                     }
-                    Err(e) => {
-                        if self.lessons[self.selected].id == done.id {
-                            self.status = Some((e, false));
+                    Err(error) => {
+                        if current {
+                            self.status = Some((error, false));
                         }
                     }
                 }
@@ -157,157 +237,395 @@ impl App {
             _ => {}
         }
     }
-    fn theory(&mut self, ui: &mut egui::Ui, lesson: &course::Lesson) {
-        ui.label(RichText::new("UNDERSTAND").color(BLUE).size(11.0));
-        ui.add_space(8.0);
-        for paragraph in lesson.concept.split("\n\n") {
-            ui.label(paragraph);
-            ui.add_space(12.0);
+    fn format(&mut self, ctx: &egui::Context, file: String) {
+        if self.stage == 0 || self.format_pending.is_some() || self.pending.is_some() {
+            return;
         }
-        ui.separator();
-        ui.add_space(8.0);
-        ui.label(RichText::new("YOUR LAB").color(BLUE).size(11.0));
-        ui.add_space(8.0);
-        ui.label(&lesson.task);
-        ui.add_space(16.0);
-        if ui
-            .button(if self.hint {
-                "Hide hint"
-            } else {
-                "Need a hint?"
-            })
-            .clicked()
-        {
-            self.hint = !self.hint;
-        }
-        if self.hint {
-            ui.add_space(8.0);
-            ui.label(RichText::new(&lesson.hint).color(WARN));
-        }
-        ui.add_space(12.0);
-        if ui.button("View worked solution").clicked() {
-            self.solution = true;
-            self.progress.draft(lesson).solution_seen = true;
-            self.dirty = Some(Instant::now());
-        }
-        ui.add_space(14.0);
-        ui.small("Every lab checks type contracts. Selected function labs also run sample inputs in an isolated JavaScript context.");
-        ui.hyperlink_to(
-            "Official TypeScript Handbook",
-            "https://www.typescriptlang.org/docs/handbook/intro.html",
-        );
-    }
-    fn lab(&mut self, ui: &mut egui::Ui, lesson: &course::Lesson) {
-        ui.horizontal(|ui| {
-            ui.label(RichText::new("answer.ts").monospace().color(BLUE));
-            ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                ui.small("strict · ES2022");
+        let lesson = self.active_lesson();
+        let draft = self.active_draft(&lesson);
+        let source = if file == "answer.ts" {
+            draft.source.clone()
+        } else if file == "playground.ts" {
+            draft
+                .playground
+                .clone()
+                .unwrap_or_else(|| engine::PLAYGROUND.into())
+        } else {
+            return;
+        };
+        let points = draft.breakpoints.get(&file).cloned().unwrap_or_default();
+        let (tx, rx) = mpsc::channel();
+        self.format_pending = Some(rx);
+        self.format_notice = None;
+        let ctx = ctx.clone();
+        std::thread::spawn(move || {
+            let result = formatter::format(&source, &points);
+            let _ = tx.send(FormatJob {
+                id: lesson.id,
+                file,
+                source,
+                points,
+                result,
             });
+            ctx.request_repaint();
         });
-        let draft = self.progress.draft(lesson);
-        let editor = egui::TextEdit::multiline(&mut draft.source)
-            .font(egui::TextStyle::Monospace)
-            .code_editor()
-            .desired_width(f32::INFINITY)
-            .desired_rows(16)
-            .lock_focus(true)
-            .id(egui::Id::new(("editor", &lesson.id)));
-        let changed = ui
-            .add_sized([ui.available_width(), 280.0], editor)
-            .changed();
-        if changed {
-            self.dirty = Some(Instant::now());
-            self.status = None;
+    }
+    fn receive_format(&mut self, ctx: &egui::Context) {
+        let result = self.format_pending.as_ref().map(|r| r.try_recv());
+        match result {
+            Some(Ok(done)) => {
+                self.format_pending = None;
+                if self.active_lesson().id != done.id
+                    || self.stage == 0
+                    || self.workbench.active_file() != done.file
+                {
+                    self.format_notice = Some((
+                        "File or stage changed. Format the current file again.".into(),
+                        false,
+                    ));
+                    return;
+                }
+                match done.result {
+                    Ok(formatted) => {
+                        let lesson = self.active_lesson();
+                        let draft = self.active_draft(&lesson);
+                        let source = if done.file == "answer.ts" {
+                            &mut draft.source
+                        } else {
+                            draft
+                                .playground
+                                .get_or_insert_with(|| engine::PLAYGROUND.into())
+                        };
+                        if *source != done.source
+                            || draft
+                                .breakpoints
+                                .get(&done.file)
+                                .cloned()
+                                .unwrap_or_default()
+                                != done.points
+                        {
+                            self.format_notice = Some((
+                                "Code or breakpoints changed while formatting. Format again."
+                                    .into(),
+                                false,
+                            ));
+                            return;
+                        }
+                        let changed = *source != formatted.source;
+                        if changed {
+                            editor::Editor::record_format(
+                                ctx,
+                                &format!("{}:{}", done.id, done.file),
+                                source,
+                                &formatted.source,
+                            );
+                        }
+                        *source = formatted.source;
+                        draft.breakpoints.insert(done.file, formatted.breakpoints);
+                        if changed {
+                            self.dirty = Some(Instant::now());
+                            self.status = None;
+                        }
+                        self.format_notice = Some((
+                            format!(
+                                "Prettier {} · {}",
+                                formatter::VERSION,
+                                if changed {
+                                    "Formatted. Check this revision again."
+                                } else {
+                                    "Already formatted."
+                                }
+                            ),
+                            true,
+                        ));
+                    }
+                    Err(error) => self.format_notice = Some((error, false)),
+                }
+            }
+            Some(Err(mpsc::TryRecvError::Disconnected)) => {
+                self.format_pending = None;
+                self.format_notice = Some((
+                    "Formatter stopped unexpectedly. Your code was preserved.".into(),
+                    false,
+                ));
+            }
+            _ => {}
         }
-        ui.add_space(8.0);
-        ui.horizontal_wrapped(|ui| {
-            let check = ui.add_enabled(
-                self.pending.is_none(),
-                egui::Button::new(RichText::new("Check lab").color(Color32::BLACK)).fill(BLUE),
-            );
-            if check.clicked() {
-                self.check(ui.ctx());
-            }
-            if self.pending.is_some() {
-                ui.spinner();
-                ui.label("Compiling your draft…");
-            }
-            if ui.button("Reset draft…").clicked() {
-                self.reset = true;
-            }
-        });
+    }
+    fn path(&mut self, ui: &mut egui::Ui, compact: bool) {
+        if !compact {
+            ui.add_space(12.0);
+            design::eyebrow(ui, "LEARNING PATH", MUTED);
+            ui.add_space(10.0);
+        }
+        ui.add(
+            egui::TextEdit::singleline(&mut self.query)
+                .hint_text(format!("Search {} lessons", self.lessons.len()))
+                .desired_width(f32::INFINITY),
+        );
         ui.add_space(12.0);
-        let passed = self.progress.draft(lesson).passed();
-        if let Some((text, ok)) = &self.status {
-            egui::Frame::new()
-                .fill(Color32::from_rgb(24, 29, 39))
-                .inner_margin(12.0)
-                .show(ui, |ui| {
-                    ui.label(
-                        RichText::new(if *ok { "PASSED" } else { "NEEDS ATTENTION" })
-                            .color(if *ok { GOOD } else { WARN }),
+        let query = self.query.trim().to_lowercase();
+        let mut choose = None;
+        let mut matches = 0;
+        let mut sections = Vec::<String>::new();
+        for lesson in &self.lessons {
+            if sections.last() != Some(&lesson.section) {
+                sections.push(lesson.section.clone());
+            }
+        }
+        egui::ScrollArea::vertical()
+            .id_salt("lessons")
+            .show(ui, |ui| {
+                for section in sections {
+                    let indices: Vec<usize> = self
+                        .lessons
+                        .iter()
+                        .enumerate()
+                        .filter(|(_, l)| l.section == section)
+                        .map(|(i, _)| i)
+                        .collect();
+                    let visible: Vec<usize> = indices
+                        .iter()
+                        .copied()
+                        .filter(|i| {
+                            query.is_empty()
+                                || format!("{} {}", self.lessons[*i].title, section)
+                                    .to_lowercase()
+                                    .contains(&query)
+                        })
+                        .collect();
+                    if visible.is_empty() {
+                        continue;
+                    }
+                    matches += visible.len();
+                    let done = indices
+                        .iter()
+                        .filter(|i| {
+                            self.progress
+                                .drafts
+                                .get(&self.lessons[**i].id)
+                                .is_some_and(|d| d.passed())
+                        })
+                        .count();
+                    let open = !query.is_empty() || self.open_sections.contains(&section);
+                    ui.add_space(6.0);
+                    let title = section
+                        .split_once(" · ")
+                        .map(|(_, name)| name)
+                        .unwrap_or(&section);
+                    ui.horizontal(|ui| {
+                        design::chapter(ui, section.as_bytes().get(1).copied().unwrap_or(b'1'));
+                        let button = ui.add(
+                            egui::Button::new(
+                                RichText::new(format!(
+                                    "{} {}",
+                                    if !query.is_empty() {
+                                        ">"
+                                    } else if open {
+                                        "−"
+                                    } else {
+                                        "+"
+                                    },
+                                    title
+                                ))
+                                .size(12.0)
+                                .color(if open {
+                                    BLUE
+                                } else {
+                                    MUTED
+                                }),
+                            )
+                            .frame(false)
+                            .wrap(),
+                        );
+                        if button.clicked() {
+                            if !query.is_empty() {
+                                self.query.clear();
+                                self.open_sections.insert(section.clone());
+                            } else if self.open_sections.contains(&section) {
+                                self.open_sections.remove(&section);
+                            } else {
+                                self.open_sections.insert(section.clone());
+                            }
+                        }
+                        ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                            ui.label(
+                                RichText::new(format!("{done}/{}", indices.len()))
+                                    .monospace()
+                                    .size(11.5)
+                                    .color(MUTED),
+                            );
+                        });
+                    });
+                    ui.add(
+                        egui::ProgressBar::new(done as f32 / indices.len() as f32)
+                            .desired_width(ui.available_width())
+                            .desired_height(2.0)
+                            .fill(GOOD),
                     );
                     ui.add_space(6.0);
-                    ui.add(egui::Label::new(RichText::new(text).monospace().size(12.0)).wrap());
-                });
-        } else {
-            ui.label(
-                RichText::new(if passed {
-                    "Passed · this exact draft was checked"
-                } else {
-                    "Not checked · edit the starter, then Check lab"
-                })
-                .color(if passed { GOOD } else { MUTED }),
-            );
-        }
-        if passed && self.selected + 1 < self.lessons.len() {
-            ui.add_space(12.0);
-            if ui.button("Continue to next lesson").clicked() {
-                self.select(self.selected + 1);
+                    if open {
+                        for i in visible {
+                            let l = &self.lessons[i];
+                            let passed =
+                                self.progress.drafts.get(&l.id).is_some_and(|d| d.passed());
+                            let selected = self.selected == i;
+                            let response = ui.add(
+                                egui::Button::new(
+                                    RichText::new(format!(
+                                        "{:02}  {}{}",
+                                        i + 1,
+                                        l.title,
+                                        if passed { "  · Passed" } else { "" }
+                                    ))
+                                    .size(12.5),
+                                )
+                                .fill(if selected {
+                                    Color32::from_rgb(30, 54, 80)
+                                } else {
+                                    Color32::TRANSPARENT
+                                })
+                                .stroke(egui::Stroke::NONE)
+                                .min_size(egui::vec2(ui.available_width(), 34.0))
+                                .wrap(),
+                            );
+                            if selected {
+                                ui.painter().line_segment(
+                                    [
+                                        response.rect.left_top() + egui::vec2(1.0, 5.0),
+                                        response.rect.left_bottom() + egui::vec2(1.0, -5.0),
+                                    ],
+                                    egui::Stroke::new(2.0, BLUE),
+                                );
+                            }
+                            if response.clicked() {
+                                choose = Some(i);
+                            }
+                        }
+                    }
+                    ui.add_space(8.0);
+                }
+                if matches == 0 {
+                    ui.add_space(16.0);
+                    ui.label("No lessons found");
+                    ui.label(
+                        RichText::new("Try a topic, such as generics or arrays.")
+                            .size(12.0)
+                            .color(MUTED),
+                    );
+                    if ui.button("Clear search").clicked() {
+                        self.query.clear();
+                    }
+                }
+            });
+        if let Some(index) = choose {
+            self.select(index);
+            if compact {
+                self.curriculum = false;
             }
-        }
-        if passed && self.progress.complete() == self.lessons.len() {
-            ui.add_space(8.0);
-            ui.label(RichText::new("All labs passed. Revisit the projects, explain your design choices, and keep practicing.").color(GOOD));
         }
     }
     fn frame(&mut self, ui: &mut egui::Ui) {
         let ctx = ui.ctx().clone();
         self.receive();
+        self.receive_format(&ctx);
+        self.workbench.poll(&ctx);
         if self
             .dirty
             .is_some_and(|t| t.elapsed() > Duration::from_millis(700))
         {
             self.save();
         }
-        if self.dirty.is_some() || self.pending.is_some() {
+        if self.dirty.is_some() || self.pending.is_some() || self.format_pending.is_some() {
             ctx.request_repaint_after(Duration::from_millis(100));
         }
-        if ctx.input_mut(|i| i.consume_key(egui::Modifiers::COMMAND, egui::Key::Enter)) {
+        if !self.solution
+            && !self.reset
+            && self.stage > 0
+            && self.format_pending.is_none()
+            && self.workbench.allows_check()
+            && ctx.input_mut(|i| i.consume_key(egui::Modifiers::COMMAND, egui::Key::Enter))
+        {
             self.check(&ctx);
         }
-        egui::Panel::top("header").show(ui, |ui| {
-            ui.add_space(8.0);
-            ui.horizontal(|ui| {
-                if ui.button("Lessons").clicked() {
-                    self.curriculum = !self.curriculum;
-                }
-                ui.label(RichText::new("Type").size(23.0).strong());
-                ui.label(RichText::new("Dojo").size(23.0).strong().color(BLUE));
-                ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+        egui::Panel::top("header")
+            .frame(
+                egui::Frame::new()
+                    .fill(design::BG)
+                    .inner_margin(if self.focus {
+                        egui::Margin::symmetric(12, 6)
+                    } else {
+                        egui::Margin::symmetric(20, 12)
+                    }),
+            )
+            .show(ui, |ui| {
+                ui.horizontal(|ui| {
+                    if self.focus {
+                        ui.spacing_mut().button_padding = egui::vec2(8.0, 4.0);
+                    }
+                    design::seal(ui, if self.focus { 24.0 } else { 34.0 });
                     ui.label(
-                        RichText::new(format!(
-                            "{} / {} labs passed",
-                            self.progress.complete(),
-                            self.lessons.len()
-                        ))
-                        .color(MUTED),
+                        RichText::new("TypeDojo").font(design::display(if self.focus {
+                            17.0
+                        } else {
+                            23.0
+                        })),
                     );
-                    ui.small("0.1 · Foundations to advanced");
+                    ui.add_space(14.0);
+                    if ui
+                        .button(if self.curriculum {
+                            "Hide path"
+                        } else {
+                            "Learning path"
+                        })
+                        .clicked()
+                    {
+                        self.curriculum = !self.curriculum;
+                    }
+                    if ui
+                        .button(if self.focus {
+                            "Study view"
+                        } else {
+                            "Focus on code"
+                        })
+                        .clicked()
+                    {
+                        self.focus = !self.focus;
+                        if self.focus {
+                            if self.stage == 0 {
+                                self.set_stage(2);
+                            }
+                            self.path_before_focus = self.curriculum;
+                            self.curriculum = false;
+                        } else {
+                            self.curriculum = self.path_before_focus;
+                            self.workbench.stop();
+                        }
+                    }
+                    if self.focus && ui.available_width() > 620.0 {
+                        ui.label(
+                            RichText::new(&self.lessons[self.selected].title)
+                                .size(12.0)
+                                .color(MUTED),
+                        );
+                    }
+                    ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                        let done = self.progress.complete();
+                        ui.label(
+                            RichText::new(format!("{done} / {} labs", self.lessons.len()))
+                                .monospace()
+                                .size(12.0)
+                                .color(MUTED),
+                        );
+                        ui.add(
+                            egui::ProgressBar::new(done as f32 / self.lessons.len() as f32)
+                                .desired_width(80.0)
+                                .desired_height(4.0)
+                                .fill(GOOD),
+                        );
+                    });
                 });
             });
-            ui.add_space(8.0);
-        });
         if let Some(error) = self.storage_error.clone() {
             egui::Panel::top("storage-error").show(ui, |ui| {
                 ui.colored_label(WARN, error);
@@ -318,7 +636,12 @@ impl App {
         }
         egui::Panel::bottom("footer").show(ui, |ui| {
             ui.horizontal(|ui| {
-                ui.small("KEIKO FAMILY  /  Practice, understand, repeat.");
+                ui.label(
+                    RichText::new("KEIKO  /  Daily practice for builders")
+                        .monospace()
+                        .size(11.5)
+                        .color(MUTED),
+                );
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                     ui.small(if self.store.is_none() {
                         "Practice mode · saving unavailable"
@@ -333,113 +656,221 @@ impl App {
                 });
             });
         });
-        if self.curriculum {
+        let compact = ui.available_width() < 1000.0;
+        if self.curriculum && !compact && !self.focus {
             egui::Panel::left("curriculum")
-                .default_size(248.0)
-                .size_range(210.0..=320.0)
-                .show(ui, |ui| {
-                    ui.add_space(12.0);
-                    ui.label(RichText::new("THE LEARNING PATH").color(MUTED).size(11.0));
-                    ui.add_space(8.0);
-                    ui.add(
-                        egui::TextEdit::singleline(&mut self.query)
-                            .hint_text("Find a lesson…")
-                            .desired_width(f32::INFINITY),
-                    );
-                    ui.add_space(8.0);
-                    let mut choose = None;
-                    let mut section = String::new();
-                    let query = self.query.to_lowercase();
-                    egui::ScrollArea::vertical()
-                        .id_salt("lessons")
-                        .show(ui, |ui| {
-                            for (i, lesson) in self.lessons.iter().enumerate() {
-                                if !query.is_empty()
-                                    && !format!("{} {}", lesson.title, lesson.section)
-                                        .to_lowercase()
-                                        .contains(&query)
-                                {
-                                    continue;
-                                }
-                                if section != lesson.section {
-                                    section = lesson.section.clone();
-                                    ui.add_space(12.0);
-                                    ui.label(RichText::new(&section).color(BLUE).size(12.0));
-                                    ui.add_space(4.0);
-                                }
-                                let passed = self
-                                    .progress
-                                    .drafts
-                                    .get(&lesson.id)
-                                    .is_some_and(|d| d.passed());
-                                if ui
-                                    .add(
-                                        egui::Button::new(
-                                            RichText::new(format!(
-                                                "{:02}  {}{}",
-                                                i + 1,
-                                                lesson.title,
-                                                if passed { "  [pass]" } else { "" }
-                                            ))
-                                            .size(13.0),
-                                        )
-                                        .selected(self.selected == i)
-                                        .wrap(),
-                                    )
-                                    .clicked()
-                                {
-                                    choose = Some(i);
-                                }
-                            }
-                            if section.is_empty() {
-                                ui.label("No lessons match. Clear the search to see the path.");
-                            }
-                        });
-                    if let Some(index) = choose {
-                        self.select(index);
-                    }
-                });
+                .default_size(256.0)
+                .size_range(220.0..=320.0)
+                .show(ui, |ui| self.path(ui, false));
         }
         egui::CentralPanel::default().show(ui, |ui| {
-            let lesson = self.lessons[self.selected].clone();
-            ui.add_space(12.0);
-            ui.label(RichText::new(&lesson.section).color(BLUE).size(12.0));
-            ui.heading(&lesson.title);
-            ui.add_space(8.0);
-            let width = ui.available_width();
-            if width > 850.0 {
-                ui.columns(2, |columns| {
-                    egui::ScrollArea::vertical()
-                        .id_salt("theory")
-                        .show(&mut columns[0], |ui| self.theory(ui, &lesson));
-                    egui::ScrollArea::vertical()
-                        .id_salt("lab")
-                        .show(&mut columns[1], |ui| self.lab(ui, &lesson));
-                });
-            } else {
-                ui.horizontal(|ui| {
-                    ui.selectable_value(&mut self.tab, 0, "Learn");
-                    ui.selectable_value(&mut self.tab, 1, "Practice");
-                });
-                ui.add_space(8.0);
-                egui::ScrollArea::vertical()
-                    .id_salt("compact")
-                    .show(ui, |ui| {
-                        if self.tab == 0 {
-                            self.theory(ui, &lesson);
-                        } else {
-                            self.lab(ui, &lesson);
+            let base = self.lessons[self.selected].clone();
+            let guide = self.guides[self.selected].clone();
+            let guided_passed = self
+                .progress
+                .guided
+                .get(&format!("guided-{}", base.id))
+                .is_some_and(|draft| draft.passed());
+            let lab_passed = self
+                .progress
+                .drafts
+                .get(&base.id)
+                .is_some_and(|draft| draft.passed());
+            egui::Panel::top("learning-stages")
+                .frame(egui::Frame::new().inner_margin(egui::Margin::symmetric(6, 8)))
+                .show(ui, |ui| {
+                    ui.horizontal_wrapped(|ui| {
+                        for (stage, label) in [
+                            (0, "1  Learn".to_string()),
+                            (
+                                1,
+                                format!(
+                                    "2  Guided practice{}",
+                                    if guided_passed { " · Passed" } else { "" }
+                                ),
+                            ),
+                            (
+                                2,
+                                format!(
+                                    "3  Independent lab{}",
+                                    if lab_passed { " · Passed" } else { "" }
+                                ),
+                            ),
+                        ] {
+                            if ui
+                                .selectable_label(
+                                    self.stage == stage,
+                                    RichText::new(label).size(12.0),
+                                )
+                                .clicked()
+                            {
+                                self.set_stage(stage);
+                            }
+                        }
+                        if self.stage == 1
+                            && guided_passed
+                            && ui.button("Continue to lab").clicked()
+                        {
+                            self.set_stage(2);
+                        }
+                        if self.stage == 2
+                            && lab_passed
+                            && self.selected + 1 < self.lessons.len()
+                            && ui.button("Next lesson").clicked()
+                        {
+                            self.select(self.selected + 1);
                         }
                     });
+                });
+            if self.stage == 0 {
+                design::masthead(
+                    ui,
+                    self.art.as_ref(),
+                    &base.section,
+                    &base.title,
+                    self.selected,
+                    true,
+                    false,
+                );
+                ui.add_space(12.0);
+                if let Some(action) = self.reader.show(ui, &guide, &base, &self.lessons) {
+                    match action {
+                        reader::Action::Practice => self.set_stage(1),
+                        reader::Action::Prerequisite(index) => self.select(index),
+                    }
+                }
+            } else {
+                let lesson = self.active_lesson();
+                let guided = self.stage == 1;
+                let draft = if guided {
+                    self.progress
+                        .guided_draft(&lesson, &guide.practice.playground)
+                } else {
+                    self.progress.draft(&lesson)
+                };
+                let initialized = draft.playground.is_none();
+                if initialized {
+                    draft.playground = Some(engine::PLAYGROUND.into());
+                }
+                let previous_file = self.workbench.active_file().to_owned();
+                let response = self.workbench.show(
+                    ui,
+                    &lesson,
+                    draft,
+                    self.pending.is_some(),
+                    self.status.as_ref().map(|(text, _)| text.as_str()),
+                    ide::Context {
+                        guided,
+                        formatting: self.format_pending.is_some(),
+                        format_notice: self
+                            .format_notice
+                            .as_ref()
+                            .map(|(text, ok)| (text.as_str(), *ok)),
+                    },
+                );
+                if self.workbench.active_file() != previous_file {
+                    self.format_notice = None;
+                }
+                if response.changed || initialized {
+                    self.dirty = Some(Instant::now());
+                }
+                if response.changed {
+                    self.status = None;
+                    self.format_notice = None;
+                }
+                if response.check {
+                    self.check(&ctx);
+                }
+                if let Some(file) = response.format {
+                    self.format(&ctx, file);
+                }
+                if response.solution {
+                    self.solution = true;
+                    self.solution_copied = false;
+                    self.active_draft(&lesson).solution_seen = true;
+                    self.dirty = Some(Instant::now());
+                }
+                if response.reset {
+                    self.reset = true;
+                }
             }
         });
+        if self.curriculum && (compact || self.focus) {
+            let mut open = true;
+            let mut close_path = false;
+            egui::Window::new("Learning path")
+                .open(&mut open)
+                .title_bar(false)
+                .frame(
+                    egui::Frame::new()
+                        .fill(design::PANEL)
+                        .stroke(egui::Stroke::new(1.0, design::BORDER))
+                        .corner_radius(10.0)
+                        .inner_margin(16.0),
+                )
+                .collapsible(false)
+                .resizable(false)
+                .fixed_pos(egui::pos2(16.0, 76.0))
+                .default_width(300.0)
+                .max_height((ctx.content_rect().height() - 110.0).max(200.0))
+                .show(&ctx, |ui| {
+                    ui.horizontal(|ui| {
+                        ui.label(RichText::new("Learning path").font(design::display(18.0)));
+                        ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                            if ui.button("Close").clicked() {
+                                close_path = true;
+                            }
+                        });
+                    });
+                    ui.add_space(12.0);
+                    self.path(ui, true);
+                });
+            if !open || close_path {
+                self.curriculum = false;
+            }
+        }
         if self.solution {
-            let lesson = self.lessons[self.selected].clone();
-            egui::Window::new("Worked solution").open(&mut self.solution).default_width(600.0).show(&ctx,|ui|{ui.label("Read, close, then write your own answer. Viewing this does not pass the lab.");ui.add_space(10.0);egui::ScrollArea::both().show(ui,|ui|{ui.monospace(&lesson.solution);});});
+            let lesson = self.active_lesson();
+            let mut close = false;
+            let response=egui::Modal::new(egui::Id::new("worked-solution"))
+                .frame(egui::Frame::new().fill(design::PANEL).stroke(egui::Stroke::new(1.0,design::BORDER)).corner_radius(12.0).inner_margin(24.0))
+                .show(&ctx,|ui|{
+                    ui.set_width((ctx.content_rect().width()-80.0).clamp(280.0,680.0));
+                    ui.horizontal(|ui|{ui.label(RichText::new("Worked solution").font(design::display(22.0)));ui.with_layout(egui::Layout::right_to_left(egui::Align::Center),|ui|{if ui.button("Close").clicked(){close=true;}});});
+                    ui.add_space(6.0);ui.label(RichText::new(&lesson.title).size(13.0).color(MUTED));ui.add_space(14.0);
+                    ui.label("Read the approach, then write your own answer. Viewing a solution does not pass the lab.");ui.add_space(18.0);
+                    egui::Frame::new().fill(Color32::from_rgb(12,19,29)).corner_radius(7.0).inner_margin(16.0).show(ui,|ui|{
+                        ui.set_min_width(ui.available_width());egui::ScrollArea::both().max_height((ctx.content_rect().height()*0.5).max(140.0)).show(ui,|ui|self.reference_editor.reference(ui,&lesson.solution));
+                    });
+                    ui.add_space(16.0);if ui.button(if self.solution_copied {"Copied"}else{"Copy code"}).clicked(){ui.ctx().copy_text(lesson.solution.clone());self.solution_copied=true;}
+                });
+            if close || response.should_close() {
+                self.solution = false;
+            }
         }
         if self.reset {
-            egui::Window::new("Reset this draft?").collapsible(false).resizable(false).show(&ctx,|ui|{ui.label("Your current answer will be replaced by the starter. Other lessons stay saved.");ui.horizontal(|ui|{if ui.button("Keep my answer").clicked(){self.reset=false;}
-if ui.button("Reset this lesson").clicked(){let l=&self.lessons[self.selected];let d=self.progress.draft(l);d.source=l.starter.clone();d.passed_source=None;self.status=None;self.dirty=Some(Instant::now());self.reset=false;}});});
+            let mut cancel = false;
+            let mut reset = false;
+            let response=egui::Modal::new(egui::Id::new("reset-answer"))
+                .frame(egui::Frame::new().fill(design::PANEL).stroke(egui::Stroke::new(1.0,design::BORDER)).corner_radius(12.0).inner_margin(24.0))
+                .show(&ctx,|ui|{
+                    ui.set_width((ctx.content_rect().width()-80.0).clamp(280.0,420.0));
+                    ui.label(RichText::new("Reset this answer?").font(design::display(22.0)));ui.add_space(12.0);
+                    ui.label("Replace your current draft with the lesson starter. Other lessons keep their saved answers and progress.");ui.add_space(22.0);
+                    ui.horizontal(|ui|{if ui.button("Keep editing").clicked(){cancel=true;}
+if ui.add(egui::Button::new(RichText::new("Reset answer").color(design::TEXT)).fill(Color32::from_rgb(137,59,55))).clicked(){reset=true;}});
+                });
+            if reset {
+                let lesson = self.active_lesson();
+                let d = self.active_draft(&lesson);
+                d.source = lesson.starter.clone();
+                d.passed_source = None;
+                self.status = None;
+                self.dirty = Some(Instant::now());
+            }
+            if reset || cancel || response.should_close() {
+                self.reset = false;
+            }
         }
         self.screenshot(&ctx);
     }
@@ -509,16 +940,39 @@ fn style(ctx: &egui::Context) {
             .or_default()
             .insert(0, name.into());
     }
+    fonts.font_data.insert(
+        "display".into(),
+        Arc::new(egui::FontData::from_static(include_bytes!(
+            "../assets/fonts/SpaceGrotesk-Bold.ttf"
+        ))),
+    );
+    fonts.families.insert(
+        egui::FontFamily::Name("display".into()),
+        vec!["display".into(), "inter".into()],
+    );
     ctx.set_fonts(fonts);
     ctx.set_theme(egui::Theme::Dark);
     let mut visuals = egui::Visuals::dark();
-    visuals.panel_fill = Color32::from_rgb(16, 20, 28);
-    visuals.override_text_color = Some(Color32::from_rgb(230, 235, 244));
+    visuals.panel_fill = design::BG;
+    visuals.override_text_color = Some(design::TEXT);
     visuals.selection.bg_fill = Color32::from_rgb(35, 71, 112);
     visuals.hyperlink_color = BLUE;
+    visuals.extreme_bg_color = Color32::from_rgb(10, 17, 25);
+    visuals.window_fill = design::PANEL;
+    visuals.widgets.inactive.weak_bg_fill = design::PANEL;
+    visuals.widgets.inactive.bg_stroke = egui::Stroke::new(1.0, design::BORDER);
+    visuals.widgets.hovered.weak_bg_fill = Color32::from_rgb(36, 54, 74);
+    for w in [
+        &mut visuals.widgets.inactive,
+        &mut visuals.widgets.hovered,
+        &mut visuals.widgets.active,
+    ] {
+        w.corner_radius = egui::CornerRadius::same(6);
+    }
     ctx.set_visuals(visuals);
     ctx.all_styles_mut(|s| {
-        s.spacing.item_spacing = egui::vec2(10.0, 8.0);
+        s.spacing.scroll.fade.strength = 0.0;
+        s.spacing.item_spacing = egui::vec2(12.0, 8.0);
         s.spacing.button_padding = egui::vec2(10.0, 7.0);
         s.text_styles
             .insert(egui::TextStyle::Body, egui::FontId::proportional(15.0));
@@ -534,6 +988,20 @@ fn main() -> eframe::Result {
             return Ok(());
         }
     };
+    let guides = match learning::load(&lessons) {
+        Ok(guides) => guides,
+        Err(error) => {
+            eprintln!("{error}");
+            return Ok(());
+        }
+    };
+    if std::env::args().any(|a| a == "--verify-learning") {
+        if let Err(error) = learning::verify(&lessons, &guides) {
+            eprintln!("{error}");
+            std::process::exit(1);
+        }
+        return Ok(());
+    }
     if std::env::args().any(|a| a == "--verify-content") {
         if let Err(e) = compiler::verify(&lessons) {
             eprintln!("{e}");
@@ -560,6 +1028,6 @@ fn main() -> eframe::Result {
     eframe::run_native(
         "TypeDojo",
         options,
-        Box::new(move |cc| Ok(Box::new(App::new(&cc.egui_ctx, lessons)))),
+        Box::new(move |cc| Ok(Box::new(App::new(&cc.egui_ctx, lessons, guides, size[0])))),
     )
 }

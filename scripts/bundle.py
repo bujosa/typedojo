@@ -30,6 +30,11 @@ macos = app / 'Contents/MacOS'
 resources = app / 'Contents/Resources'
 macos.mkdir(parents=True)
 resources.mkdir()
+licenses = resources / 'Licenses'
+licenses.mkdir()
+for license_file in list(Path('assets/fonts').glob('OFL-*.txt')) + list(Path('assets/licenses').glob('*.txt')):
+    shutil.copy2(license_file, licenses / license_file.name)
+shutil.copy2('ATTRIBUTION.md', resources / 'ATTRIBUTION.md')
 shutil.copy2(binary, macos / 'typedojo')
 info = dict(CFBundleName='TypeDojo', CFBundleDisplayName='TypeDojo', CFBundleIdentifier='dev.bujosa.typedojo',
             CFBundleVersion=version, CFBundleShortVersionString=version, CFBundleExecutable='typedojo',

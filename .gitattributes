@@ -1,0 +1,5 @@
+# Preserve upstream notices and pinned Prettier artifacts byte-for-byte.
+# Their intentional trailing whitespace must not be normalized or reformatted.
+assets/vendor/prettier/** -text whitespace=-trailing-space
+assets/licenses/** -text whitespace=-trailing-space
+assets/fonts/OFL-*.txt -text whitespace=-trailing-space

@@ -1,17 +1,24 @@
 import AppKit
-let size = 1024
-let image = NSImage(size: NSSize(width: size, height: size))
+// Original TypeDojo bracket seal. The same geometry is painted by src/design.rs.
+let image = NSImage(size: NSSize(width: 1024, height: 1024))
 image.lockFocus()
-NSColor(calibratedRed: 0.07, green: 0.10, blue: 0.16, alpha: 1).setFill()
+NSColor(calibratedRed: 0.051, green: 0.082, blue: 0.122, alpha: 1).setFill()
 NSBezierPath(roundedRect: NSRect(x: 48, y: 48, width: 928, height: 928), xRadius: 210, yRadius: 210).fill()
-NSColor(calibratedRed: 0.36, green: 0.65, blue: 1, alpha: 1).setStroke()
-let ring = NSBezierPath(roundedRect: NSRect(x: 100, y: 100, width: 824, height: 824), xRadius: 164, yRadius: 164)
-ring.lineWidth = 12
-ring.stroke()
-let attrs: [NSAttributedString.Key: Any] = [.font: NSFont.monospacedSystemFont(ofSize: 400, weight: .bold), .foregroundColor: NSColor.white]
-let text = "T_" as NSString
-let textSize = text.size(withAttributes: attrs)
-text.draw(at: NSPoint(x: (1024 - textSize.width)/2, y: (1024 - textSize.height)/2 + 12), withAttributes: attrs)
+NSColor(calibratedRed: 0.118, green: 0.310, blue: 0.569, alpha: 1).setFill()
+NSBezierPath(roundedRect: NSRect(x: 154, y: 154, width: 716, height: 716), xRadius: 152, yRadius: 152).fill()
+NSColor(calibratedRed: 0.949, green: 0.929, blue: 0.882, alpha: 1).setStroke()
+func line(_ points: [(CGFloat, CGFloat)]) {
+    let path = NSBezierPath()
+    if let first = points.first { path.move(to: NSPoint(x: first.0, y: first.1)) }
+    for point in points.dropFirst() { path.line(to: NSPoint(x: point.0, y: point.1)) }
+    path.lineWidth = 42
+    path.lineCapStyle = .square
+    path.lineJoinStyle = .miter
+    path.stroke()
+}
+line([(390, 708), (304, 708), (304, 316), (390, 316)])
+line([(634, 708), (720, 708), (720, 316), (634, 316)])
+line([(466, 366), (558, 658)])
 image.unlockFocus()
 if let tiff = image.tiffRepresentation, let bitmap = NSBitmapImageRep(data: tiff), let png = bitmap.representation(using: .png, properties: [:]) {
     try png.write(to: URL(fileURLWithPath: CommandLine.arguments[1]))
