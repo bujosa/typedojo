@@ -22,3 +22,5 @@ Resources/Licenses. Vendored artifacts are in assets/vendor/prettier with SHA256
 Source distribution: https://registry.npmjs.org/prettier/-/prettier-3.6.2.tgz
 
 Lesson illustration collection v1: 53 original transparent images generated for TypeDojo with the built-in image_gen tool. Exact authored prompts and captions are recorded in assets/art/prompts-v1.json. The collection follows this project's MIT OR Apache-2.0 license. These are conceptual illustrations, not compiler traces.
+
+Node.js 24.22.3 (MIT and included third-party notices) and TypeScript 5.9.3 (Apache-2.0) are fetched from the upstream URLs and SHA-256 pins in runtime/toolchain.json. Generated runtimes are kept in target and bundled with their complete license notices.

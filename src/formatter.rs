@@ -3,7 +3,7 @@ use std::{
     fs,
     io::Read,
     path::PathBuf,
-    process::{Command, Stdio},
+    process::Stdio,
     time::{Duration, Instant, SystemTime, UNIX_EPOCH},
 };
 pub const VERSION: &str = "3.6.2";
@@ -69,8 +69,7 @@ pub fn format(
         PathBuf::from("/opt/homebrew/bin"),
         PathBuf::from("/usr/local/bin"),
     ]);
-    let node = std::env::var_os("TYPEDOJO_NODE").unwrap_or_else(|| "node".into());
-    let mut child = Command::new(node)
+    let mut child = crate::tooling::node()?
         .args([
             "--permission",
             "--allow-fs-read=.",

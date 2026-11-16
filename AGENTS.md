@@ -20,3 +20,5 @@ Native Rust/egui TypeScript practice app in the Keiko family. English UI and con
 - Use `TYPEDOJO_HOME` in tests and visual review, never the learner's real data.
 - No public release or catalog installation entry until a verified signed bundle exists.
 - Conventional Commits, bujosa/ branches. No hosted CI.
+
+- `completion.rs` owns bounded static language queries; `suggest.rs` owns debouncing and exact-snapshot suggestions. Never evaluate learner code for completion or apply stale results. Accepting a completion must remain undoable.

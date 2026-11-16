@@ -1,6 +1,7 @@
 mod art;
 mod commands;
 mod compiler;
+mod completion;
 mod course;
 mod design;
 mod editor;
@@ -10,6 +11,8 @@ mod ide;
 mod learning;
 mod reader;
 mod store;
+mod suggest;
+mod tooling;
 
 use egui::{Color32, RichText};
 use std::{
@@ -977,6 +980,26 @@ fn style(ctx: &egui::Context) {
     });
 }
 fn main() -> eframe::Result {
+    if let Some(arg) = std::env::args().skip(1).find(|arg| {
+        arg.starts_with("--verify-")
+            && ![
+                "--verify-art",
+                "--verify-content",
+                "--verify-learning",
+                "--verify-completion",
+            ]
+            .contains(&arg.as_str())
+    }) {
+        eprintln!("Unknown validation option: {arg}");
+        std::process::exit(2);
+    }
+    if std::env::args().any(|a| a == "--verify-completion") {
+        if let Err(error) = completion::verify() {
+            eprintln!("{error}");
+            std::process::exit(1);
+        }
+        return Ok(());
+    }
     let lessons = match course::load() {
         Ok(l) => l,
         Err(e) => {

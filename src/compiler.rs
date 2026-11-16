@@ -5,7 +5,7 @@ use std::{
     fs,
     io::Read,
     path::PathBuf,
-    process::{Command, Stdio},
+    process::Stdio,
     time::{Duration, Instant},
 };
 
@@ -44,7 +44,6 @@ pub fn check(lesson: &Lesson, source: &str) -> Result<Report, String> {
     )
     .map_err(|e| e.to_string())?;
     fs::write(work.0.join("tsconfig.json"), r#"{"compilerOptions":{"strict":true,"noEmit":false,"outDir":"out","exactOptionalPropertyTypes":true,"noUncheckedIndexedAccess":true,"target":"ES2022","module":"commonjs","types":[],"skipLibCheck":false},"files":["answer.ts","contract.ts"]}"#).map_err(|e| e.to_string())?;
-    let compiler = std::env::var_os("TYPEDOJO_TSC").unwrap_or_else(|| "tsc".into());
     let log_path = work.0.join("compiler.log");
     let log = fs::File::create(&log_path).map_err(|e| e.to_string())?;
     let mut paths: Vec<PathBuf> =
@@ -53,7 +52,7 @@ pub fn check(lesson: &Lesson, source: &str) -> Result<Report, String> {
         PathBuf::from("/opt/homebrew/bin"),
         PathBuf::from("/usr/local/bin"),
     ]);
-    let mut child = Command::new(compiler).args(["--project", "tsconfig.json", "--pretty", "false"])
+    let mut child = crate::tooling::compiler()?.args(["--project", "tsconfig.json", "--pretty", "false"])
         .current_dir(&work.0).env("PATH", std::env::join_paths(paths).map_err(|e| e.to_string())?)
         .stdin(Stdio::null()).stdout(log.try_clone().map_err(|e| e.to_string())?).stderr(log)
         .spawn().map_err(|e| format!("TypeScript compiler unavailable: {e}. Install Node.js and TypeScript (npm install -g typescript), then retry. TYPEDOJO_TSC can select an absolute compiler path."))?;
@@ -150,16 +149,19 @@ try {
     fs::write(work.0.join("runtime-checks.js"), &lesson.runtime).map_err(|e| e.to_string())?;
     let log_path = work.0.join("runtime.log");
     let log = fs::File::create(&log_path).map_err(|e| e.to_string())?;
-    let node = std::env::var_os("TYPEDOJO_NODE").unwrap_or_else(|| {
-        if std::path::Path::new("/opt/homebrew/bin/node").exists() {
-            "/opt/homebrew/bin/node".into()
-        } else {
-            "node".into()
-        }
-    });
-    let mut child=Command::new(node).args(["--permission","--allow-fs-read=.","--max-old-space-size=96","runner.cjs"])
-        .current_dir(&work.0).stdin(Stdio::null()).stdout(log.try_clone().map_err(|e|e.to_string())?).stderr(log)
-        .spawn().map_err(|e|format!("Runtime labs require Node.js 22.13 or newer: {e}. Set TYPEDOJO_NODE to its absolute path."))?;
+    let mut child = crate::tooling::node()?
+        .args([
+            "--permission",
+            "--allow-fs-read=.",
+            "--max-old-space-size=96",
+            "runner.cjs",
+        ])
+        .current_dir(&work.0)
+        .stdin(Stdio::null())
+        .stdout(log.try_clone().map_err(|e| e.to_string())?)
+        .stderr(log)
+        .spawn()
+        .map_err(|e| format!("Bundled runtime could not start: {e}"))?;
     let start = Instant::now();
     let status = loop {
         match child.try_wait() {
