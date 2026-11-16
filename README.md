@@ -12,21 +12,20 @@ Twenty function and project labs also check runtime examples. Further projects a
 
 ## Install
 
-Download **TypeDojo-v0.1.1-macos-arm64.zip** from the [latest release](https://github.com/bujosa/typedojo/releases/latest), extract it and move TypeDojo.app to `~/Applications`. Keiko also installs, verifies and updates TypeDojo from its catalog.
+Download **TypeDojo-v0.2.0-macos-arm64.zip** from the [latest release](https://github.com/bujosa/typedojo/releases/latest), extract it and move TypeDojo.app to `~/Applications`. Keiko also installs, verifies and updates TypeDojo from its catalog.
 
-The initial binary supports macOS Apple Silicon. It is ad-hoc signed and not notarized; macOS may ask you to approve its first launch in System Settings → Privacy & Security. Node.js 22.13+ and TypeScript 5.9+ are required separately, as described below.
+The initial binary supports macOS Apple Silicon. It is ad-hoc signed and not notarized; macOS may ask you to approve its first launch in System Settings → Privacy & Security. Node.js 24.22.3 and TypeScript 5.9.3 are bundled with the app. The 0.2 runtime requires macOS 13.5 or newer. No separate Node/npm installation is needed.
 
 ## Start from source
 
-macOS, Rust (pinned by `rust-toolchain.toml`), Node.js 22.13+, and TypeScript 5.9+ on PATH:
+Apple Silicon macOS 13.5+, Python 3 (build tooling) and Rust (pinned by `rust-toolchain.toml`):
 
 ```sh
-npm install -g typescript
+python3 scripts/toolchain.py
 cargo run
 ```
 
-You do not need a database, Docker, a server or an account. Once the tools are installed, labs work
-offline. TypeDojo never installs npm packages automatically.
+You do not need a database, Docker, a server or an account. The signed app includes its verified toolchain and works offline. Developer setup downloads checksum-pinned archives into `target/toolchain`; it never modifies system Node/npm.
 
 - Choose a lesson in the left rail; search by title or section.
 - **Learn** explains the outcome, prerequisite concepts and vocabulary, then traces a colored TypeScript example.
@@ -49,6 +48,7 @@ For example, after exporting `greet`, use `import { greet } from './answer'; con
 - **Debug / F5** pauses at entry. Click the gutter or use the sidebar to set breakpoints before starting.
 - **Continue / F5**, **Step over / F10**, **Step into / F11**, **Step out / Shift+F11**, **Pause** and **Stop** control V8.
 - Inspect variables and stack frames; evaluate side-effect-free expressions in the selected frame.
+- **Suggest / Ctrl+Space** opens semantic suggestions for the current code and the other workspace file. Typing a member access or identifier also requests them automatically. Use Up/Down, then Tab or Enter; Escape dismisses. Acceptance is undoable.
 - **Format / Cmd+Shift+I** formats the active file with bundled Prettier 3.6.2, offline. Syntax errors preserve your code; Undo restores the previous text. Edits during formatting discard its stale result.
 - **Commands / Cmd+Shift+P** opens a searchable keyboard command palette with state-aware actions.
 - **Find / Cmd+F** highlights literal case-sensitive matches in the active file; Enter / Shift+Enter moves through them.
@@ -101,12 +101,13 @@ a VM without host APIs, disabled string/Wasm code generation, and Node permissio
 reads only in that temporary folder. This limits mistakes; **Node VM and permission flags are not
 a security sandbox for malicious code**. Use only your own trusted practice answers.
 
-`TYPEDOJO_TSC` and `TYPEDOJO_NODE` can select absolute executable paths when launching from Finder.
-Homebrew's standard binary directories are discovered automatically.
+`TYPEDOJO_TSC` and `TYPEDOJO_NODE` are optional developer overrides. Normal signed-app execution uses its bundled tools, including for completion. Homebrew is not required.
 
 ## Development
 
 ```sh
+python3 scripts/toolchain.py
+python3 scripts/validate.py # all required local gates
 cargo fmt --check
 cargo clippy --all-targets -- -D warnings
 cargo test
@@ -148,3 +149,5 @@ The explanations and exercises are original. Technical reference:
 [Node permissions](https://nodejs.org/api/permissions.html).
 
 MIT OR Apache-2.0. Bundled fonts are OFL; see [ATTRIBUTION.md](ATTRIBUTION.md).
+
+The [editor assistance contract](docs/editor-assistance.md) describes snapshot protection, limits and tool provenance. The editor is a focused two-file learning workspace; completion does not add arbitrary package installation or a complete LSP environment.

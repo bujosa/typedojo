@@ -6,7 +6,7 @@ use std::{
     fs,
     io::{BufRead, BufReader, Read, Write},
     path::PathBuf,
-    process::{Child, Command, Stdio},
+    process::{Child, Stdio},
     sync::mpsc::{self, Receiver, Sender, SyncSender},
     time::{Duration, Instant, SystemTime, UNIX_EPOCH},
 };
@@ -163,8 +163,7 @@ fn run(
     fs::write(work.0.join("tsconfig.json"),r#"{"compilerOptions":{"strict":true,"noEmitOnError":true,"outDir":"out","sourceMap":true,"inlineSources":true,"exactOptionalPropertyTypes":true,"noUncheckedIndexedAccess":true,"target":"ES2022","module":"commonjs","types":[]},"files":["answer.ts","playground.ts"]}"#).map_err(|e|e.to_string())?;
     let log_path = work.0.join("compiler.log");
     let log = fs::File::create(&log_path).map_err(|e| e.to_string())?;
-    let tsc = std::env::var_os("TYPEDOJO_TSC").unwrap_or_else(|| "tsc".into());
-    let mut compiler = Process(Command::new(tsc).args(["-p","tsconfig.json","--pretty","false"])
+    let mut compiler = Process(crate::tooling::compiler()?.args(["-p","tsconfig.json","--pretty","false"])
         .current_dir(&work.0).env("PATH",path_env()?).stdin(Stdio::null())
         .stdout(log.try_clone().map_err(|e|e.to_string())?).stderr(log)
         .spawn().map_err(|e|format!("TypeScript compiler unavailable: {e}. Install Node.js and TypeScript or set TYPEDOJO_TSC."))?);
@@ -201,12 +200,11 @@ fn run(
         }
         std::thread::sleep(Duration::from_millis(30));
     }
-    let node = std::env::var_os("TYPEDOJO_NODE").unwrap_or_else(|| "node".into());
     let stderr = fs::File::create(work.0.join("node.log")).map_err(|e| e.to_string())?;
     // Node's permission mode prohibits inspector sessions. The VM exposes no host API, but is
     // educational isolation only. Existing lab checks retain their separate permission-mode runner.
     let mut child = Process(
-        Command::new(node)
+        crate::tooling::node()?
             .args([
                 "--max-old-space-size=96",
                 "--disable-proto=throw",

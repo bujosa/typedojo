@@ -128,8 +128,10 @@ pub struct Options<'a> {
     pub expanded: bool,
     pub height: Option<f32>,
     pub read_only: bool,
+    pub completion_enabled: bool,
     pub workbench: bool,
     pub name: &'a str,
+    pub sibling: &'a str,
     pub breakpoints: Option<&'a mut std::collections::BTreeSet<usize>>,
     pub execution: Option<usize>,
     pub font_size: f32,
@@ -140,8 +142,10 @@ impl Default for Options<'_> {
             expanded: false,
             height: None,
             read_only: false,
+            completion_enabled: true,
             workbench: false,
             name: "answer.ts",
+            sibling: "",
             breakpoints: None,
             execution: None,
             font_size: 14.0,
@@ -150,6 +154,7 @@ impl Default for Options<'_> {
 }
 #[derive(Default)]
 pub struct Editor {
+    suggestions: crate::suggest::Suggestions,
     syntax: Syntax,
     source: String,
     pixels_per_point: f32,
@@ -165,6 +170,29 @@ pub struct Editor {
     selection: Option<(usize, usize)>,
 }
 impl Editor {
+    pub fn request_suggestions(&mut self) {
+        self.suggestions.request();
+    }
+    fn record_completion(ctx: &egui::Context, id: &str, before: &str, after: &str, cursor: usize) {
+        let widget = egui::Id::new(("editor", id));
+        let mut state = egui::TextEdit::load_state(ctx, widget).unwrap_or_default();
+        let range = state.cursor.char_range().unwrap_or_else(|| {
+            egui::text::CCursorRange::one(egui::text::CCursor::new(before.chars().count()))
+        });
+        let next = egui::text::CCursorRange::one(egui::text::CCursor::new(cursor));
+        let mut undo = state.undoer();
+        let time = ctx.input(|i| i.time);
+        let old = (range, before.to_owned());
+        let new = (next, after.to_owned());
+        undo.feed_state(time, &old);
+        undo.add_undo(&old);
+        undo.feed_state(time, &new);
+        undo.add_undo(&new);
+        state.set_undoer(undo);
+        state.cursor.set_char_range(Some(next));
+        state.store(ctx, widget);
+        ctx.memory_mut(|m| m.request_focus(widget));
+    }
     /// Keep a formatter replacement separate from a recent paste or typing burst.
     pub fn record_format(ctx: &egui::Context, id: &str, before: &str, after: &str) {
         let widget_id = egui::Id::new(("editor", id));
@@ -368,6 +396,31 @@ impl Editor {
                 ui.memory_mut(|m| m.request_focus(widget_id));
             }
         }
+        let mut completed = false;
+        if options.workbench {
+            let cursor = egui::TextEdit::load_state(ui.ctx(), widget_id)
+                .and_then(|s| s.cursor.char_range())
+                .map(|r| usize::from(r.primary.index))
+                .unwrap_or(0);
+            let request = crate::completion::Request {
+                id: id.to_owned(),
+                file: options.name.to_owned(),
+                source: source.clone(),
+                sibling: options.sibling.to_owned(),
+                cursor,
+            };
+            if let Some(entry) = self.suggestions.before(
+                ui,
+                &request,
+                widget_id,
+                options.read_only || !options.completion_enabled,
+            ) && let Ok((after, cursor)) = entry.apply(&request)
+            {
+                Self::record_completion(ui.ctx(), id, source, &after, cursor);
+                *source = after;
+                completed = true;
+            }
+        }
         if !options.read_only && ui.memory(|m| m.has_focus(widget_id)) {
             let range =
                 egui::TextEdit::load_state(ui.ctx(), widget_id).and_then(|s| s.cursor.char_range());
@@ -401,7 +454,7 @@ impl Editor {
             }
         }
         let width = ui.available_width();
-        let mut changed = false;
+        let mut changed = completed;
         egui::Frame::new()
             .fill(WELL)
             .stroke(if options.workbench {
@@ -503,7 +556,35 @@ impl Editor {
                                 .layouter(&mut layouter)
                                 .show(ui);
                             ui.set_clip_rect(previous_clip);
-                            changed = output.response.changed();
+                            if self.suggestions.wants_focus() {
+                                output.response.request_focus();
+                            }
+                            changed |= output.response.changed();
+                            if options.workbench
+                                && let Some(range) = output.cursor_range
+                            {
+                                let cursor = usize::from(range.primary.index);
+                                let rect = output
+                                    .galley
+                                    .pos_from_cursor(range.primary)
+                                    .translate(output.galley_pos.to_vec2());
+                                let request = crate::completion::Request {
+                                    id: id.to_owned(),
+                                    file: options.name.to_owned(),
+                                    source: source.clone(),
+                                    sibling: options.sibling.to_owned(),
+                                    cursor,
+                                };
+                                self.suggestions.observe(
+                                    ui.ctx(),
+                                    request,
+                                    rect.left_bottom() + egui::vec2(0.0, 4.0),
+                                    output.response.has_focus(),
+                                    !options.read_only
+                                        && options.completion_enabled
+                                        && range.is_empty(),
+                                );
+                            }
                             let active = output
                                 .cursor_range
                                 .map(|r| output.galley.layout_from_cursor(r.primary).row);
@@ -719,6 +800,9 @@ impl Editor {
                         });
                     });
             });
+        if options.workbench {
+            self.suggestions.popup(ui.ctx(), widget_id);
+        }
         changed
     }
 }

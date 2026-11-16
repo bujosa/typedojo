@@ -18,6 +18,13 @@ everything.
   step over/into/out, pause/continue/stop, variables, call stack and expression inspection.
 - Public macOS Apple Silicon v0.1.0 release and verified installation through Keiko.
 
+## 0.2 implemented
+
+- Bundled, checksum-pinned Node 24.22.3 and TypeScript 5.9.3 for Check, Run, Debug, Prettier and completion. No learner terminal setup.
+- Offline semantic member and workspace-symbol suggestions, explicit Suggest/Ctrl+Space, keyboard acceptance and undoable replacement.
+- Exact-snapshot background requests, bounded processes, Unicode-safe ranges and a native caret popup.
+- macOS 13.5+ is required by the included Node runtime. Developer ID/notarization remains separate release work.
+
 ## Complete the beginner path
 
 - Deeper JavaScript: destructuring, module scope, asynchronous iteration,

@@ -955,6 +955,16 @@ impl Workbench {
                         {
                             format = Some(self.file.clone());
                         }
+                        if ui
+                            .add_enabled(
+                                !active && !checking && !context.formatting,
+                                egui::Button::new("Suggest"),
+                            )
+                            .on_hover_text("Autocomplete · Ctrl+Space")
+                            .clicked()
+                        {
+                            self.editor.request_suggestions();
+                        }
                         if active {
                             ui.label(
                                 RichText::new("Read only · running snapshot")
@@ -1005,6 +1015,15 @@ impl Workbench {
                 } else {
                     None
                 };
+                let sibling = if self.file == "answer.ts" {
+                    draft
+                        .playground
+                        .as_deref()
+                        .unwrap_or(engine::PLAYGROUND)
+                        .to_owned()
+                } else {
+                    draft.source.clone()
+                };
                 let source = if self.file == "answer.ts" {
                     &mut draft.source
                 } else {
@@ -1020,8 +1039,12 @@ impl Workbench {
                     editor::Options {
                         height: Some(height),
                         read_only: active,
+                        completion_enabled: !checking
+                            && !context.formatting
+                            && !self.palette.is_open(),
                         workbench: true,
                         name: &self.file,
+                        sibling: &sibling,
                         breakpoints: Some(points),
                         execution,
                         font_size: self.font_size,

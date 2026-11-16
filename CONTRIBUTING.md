@@ -4,15 +4,15 @@ TypeDojo welcomes improvements to its explanations, guided exercises, compiler c
 
 ## Local setup
 
-Install Git, rustup (the Rust toolchain is pinned), Node.js 22.13+ and TypeScript 5.9+. macOS Apple Silicon is the tested packaged target. Bundling also requires Apple command-line tools.
+Install Git, Python 3 and rustup (the Rust toolchain is pinned). Apple Silicon macOS 13.5+ is the packaged target. Bundling also requires Apple command-line tools. Node and TypeScript are fetched into the generated, app-owned toolchain.
 
 ```sh
-npm install -g typescript
+python3 scripts/toolchain.py
 export TYPEDOJO_HOME="$(mktemp -d -t typedojo-contrib)"
 cargo run --locked
 ```
 
-Use your temporary profile for development and screenshots. Never test resets, corrupt saves or storage migrations against your real progress. `TYPEDOJO_NODE` and `TYPEDOJO_TSC` accept executable paths when tools are outside the detected directories. The formatter is pinned and bundled; do not replace it with an arbitrary local Prettier version.
+Use your temporary profile for development and screenshots. Never test resets, corrupt saves or storage migrations against your real progress. `TYPEDOJO_NODE` and `TYPEDOJO_TSC` accept executable paths when tools are for explicit developer overrides. The formatter is pinned and bundled; do not replace it with an arbitrary local Prettier version.
 
 ## Map of the code
 
@@ -20,12 +20,14 @@ Use your temporary profile for development and screenshots. Never test resets, c
 - `content/learning.json` / `src/learning.rs`: structured readings, predictions and separate guided exercises.
 - `src/compiler.rs`: answer checks; `src/engine.rs` / `runtime/bridge.cjs`: interactive Run/Debug.
 - `src/formatter.rs` / `runtime/format.mjs`: offline Prettier and safe background results.
+- `src/completion.rs`, `src/suggest.rs` and `runtime/complete.cjs`: semantic suggestions and exact-snapshot edits.
 - `src/store.rs`: saved drafts, exact-source completion and locking.
 - `src/reader.rs`, `src/editor.rs`, `src/ide.rs`, `src/main.rs`: native experience.
 
 ## Validation
 
 ```sh
+python3 scripts/validate.py # complete required gates
 cargo fmt --check
 cargo clippy --all-targets -- -D warnings
 cargo test --locked
