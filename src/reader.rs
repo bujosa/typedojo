@@ -22,44 +22,90 @@ impl Reader {
         let mut action = None;
         egui::Frame::new()
             .fill(design::PANEL)
-            .stroke(Stroke::new(1.0, design::BORDER))
-            .corner_radius(8.0)
-            .inner_margin(16.0)
+            .corner_radius(6.0)
+            .inner_margin(14.0)
             .show(ui, |ui| {
-                ui.set_min_width((ui.available_width() - 2.0).max(0.0));
-                design::eyebrow(ui, "WHAT YOU WILL LEARN", design::ACCENT);
-                ui.label(
-                    RichText::new(&guide.outcome)
-                        .size(17.0)
-                        .line_height(Some(24.0)),
-                );
-                ui.horizontal_wrapped(|ui| {
-                    ui.label(
-                        RichText::new(if guide.prerequisites.is_empty() {
-                            "Starts from zero"
-                        } else {
-                            "Builds on:"
-                        })
-                        .size(11.5)
-                        .color(design::MUTED),
-                    );
-                    for prerequisite in &guide.prerequisites {
-                        if let Some((index, base)) = lessons
-                            .iter()
-                            .enumerate()
-                            .find(|(_, l)| &l.id == prerequisite)
-                            && ui.small_button(&base.title).clicked()
-                        {
-                            action = Some(Action::Prerequisite(index));
-                        }
+                let roomy = ui.available_width() > 680.0;
+                let width = ui.available_width();
+                ui.horizontal_top(|ui| {
+                    ui.vertical(|ui| {
+                        ui.set_width(if roomy { width - 190.0 } else { width });
+                        design::eyebrow(ui, "YOUR NEXT SKILL", design::ACCENT);
+                        ui.add(
+                            egui::Label::new(
+                                RichText::new(&guide.outcome)
+                                    .size(15.0)
+                                    .line_height(Some(22.0)),
+                            )
+                            .wrap(),
+                        );
+                        ui.horizontal_wrapped(|ui| {
+                            ui.label(
+                                RichText::new(if guide.prerequisites.is_empty() {
+                                    "No experience needed"
+                                } else {
+                                    "Builds on"
+                                })
+                                .size(11.5)
+                                .color(design::MUTED),
+                            );
+                            for prerequisite in &guide.prerequisites {
+                                if let Some((index, base)) = lessons
+                                    .iter()
+                                    .enumerate()
+                                    .find(|(_, l)| &l.id == prerequisite)
+                                    && ui
+                                        .add(
+                                            egui::Button::new(
+                                                RichText::new(&base.title)
+                                                    .size(11.5)
+                                                    .color(design::TEXT),
+                                            )
+                                            .frame(false),
+                                        )
+                                        .clicked()
+                                {
+                                    action = Some(Action::Prerequisite(index));
+                                }
+                            }
+                        });
+                    });
+                    if roomy
+                        && ui
+                            .add(
+                                egui::Button::new(
+                                    RichText::new("Start practice")
+                                        .size(12.5)
+                                        .color(design::INK),
+                                )
+                                .fill(design::ACCENT)
+                                .min_size(egui::vec2(164.0, 34.0)),
+                            )
+                            .clicked()
+                    {
+                        action = Some(Action::Practice);
                     }
                 });
+                if !roomy
+                    && ui
+                        .add(
+                            egui::Button::new(
+                                RichText::new("Start practice")
+                                    .size(12.5)
+                                    .color(design::INK),
+                            )
+                            .fill(design::ACCENT),
+                        )
+                        .clicked()
+                {
+                    action = Some(Action::Practice);
+                }
             });
         ui.add_space(14.0);
         let wide = ui.available_width() > 900.0;
         let height = ui.available_height();
         if wide {
-            let left = (ui.available_width() * 0.43).clamp(300.0, 500.0);
+            let left = (ui.available_width() * 0.28).clamp(230.0, 300.0);
             let right = ui.available_width() - left - 20.0;
             ui.horizontal_top(|ui| {
                 ui.spacing_mut().item_spacing.x = 20.0;
@@ -94,8 +140,13 @@ impl Reader {
             egui::ScrollArea::vertical()
                 .id_salt("learning-compact")
                 .show(ui, |ui| {
-                    Self::definitions(ui, guide, lesson);
-                    ui.add_space(20.0);
+                    egui::CollapsingHeader::new(format!(
+                        "Key concepts · {} terms",
+                        guide.vocabulary.len()
+                    ))
+                    .id_salt((&guide.id, "compact-terms"))
+                    .show(ui, |ui| Self::definitions(ui, guide, lesson));
+                    ui.add_space(16.0);
                     if self.example(ui, guide) {
                         action = Some(Action::Practice);
                     }
@@ -104,19 +155,19 @@ impl Reader {
         action
     }
     fn definitions(ui: &mut egui::Ui, guide: &Guide, lesson: &Lesson) {
-        design::eyebrow(ui, "01 / UNDERSTAND THE BUILDING BLOCKS", design::MUTED);
+        design::eyebrow(ui, "01 / KEY CONCEPTS", design::MUTED);
         ui.add_space(12.0);
         for term in &guide.vocabulary {
             ui.label(
                 RichText::new(&term.term)
-                    .size(14.5)
+                    .size(14.0)
                     .strong()
                     .color(design::ACCENT),
             );
             ui.label(
                 RichText::new(&term.meaning)
-                    .size(14.0)
-                    .line_height(Some(21.0)),
+                    .size(13.0)
+                    .line_height(Some(20.0)),
             );
             ui.add_space(14.0);
         }
@@ -139,43 +190,61 @@ impl Reader {
     }
     fn example(&mut self, ui: &mut egui::Ui, guide: &Guide) -> bool {
         let mut practice = false;
-        design::eyebrow(ui, "02 / FOLLOW A WORKED EXAMPLE", design::MUTED);
+        design::eyebrow(ui, "02 / SEE IT IN CODE", design::MUTED);
         ui.add_space(12.0);
         egui::Frame::new()
-            .fill(egui::Color32::from_rgb(12, 19, 29))
+            .fill(design::EDITOR)
             .stroke(Stroke::new(1.0, design::BORDER))
             .corner_radius(8.0)
             .inner_margin(14.0)
             .show(ui, |ui| {
                 ui.set_min_width((ui.available_width() - 2.0).max(0.0));
+                ui.horizontal(|ui| {
+                    ui.label(
+                        RichText::new("example.ts")
+                            .monospace()
+                            .size(11.5)
+                            .color(design::MUTED),
+                    );
+                    ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                        if ui
+                            .small_button(if self.copied { "Copied" } else { "Copy code" })
+                            .clicked()
+                        {
+                            ui.ctx().copy_text(guide.example.clone());
+                            self.copied = true;
+                        }
+                    });
+                });
+                ui.add_space(6.0);
+                ui.separator();
+                ui.add_space(8.0);
                 egui::ScrollArea::horizontal()
                     .id_salt("example-code")
                     .show(ui, |ui| self.example.reference(ui, &guide.example));
             });
-        if ui
-            .small_button(if self.copied {
-                "Copied"
-            } else {
-                "Copy example"
-            })
-            .clicked()
-        {
-            ui.ctx().copy_text(guide.example.clone());
-            self.copied = true;
-        }
         ui.add_space(12.0);
         for (index, step) in guide.explanation.iter().enumerate() {
-            ui.label(
-                RichText::new(format!("{}. {step}", index + 1))
-                    .size(13.5)
-                    .line_height(Some(21.0)),
-            );
+            ui.horizontal_top(|ui| {
+                ui.add_sized(
+                    egui::vec2(24.0, 22.0),
+                    egui::Label::new(
+                        RichText::new(format!("{:02}", index + 1))
+                            .monospace()
+                            .size(11.5)
+                            .color(design::ACCENT),
+                    ),
+                );
+                ui.add(
+                    egui::Label::new(RichText::new(step).size(13.5).line_height(Some(22.0))).wrap(),
+                );
+            });
             ui.add_space(10.0);
         }
         ui.add_space(8.0);
         ui.separator();
         ui.add_space(12.0);
-        design::eyebrow(ui, "03 / CHECK YOUR UNDERSTANDING", design::MUTED);
+        design::eyebrow(ui, "03 / MAKE A PREDICTION", design::MUTED);
         ui.add_space(8.0);
         ui.label(
             RichText::new(&guide.prediction.question)
@@ -185,14 +254,17 @@ impl Reader {
         for (index, choice) in guide.prediction.choices.iter().enumerate() {
             if ui
                 .add(
-                    egui::Button::new(RichText::new(choice).size(13.0))
-                        .fill(if self.prediction == Some(index) {
-                            egui::Color32::from_rgb(30, 54, 80)
-                        } else {
-                            design::PANEL
-                        })
-                        .min_size(egui::vec2(ui.available_width(), 30.0))
-                        .wrap(),
+                    egui::Button::new(
+                        RichText::new(format!("{}   {choice}", (b'A' + index as u8) as char))
+                            .size(13.0),
+                    )
+                    .fill(if self.prediction == Some(index) {
+                        design::SELECTED
+                    } else {
+                        design::PANEL
+                    })
+                    .min_size(egui::vec2(ui.available_width(), 38.0))
+                    .wrap(),
                 )
                 .clicked()
             {

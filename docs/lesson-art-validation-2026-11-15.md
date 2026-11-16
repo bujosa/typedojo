@@ -1,0 +1,9 @@
+# TypeDojo 0.1.1 validation
+
+The lesson masthead now embeds 53 original transparent cobalt/ivory/brass concept illustrations, keyed by stable lesson ID. Exact prompts, source dimensions and SHA-256 hashes are in assets/art/prompts-v1.json. The reader shares the suite's proportional code/reasoning layout, filename/copy control, compact glossary, explicit selected stages and direct practice action.
+
+Native review used isolated TYPEDOJO_HOME profiles at 1280x860 and 820x700. Reviewed values, arrays, objects, functions, branches, loops and generics, then revisited the first image after exceeding the four-texture cache. Accessible image captions matched the selected concept. The final searchable-catalog project was reviewed in compact mode, followed by Start practice and IDE focus mode. A discovered long-outcome layout issue was corrected with explicit text wrapping; the practice action remained visible in the rebuilt compact app. No automated presentation tests were added. This pass is representative native coverage, not a repeated complete 53-lesson UI traversal.
+
+Required gates: cargo fmt --check; cargo clippy --all-targets -- -D warnings; cargo test (14 passed); --verify-art (53 uniquely keyed decodable transparent assets); --verify-content (318 contract cases); --verify-learning (318 guided cases, 53 explained examples and 53 guided playgrounds); node tools/format-content.mjs (679 fields, zero requiring formatting). All passed. The final UI wrapping correction was followed by Clippy, Rust tests, a signed rebuild and native reinspection. Behavior, compiler contracts and course text did not change.
+
+The signed bundle and ZIP are built by scripts/bundle.py, with an independent SHA256SUMS.txt. Distribution remains macOS Apple Silicon and ad-hoc signed, without notarization. Node.js 22.13+ and TypeScript 5.9+ remain external requirements. Original learner data and all other dojo profiles are preserved; no progress migration is needed.

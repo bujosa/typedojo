@@ -8,6 +8,8 @@ pub const INK: Color32 = Color32::from_rgb(36, 45, 60);
 pub const BLUE_INK: Color32 = Color32::from_rgb(30, 79, 145);
 pub const ACCENT: Color32 = Color32::from_rgb(135, 186, 247);
 pub const MUTED: Color32 = Color32::from_rgb(163, 180, 199);
+pub const EDITOR: Color32 = Color32::from_rgb(12, 19, 29);
+pub const SELECTED: Color32 = Color32::from_rgb(30, 54, 80);
 pub const TEXT: Color32 = Color32::from_rgb(233, 237, 241);
 
 pub fn display(size: f32) -> FontId {
@@ -43,34 +45,6 @@ pub fn seal(ui: &mut egui::Ui, size: f32) {
         stroke,
     );
 }
-pub fn courtyard(ctx: &egui::Context) -> Option<egui::TextureHandle> {
-    let image = image::load_from_memory(include_bytes!("../assets/art/courtyard-banner-v1.png"))
-        .ok()?
-        .to_rgba8();
-    let size = [image.width() as usize, image.height() as usize];
-    Some(ctx.load_texture(
-        "original-courtyard",
-        egui::ColorImage::from_rgba_unmultiplied(size, &image),
-        egui::TextureOptions::LINEAR,
-    ))
-}
-
-pub fn blend_image_edge(painter: &egui::Painter, rect: egui::Rect) {
-    let fade = egui::Rect::from_min_size(rect.min, egui::vec2(60.0, rect.height()));
-    let mut mesh = egui::Mesh::default();
-    for (pos, color) in [
-        (fade.left_top(), PANEL),
-        (fade.right_top(), Color32::TRANSPARENT),
-        (fade.left_bottom(), PANEL),
-        (fade.right_bottom(), Color32::TRANSPARENT),
-    ] {
-        mesh.colored_vertex(pos, color);
-    }
-    mesh.add_triangle(0, 1, 2);
-    mesh.add_triangle(1, 3, 2);
-    painter.add(egui::Shape::mesh(mesh));
-}
-
 /// Six original chapter crests drawn on the same grid as the bracket seal.
 pub fn chapter(ui: &mut egui::Ui, index: u8) {
     let (rect, _) = ui.allocate_exact_size(egui::vec2(20.0, 20.0), egui::Sense::hover());
@@ -147,63 +121,118 @@ pub fn chapter(ui: &mut egui::Ui, index: u8) {
     }
 }
 
-/// A compact editorial masthead that protects the working area on small screens.
+/// Lesson-specific artwork stays separate from text and remains visible on compact windows.
 pub fn masthead(
     ui: &mut egui::Ui,
-    art: Option<&egui::TextureHandle>,
     section: &str,
     title: &str,
     index: usize,
-    compact: bool,
-    practice: bool,
+    art: Option<&egui::TextureHandle>,
+    caption: &str,
+    failed: bool,
 ) {
     let width = ui.available_width();
-    let short = compact && practice;
-    let height = if short { 82.0 } else { 108.0 };
+    let compact = width < 900.0;
+    let height = if compact { 152.0 } else { 168.0 };
+    let art_width = (width * 0.35).clamp(220.0, 390.0);
     let (banner, _) = ui.allocate_exact_size(egui::vec2(width, height), egui::Sense::hover());
-    ui.painter().rect_filled(banner, 10.0, PANEL);
+    ui.painter().rect_filled(banner, 8.0, PANEL);
+    let mut bounds = egui::Rect::from_min_max(
+        egui::pos2(banner.right() - art_width, banner.top()),
+        banner.right_bottom(),
+    )
+    .shrink(8.0);
+    bounds.max.y -= 19.0;
     if let Some(art) = art {
-        let natural_width = height * art.size_vec2().x / art.size_vec2().y;
-        let art_width = (width * 0.40).min(390.0).min(natural_width);
-        let rect = egui::Rect::from_min_size(
-            egui::pos2(banner.right() - art_width, banner.top()),
-            egui::vec2(art_width, height),
+        let size = art.size_vec2();
+        let scale = (bounds.width() / size.x).min(bounds.height() / size.y);
+        let rect = egui::Rect::from_center_size(bounds.center(), size * scale);
+        ui.painter().image(
+            art.id(),
+            rect,
+            egui::Rect::from_min_max(egui::Pos2::ZERO, egui::pos2(1.0, 1.0)),
+            Color32::WHITE,
         );
-        let uv = egui::Rect::from_min_max(
-            egui::pos2((1.0 - art_width / natural_width).max(0.0), 0.0),
-            egui::pos2(1.0, 1.0),
+        let response = ui.interact(
+            rect,
+            ui.id().with(("lesson-art", index)),
+            egui::Sense::hover(),
         );
-        ui.painter().add(
-            egui::epaint::RectShape::filled(
-                rect,
-                egui::CornerRadius {
-                    nw: 0,
-                    ne: 10,
-                    sw: 0,
-                    se: 10,
-                },
-                Color32::WHITE,
-            )
-            .with_texture(art.id(), uv),
+        response.widget_info(|| egui::WidgetInfo::labeled(egui::WidgetType::Image, true, caption));
+        let caption_rect = egui::Rect::from_min_max(
+            egui::pos2(bounds.left(), bounds.bottom() + 4.0),
+            egui::pos2(bounds.right(), banner.bottom() - 3.0),
         );
-        blend_image_edge(ui.painter(), rect);
+        ui.painter().with_clip_rect(caption_rect).text(
+            egui::pos2(bounds.center().x, bounds.bottom() + 5.0),
+            egui::Align2::CENTER_TOP,
+            caption,
+            FontId::proportional(10.5),
+            MUTED,
+        );
+    } else {
+        ui.scope_builder(egui::UiBuilder::new().max_rect(bounds), |ui| {
+            ui.centered_and_justified(|ui| {
+                if failed {
+                    ui.label(
+                        RichText::new("Illustration unavailable")
+                            .size(11.0)
+                            .color(MUTED),
+                    );
+                } else {
+                    ui.spinner();
+                }
+            });
+        });
     }
     let text_rect = egui::Rect::from_min_size(
-        banner.min + egui::vec2(20.0, 12.0),
-        egui::vec2(width * 0.60 - 26.0, height - 20.0),
+        banner.min + egui::vec2(20.0, 18.0),
+        egui::vec2(width - art_width - 34.0, height - 30.0),
     );
     ui.scope_builder(egui::UiBuilder::new().max_rect(text_rect), |ui| {
         eyebrow(ui, &section.to_uppercase(), ACCENT);
-        ui.add_space(5.0);
-        ui.label(RichText::new(title).font(display(if compact { 20.0 } else { 26.0 })));
-        if !short {
-            ui.add_space(5.0);
-            ui.label(
-                RichText::new(format!("LAB {:02}  /  Learn by building", index + 1))
-                    .monospace()
-                    .size(11.5)
-                    .color(MUTED),
-            );
-        }
+        ui.add_space(8.0);
+        ui.add(
+            egui::Label::new(RichText::new(title).font(display(if compact { 24.0 } else { 29.0 })))
+                .wrap(),
+        );
+        ui.add_space(9.0);
+        ui.label(
+            RichText::new(format!("LESSON {:02}  /  Learn by building", index + 1))
+                .monospace()
+                .size(11.5)
+                .color(MUTED),
+        );
     });
+    ui.advance_cursor_after_rect(banner);
+}
+
+/// A navigation tab with an explicit active underline; never a completion indicator.
+pub fn tab(ui: &mut egui::Ui, label: impl Into<String>, selected: bool) -> egui::Response {
+    let response = ui.add(
+        egui::Button::new(RichText::new(label.into()).size(12.5).color(if selected {
+            TEXT
+        } else {
+            MUTED
+        }))
+        .selected(selected)
+        .fill(if selected {
+            SELECTED
+        } else {
+            Color32::TRANSPARENT
+        })
+        .stroke(Stroke::NONE)
+        .corner_radius(4.0)
+        .min_size(egui::vec2(0.0, 32.0)),
+    );
+    if selected {
+        ui.painter().line_segment(
+            [
+                response.rect.left_bottom() + egui::vec2(7.0, 0.0),
+                response.rect.right_bottom() - egui::vec2(7.0, 0.0),
+            ],
+            Stroke::new(2.0, ACCENT),
+        );
+    }
+    response
 }

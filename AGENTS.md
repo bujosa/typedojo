@@ -1,6 +1,7 @@
 # TypeDojo
 Native Rust/egui TypeScript practice app in the Keiko family. English UI and content.
 
+- `src/art.rs`: stable lesson-keyed illustrations, background decode and bounded texture cache. Run --verify-art for asset delivery checks.
 - `src/course.rs`: pure curriculum model, embedded `content/course.json`.
 - `src/learning.rs` / `content/learning.json`: 53 structured guides and separate guided exercise contracts.
 - `src/reader.rs`: glossary, worked examples and explained predictions.

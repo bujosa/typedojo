@@ -1,0 +1,483 @@
+{
+  "generator": "built-in image_gen",
+  "direction": "TypeScript concept dioramas: cobalt glass, ivory ceramic, brass and amber.",
+  "images": [
+    {
+      "id": "values",
+      "file": "values-v1.png",
+      "caption": "Names bind to typed values",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: Three named ceramic containers hold distinct geometric values: sphere, ribbon and toggle; blank brass nameplates. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "b9a42732e4ade28b688a07edf4ac1c90e5c0d8b3b4b4f64620b21356fe92f2f3",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "arrays",
+      "file": "arrays-v1.png",
+      "caption": "Order gives each item a position",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: An ordered row of cobalt glass compartments holds different ivory and amber objects; a brass pointer selects a position. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "343d92514e29d083e51b54dba1103ddecbc8d05145a295806c226c271d278da3",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "objects",
+      "file": "objects-v1.png",
+      "caption": "Fields describe one structured value",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: An open ceramic record cabinet has several differently shaped fields holding their corresponding values. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "d5734305c897786dee69d80fa69e577846a07899412a3f984ec4ecd7c34f22c5",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "functions",
+      "file": "functions-v1.png",
+      "caption": "Inputs and outputs form a contract",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: A cobalt transformation machine accepts two amber inputs and returns one ivory output through a visibly constrained port. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "79f44829e2bcce4b8e70299d4f23bc07e086bbfee71c6643de597b3ce2e8ef3f",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "branches",
+      "file": "branches-v1.png",
+      "caption": "Narrow the possibilities before acting",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: An ivory path forks at a cobalt decision gate; one valid branch opens and another remains closed. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "822242cd37d910b842e7bcaf39eba963f85adb6d8bdcf58728ea519cf7fa200b",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "loops",
+      "file": "loops-v1.png",
+      "caption": "Repeat work and return a result",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: A circular brass conveyor repeatedly adds amber beads into a cobalt accumulator bowl. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "6cd7d8f9890fb82ec3a69d1eb2aed718979381a037183f91786555fad3116be1",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "discount",
+      "file": "discount-v1.png",
+      "caption": "Calculate once; reuse the rule",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: Two counting rails combine groups of amber beads through a ceramic arithmetic mechanism. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "a56461a7025738e7049581c0797c38516c8c55543a3041198198d58e28293bf8",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "eligible",
+      "file": "eligible-v1.png",
+      "caption": "Combine conditions deliberately",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: Two mechanical switches feed a precision comparison balance and one open or closed gate. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "5c845068b945075ce82ed4db748d3c789e69842e15135221349c788e051f75df",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "initials",
+      "file": "initials-v1.png",
+      "caption": "Normalize text before composing it",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: A tangled fabric ribbon passes through cobalt rollers and emerges neatly trimmed and folded. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "f2847644aaa709fda58dcec91b87743f01da97120b196a9ac095899073b7d1d0",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "fallback",
+      "file": "fallback-v1.png",
+      "caption": "Missing differs from empty",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: Four cobalt cubbies contain an empty ring, closed switch, empty ribbon, and one genuinely missing item; only the missing slot receives a fallback. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "87697cae7590c3eb68c9ea72832238f00d1f721e9db4cbbf73fd927360bb0309",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "greeting",
+      "file": "greeting-v1.png",
+      "caption": "Default only what is omitted",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: Two input slots feed a machine: an omitted optional input is replaced by a fresh ivory default token. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "f43c4645f60bac101af1f539457fcabd43a715f57b8b47726c208bf645df24d3",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "doubled",
+      "file": "doubled-v1.png",
+      "caption": "Transform each item independently",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: An ordered input row of amber cubes becomes an ordered row of taller cobalt cubes through a mapper. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "deee7601e79117543c2079bc5225553088d9f4a93a700d92f081f569c570303a",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "passing",
+      "file": "passing-v1.png",
+      "caption": "Keep the items that match",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: A cobalt sieve retains selected amber geometric pieces while other shapes move to a separate tray. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "1d8534c0ead53f80e0e2aad91b6f4ed9b3fad7832f3dd85cdbf453e1a1d88f16",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "count-tags",
+      "file": "count-tags-v1.png",
+      "caption": "Combine many values into one result",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: A brass collecting rail folds many amber pieces into one cobalt summary container. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "69d7995cd458df887a66cacc1983f8747374033058fc25e0c793e1558064a4a7",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "counter",
+      "file": "counter-v1.png",
+      "caption": "State can live behind a function",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: A glass dome encloses a private amber dial retained by a small inner ivory mechanism with an exterior handle. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "da98b442ae01dfcb67e39a316c31db01ea839329d9082fda1007ceaad1a6994e",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "safe-divide",
+      "file": "safe-divide-v1.png",
+      "caption": "Handle failure as part of the result",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: An inspection machine routes one invalid amber piece into an explicit side error channel while valid pieces continue. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "3e9c4097b21ece101d809f7caa6cd067bf03a1a4dcef9d703faebe8d3cd05a91",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "optional",
+      "file": "optional-v1.png",
+      "caption": "A field may be absent",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: Two ivory record fields distinguish an absent optional socket from a present empty cobalt socket. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "d42dc0508da57a459b5e0016e1100b66ca9aa1a82bd7c6434bd607c227427e0b",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "literals",
+      "file": "literals-v1.png",
+      "caption": "Known values define a closed set",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: Three exact geometric tokens are permitted through a cobalt gate with matching sockets; all other shapes remain outside. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "45b7fe5a94ef5e6de91dcdfb05ef5a8d85c9c730089deca60a995b4557a4ba6d",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "tuples",
+      "file": "tuples-v1.png",
+      "caption": "Position gives each element meaning",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: A fixed pair of cobalt compartments holds two different shaped objects in distinct positions. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "e85bd20607f730c0af0213c6c3fed02c6183ef0024e9bbb1839458f2805b71db",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "readonly",
+      "file": "readonly-v1.png",
+      "caption": "Protect the shape from mutation",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: An ivory record plaque has cobalt fields protected by a delicate transparent locked cover, readable but not changeable. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "db0d124058ea9adec9d87001e0abeed28aebb879ff8e823ef9d605cdb3d22335",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "unknown",
+      "file": "unknown-v1.png",
+      "caption": "Prove what an unknown value contains",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: An opaque dark box approaches a cobalt inspection station; only after opening and inspecting its contents may a matching object pass. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "3b3ae8eebe18dd87d405b1ead6f8734d1453826252d115530e0179df1782dd79",
+      "width": 1835,
+      "height": 857
+    },
+    {
+      "id": "results",
+      "file": "results-v1.png",
+      "caption": "Each outcome carries its own data",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: Two clear outcome containers with different distinctive cobalt lids reveal different field arrangements, selecting a variant by its visible tag. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "f8334c62a0a9c1108931044176a3f4c340cd29da31788fb8da6d25d192be6217",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "generics",
+      "file": "generics-v1.png",
+      "caption": "One container preserves many types",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: A reusable cobalt frame adapts to a sphere or cube while keeping matching input and output shapes connected. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "314ed9019333146601b8e570e85f2815ceb28727d10404faf8b09653fde19927",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "generic-functions",
+      "file": "generic-functions-v1.png",
+      "caption": "Let the input determine the output",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: A generic ivory machine returns the same shape and material it received, maintaining an explicit visual relationship. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "ecb3e54442d820c43329ca77f3396e622f16e8a2bf8e19b3219a0be61b468dc4",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "constraints",
+      "file": "constraints-v1.png",
+      "caption": "Accept only shapes that fit",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: A flexible cobalt frame accepts only objects carrying one required brass connector; otherwise different shapes remain allowed. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "f54bb5cb6c72a9e8de778ed206c1664835df1f2cf10efca84eb21d51f144fee2",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "keyof",
+      "file": "keyof-v1.png",
+      "caption": "Keys define the permitted choices",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: A brass key selects one field in a cobalt record cabinet and retrieves that exact field value. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "b4ccc3ee665bd076d945a8b66444288b17a80f82d05c746c9c141ecd8c82b448",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "mapped",
+      "file": "mapped-v1.png",
+      "caption": "Transform every field consistently",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: A complete row of ivory record fields is transformed uniformly into matching cobalt fields one by one. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "562bb35779f9631c4992ad678d1804222c0ce6f2d0746b1d2dd224075720041b",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "utilities",
+      "file": "utilities-v1.png",
+      "caption": "Reuse the shape; change its contract",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: An ivory record template is projected into selected fields, partial fields and protected fields on three distinct cobalt plaques. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "2c7e255d1724df7cd420929d43e582b91c553e8ab5c4a7498993ec64edd5e6d1",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "intersections",
+      "file": "intersections-v1.png",
+      "caption": "Combine independent requirements",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: Two translucent cobalt record plates overlap to form one combined record that contains the fields required by both. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "caadc66eb8e77e98fa399b3f079e3e0c7b2d84d2d4d73e391dfbc42d18b17822",
+      "width": 1835,
+      "height": 857
+    },
+    {
+      "id": "interfaces",
+      "file": "interfaces-v1.png",
+      "caption": "Describe a structural agreement",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: A cobalt blueprint builds a second ivory structure by extending an existing base with new compatible fields. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "683bb10ea9a5e04a49dba7c270efb23c6d9dd3ef6bb0b18dca159eda5e9836ec",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "typequeries",
+      "file": "typequeries-v1.png",
+      "caption": "Derive types from existing values",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: A solid amber record casts a precise cobalt blueprint shadow matching its actual shape. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "a3941890d72ba1832012578b3f0be921e701f00fcc1b9d426c3ebee21be4409d",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "records",
+      "file": "records-v1.png",
+      "caption": "Map known keys to their values",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: A cobalt cabinet has a closed set of three differently shaped key sockets; every socket has a corresponding ivory value. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "051204a4176d1089e9614ed3bbd15311c0b7e8e62f6e3e95e6e2a50476e8e054",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "required",
+      "file": "required-v1.png",
+      "caption": "Make every required field explicit",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: An ivory record blueprint with optional open sockets becomes a complete cobalt record with every socket filled. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "244c2d0c1b2add3c9d57402995c898d9562dad0ac65af4a04b43c6fe17d5de4b",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "satisfies",
+      "file": "satisfies-v1.png",
+      "caption": "Check compatibility; retain precision",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: A precision cobalt gauge validates an amber object without changing or covering its distinctive original shape. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "5886e0b16a01f21cc76ab23c3dde695ca758e035945e66e6b2be9006b7a186d0",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "recursive",
+      "file": "recursive-v1.png",
+      "caption": "A structure can contain itself",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: A miniature cobalt tree recursively branches into smaller versions of the same ivory-and-amber node structure. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "6237e71c886c8b670d69e5d3793fa7a31712484d2884f41ee0a32312a661c8f5",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "extract",
+      "file": "extract-v1.png",
+      "caption": "Select the members that match",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: A brass sieve extracts only one tagged cobalt variant from a mixed group of differently tagged tokens. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "98314fb2b3abc3060f13f532838db735d565c46908b6bee6ab9e25c8835a0123",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "parameters",
+      "file": "parameters-v1.png",
+      "caption": "Derive a function's argument contract",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: The input connectors of one cobalt function machine are copied as an ordered ivory parameter tray for reuse. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "be7e9479ac383b09aa6a7286ceaf53e75e3500f87d543ab6c162b63a86109f11",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "promises",
+      "file": "promises-v1.png",
+      "caption": "A result arrives later",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: Three nested transparent cobalt capsules open successively to reveal the final amber asynchronous result. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "b0b317324b03954d6d0cbf25151b10e2346dcc547497afa793e74de3d9b0a3ce",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "conditional",
+      "file": "conditional-v1.png",
+      "caption": "Choose a type with a condition",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: A cobalt type-inspection gate chooses between two differently shaped output molds based on an input shape. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "61004f9a1cbe41d8764ec872880a12913ef0a0fb1b08bd910b9107eca749d3f4",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "infer",
+      "file": "infer-v1.png",
+      "caption": "Recover the type inside a pattern",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: A precision brass extractor reveals and retains the small amber shape nested inside a larger cobalt structure. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "ca44c96a6e9c6c89456b165a3ee489dc0817317dc7323b179b9fb8a69eaf6aaf",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "templates",
+      "file": "templates-v1.png",
+      "caption": "Compose new names from known pieces",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: Ivory text ribbons and cobalt literal tiles combine into a small family of exact structured output ribbons. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "24d938655c924779210fd5be6e4c0d766bebc836e2815e057a958a854d412864",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "remap",
+      "file": "remap-v1.png",
+      "caption": "Transform keys as well as values",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: A cobalt record cabinet preserves its contents while its brass key plates are replaced with newly shaped key names. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "0adfbb09d71db2807354bea402bca32ad07a858ddcf9e727afd0e432d6076a70",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "async",
+      "file": "async-v1.png",
+      "caption": "Await work without losing its result",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: Three concurrent cobalt paths deliver amber results to ordered ivory bowls through a clear asynchronous contract. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "29ed15c03d7688e648605489f20f19668675f235600523233fa52b325fcc5063",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "exhaustive",
+      "file": "exhaustive-v1.png",
+      "caption": "Account for every possible state",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: A complete set of tagged cobalt variants each has its own path; an impossible unmatched route ends at an empty sealed gate. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "58cbc5888a0dbdbc60046a87449dbd8978bcec4b5e7b789365852a10f29dd075",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "api-state",
+      "file": "api-state-v1.png",
+      "caption": "State determines the available data",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: Four ivory lifecycle stations show pending, loading, success and failure using distinctive cobalt structures and constrained brass transitions. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "fd8f9404c02cd28e23a4fe0b3bf1fa109758fbb189f83ed87a401a54919a586e",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "brands",
+      "file": "brands-v1.png",
+      "caption": "Give similar values distinct identities",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: Two visually similar amber identifier tokens carry different cobalt seals and fit only their own matching domain sockets. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "ed344a491d8e750ec1bdc18439e9780f4457212d2c8c6fe48ca04151c9d9f4ea",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "validation",
+      "file": "validation-v1.png",
+      "caption": "Validate data at the boundary",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: An external ivory data sheet is inspected by a cobalt boundary gate before becoming a clean internal record. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "64566434b7bf32e7c16340c355ef00cb6ad141aa7f1a8c4433f8740d931367a9",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "repositories",
+      "file": "repositories-v1.png",
+      "caption": "Separate storage from the domain",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: An ivory domain machine connects through a brass port to either a cobalt storage cabinet or a small interchangeable in-memory tray. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "eb3a76db949c341802621a08127aa5753d49ee831f6ef26817b424bb70947c8b",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "events",
+      "file": "events-v1.png",
+      "caption": "Each event carries the right payload",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: Three differently tagged cobalt event tokens connect only to matching ivory handler ports. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "86a4ffb555874632c02114d663d96f9070dc4d593bf1d2f5bfd4ce0dcaafc733",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "capstone",
+      "file": "capstone-v1.png",
+      "caption": "Compose contracts into one system",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: A complete miniature learning API workshop combines typed input gates, domain record shelves and explicit success or failure outputs. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "6e5d576ce488325d9ee58eb5434893145c15c495e6f621eb3314dbbceb148159",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "project-tracker",
+      "file": "project-tracker-v1.png",
+      "caption": "Keep task transitions predictable",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: A refined study desk tracks individual ivory session cards with cobalt time dials and an amber progress accumulator. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "6e2ab45066891b41538a11a0b76f23a4a46d9ab4085ff5d88e791c1453891d3b",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "project-parser",
+      "file": "project-parser-v1.png",
+      "caption": "Parse first; report precise failures",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: A miniature API payload record passes through a cobalt schema inspection gate; valid fields form a clean ivory object and invalid fields enter a rejection tray. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "718c1d011fb656f86adc0a15ece3a9e90c01618ed389797a4e28b12fccd83491",
+      "width": 1836,
+      "height": 857
+    },
+    {
+      "id": "project-catalog",
+      "file": "project-catalog-v1.png",
+      "caption": "Preserve contracts across a catalog",
+      "prompt": "Use case: stylized-concept. Asset: original lesson illustration for TypeDojo, a professional native TypeScript learning app. Create an exquisite handcrafted miniature educational diorama. Subject: An elegant cobalt library catalog displays ivory course cards grouped on shelves; a brass search lens selects matching cards into a sorted output tray. Materials: warm ivory ceramic and stone, translucent cobalt-blue and indigo glass, tiny brushed brass details, restrained amber accents. Elevated three-quarter isometric view, soft cinematic studio light, precise architectural composition, elegant tactile contemporary editorial artwork, not cartoon clipart. One coherent scene, a wide low silhouette, all important objects fully visible, generous breathing room, genuinely transparent background. Legible at 300 by 140 points. No words, lettering, digits, logos, UI, borders or watermark. Convey the programming concept clearly; match a consistent ivory/cobalt/brass collection.",
+      "sha256": "0503a4274ecdeca4c0e56bc1d4be09e5c00c1a6c0bab6be037c3755359e47a79",
+      "width": 1836,
+      "height": 857
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+mod art;
 mod commands;
 mod compiler;
 mod course;
@@ -36,7 +37,7 @@ struct FormatJob {
     result: Result<formatter::Formatted, String>,
 }
 struct App {
-    art: Option<egui::TextureHandle>,
+    illustrations: art::Illustrations,
     reader: reader::Reader,
     guides: Vec<learning::Guide>,
     workbench: ide::Workbench,
@@ -85,7 +86,7 @@ impl App {
             open_sections,
             focus: false,
             path_before_focus: true,
-            art: design::courtyard(ctx),
+            illustrations: art::Illustrations::default(),
             reader: reader::Reader::default(),
             guides,
             workbench: ide::Workbench::default(),
@@ -637,7 +638,7 @@ impl App {
         egui::Panel::bottom("footer").show(ui, |ui| {
             ui.horizontal(|ui| {
                 ui.label(
-                    RichText::new("KEIKO  /  Daily practice for builders")
+                    RichText::new("KEIKO  /  TYPESCRIPT WORKSPACE")
                         .monospace()
                         .size(11.5)
                         .color(MUTED),
@@ -697,13 +698,7 @@ impl App {
                                 ),
                             ),
                         ] {
-                            if ui
-                                .selectable_label(
-                                    self.stage == stage,
-                                    RichText::new(label).size(12.0),
-                                )
-                                .clicked()
-                            {
+                            if design::tab(ui, label, self.stage == stage).clicked() {
                                 self.set_stage(stage);
                             }
                         }
@@ -723,14 +718,15 @@ impl App {
                     });
                 });
             if self.stage == 0 {
+                let illustration = self.illustrations.get(&ctx, &base.id);
                 design::masthead(
                     ui,
-                    self.art.as_ref(),
                     &base.section,
                     &base.title,
                     self.selected,
-                    true,
-                    false,
+                    illustration.as_ref(),
+                    art::caption(&base.id),
+                    self.illustrations.failed(&base.id),
                 );
                 ui.add_space(12.0);
                 if let Some(action) = self.reader.show(ui, &guide, &base, &self.lessons) {
@@ -988,6 +984,13 @@ fn main() -> eframe::Result {
             return Ok(());
         }
     };
+    if std::env::args().any(|a| a == "--verify-art") {
+        if let Err(error) = art::verify(&lessons) {
+            eprintln!("{error}");
+            std::process::exit(1);
+        }
+        return Ok(());
+    }
     let guides = match learning::load(&lessons) {
         Ok(guides) => guides,
         Err(error) => {
