@@ -20,3 +20,5 @@ Offline code formatting uses Prettier 3.6.2 standalone with its TypeScript and E
 MIT license and bundled third-party notices are in assets/licenses/Prettier*.txt and ship in
 Resources/Licenses. Vendored artifacts are in assets/vendor/prettier with SHA256 checksums.
 Source distribution: https://registry.npmjs.org/prettier/-/prettier-3.6.2.tgz
+
+Lesson illustration collection v1: 53 original transparent images generated for TypeDojo with the built-in image_gen tool. Exact authored prompts and captions are recorded in assets/art/prompts-v1.json. The collection follows this project's MIT OR Apache-2.0 license. These are conceptual illustrations, not compiler traces.

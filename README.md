@@ -12,7 +12,7 @@ Twenty function and project labs also check runtime examples. Further projects a
 
 ## Install
 
-Download **TypeDojo-v0.1.0-macos-arm64.zip** from the [latest release](https://github.com/bujosa/typedojo/releases/latest), extract it and move TypeDojo.app to `~/Applications`. Keiko also installs, verifies and updates TypeDojo from its catalog.
+Download **TypeDojo-v0.1.1-macos-arm64.zip** from the [latest release](https://github.com/bujosa/typedojo/releases/latest), extract it and move TypeDojo.app to `~/Applications`. Keiko also installs, verifies and updates TypeDojo from its catalog.
 
 The initial binary supports macOS Apple Silicon. It is ad-hoc signed and not notarized; macOS may ask you to approve its first launch in System Settings → Privacy & Security. Node.js 22.13+ and TypeScript 5.9+ are required separately, as described below.
 
@@ -71,6 +71,8 @@ See [docs/ide-engine.md](docs/ide-engine.md) for the engine contract and validat
 The [native E2E report](docs/e2e-validation-2026-11-15.md) records the complete 53-lesson UI traversal,
 the formatter undo fix, integration checks and the remaining distribution/cluster coverage limits.
 
+Every lesson includes its own original concept illustration, embedded locally. The reading layout gives code and explanations more space, with an explicit active stage and direct practice action. Artwork prompts and file hashes are recorded in `assets/art/prompts-v1.json`.
+
 ## Learning path
 
 | Block | Labs | Topics |
@@ -108,6 +110,7 @@ Homebrew's standard binary directories are discovered automatically.
 cargo fmt --check
 cargo clippy --all-targets -- -D warnings
 cargo test
+cargo run --locked -- --verify-art
 cargo run --locked -- --verify-content
 cargo run --locked -- --verify-learning
 node tools/format-content.mjs # check all bundled TypeScript code fields

@@ -61,3 +61,11 @@ Learn → Practice were exercised in the native app. Fresh wide/compact captures
 
 The installed app was updated with its prior bundle preserved in target/install-backups/. Existing
 selected lesson, source and exact-draft pass were observed after reopening. No progress migration.
+
+## Lesson collection · 0.1.1
+
+The courtyard above documents the original 0.1.0 direction. Version 0.1.1 replaces the shared banner with 53 original transparent concept dioramas in cobalt glass, ivory ceramic and brass. Each stable lesson ID has its own scene and explanatory caption. The full prompts, dimensions and SHA-256 values are retained in assets/art/prompts-v1.json. Previous masters remain as historical source assets and are no longer embedded.
+
+The full scene is contained within a separate masthead image region, with native text, an accessible image caption and no crop. Decoding occurs off the UI thread. A four-texture LRU bounds GPU use; results from old lesson selections cannot replace the current illustration. --verify-art validates exact lesson coverage, unique IDs, PNG decoding, dimensions and transparency. This is asset-delivery validation, not an automated presentation test.
+
+The reader now gives more space to worked code and its reasoning, provides a filename and copy action, folds definitions on compact windows and offers a direct Start practice action. Stage tabs expose selected state and use an underline. Runtime, grading, curriculum and progress schemas retain their existing contracts.
